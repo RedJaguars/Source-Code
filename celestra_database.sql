@@ -18,6 +18,30 @@ USE `celestra_database`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `account` (
+  `accountID` int(11) NOT NULL AUTO_INCREMENT,
+  `password` varchar(45) NOT NULL,
+  PRIMARY KEY (`accountID`),
+  UNIQUE KEY `accountID_UNIQUE` (`accountID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `account`
+--
+
+LOCK TABLES `account` WRITE;
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `alteration_order`
 --
 
@@ -25,13 +49,13 @@ DROP TABLE IF EXISTS `alteration_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `alteration_order` (
-  `id_order` int(11) NOT NULL,
-  `garment_type` varchar(45) NOT NULL,
-  `special_instruction` varchar(45) DEFAULT NULL,
-  `id_measurement` int(11) NOT NULL,
-  PRIMARY KEY (`id_order`),
-  CONSTRAINT `alter_measurement` FOREIGN KEY (`id_order`) REFERENCES `measurements` (`id_measurements`) ON UPDATE CASCADE,
-  CONSTRAINT `alteration` FOREIGN KEY (`id_order`) REFERENCES `order` (`id_order`) ON DELETE CASCADE ON UPDATE CASCADE
+  `orderID` int(11) NOT NULL,
+  `garmentType` varchar(45) NOT NULL,
+  `specialInstruction` varchar(45) DEFAULT NULL,
+  `measurementID` int(11) NOT NULL,
+  PRIMARY KEY (`orderID`),
+  CONSTRAINT `alteration` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `alter_measurement` FOREIGN KEY (`orderID`) REFERENCES `measurements` (`measurementsID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,14 +76,14 @@ DROP TABLE IF EXISTS `clients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `clients` (
-  `id_client` int(11) NOT NULL AUTO_INCREMENT,
-  `last_name` varchar(45) NOT NULL,
-  `first_name` varchar(45) NOT NULL,
+  `clientID` int(11) NOT NULL AUTO_INCREMENT,
+  `lastName` varchar(45) NOT NULL,
+  `firstName` varchar(45) NOT NULL,
   `gender` varchar(45) NOT NULL,
-  `contact_no` varchar(45) NOT NULL,
+  `contactNo` varchar(45) NOT NULL,
   `email` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id_client`),
-  UNIQUE KEY `id_client_UNIQUE` (`id_client`)
+  PRIMARY KEY (`clientID`),
+  UNIQUE KEY `id_client_UNIQUE` (`clientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -80,17 +104,14 @@ DROP TABLE IF EXISTS `embroidery_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `embroidery_order` (
-  `id_order` int(11) NOT NULL,
+  `orderID` int(11) NOT NULL,
   `logo` blob,
   `size` double NOT NULL,
-  `num_of_colors` int(11) NOT NULL,
-  `embroidery_type` varchar(45) DEFAULT NULL,
-  `id_measurement` int(11) NOT NULL,
-  PRIMARY KEY (`id_order`),
-  UNIQUE KEY `id_order_UNIQUE` (`id_order`),
-  KEY `embroid_measurement_idx` (`id_measurement`),
-  CONSTRAINT `embroid_measurement` FOREIGN KEY (`id_measurement`) REFERENCES `measurements` (`id_measurements`) ON UPDATE CASCADE,
-  CONSTRAINT `embroidery_order` FOREIGN KEY (`id_order`) REFERENCES `order` (`id_order`) ON DELETE CASCADE ON UPDATE CASCADE
+  `numOfColors` int(11) NOT NULL,
+  `embroideryType` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`orderID`),
+  UNIQUE KEY `id_order_UNIQUE` (`orderID`),
+  CONSTRAINT `embroidery` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -111,13 +132,16 @@ DROP TABLE IF EXISTS `garment_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `garment_order` (
-  `id_order` int(11) NOT NULL,
+  `orderID` int(11) NOT NULL,
   `gender` varchar(45) NOT NULL,
   `material` varchar(45) DEFAULT NULL,
   `special_instruction` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id_order`),
-  UNIQUE KEY `id_order_UNIQUE` (`id_order`),
-  CONSTRAINT `garment_order` FOREIGN KEY (`id_order`) REFERENCES `order` (`id_order`) ON DELETE CASCADE ON UPDATE CASCADE
+  `measurementID` int(11) NOT NULL,
+  PRIMARY KEY (`orderID`),
+  UNIQUE KEY `id_order_UNIQUE` (`orderID`),
+  KEY `garmentMeasure_idx` (`measurementID`),
+  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `garmentMeasure` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -131,6 +155,59 @@ LOCK TABLES `garment_order` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `inventory`
+--
+
+DROP TABLE IF EXISTS `inventory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inventory` (
+  `inventoryID` int(11) NOT NULL AUTO_INCREMENT,
+  `inventoryName` varchar(45) NOT NULL,
+  `quantityInStock` varchar(45) NOT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`inventoryID`),
+  UNIQUE KEY `inventoryID_UNIQUE` (`inventoryID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inventory`
+--
+
+LOCK TABLES `inventory` WRITE;
+/*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `materials_used`
+--
+
+DROP TABLE IF EXISTS `materials_used`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `materials_used` (
+  `materialID` int(11) NOT NULL AUTO_INCREMENT,
+  `quantity` varchar(45) NOT NULL,
+  `inventoryID` int(11) NOT NULL,
+  PRIMARY KEY (`materialID`),
+  UNIQUE KEY `materialID_UNIQUE` (`materialID`),
+  KEY `inventory_idx` (`inventoryID`),
+  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `materials_used`
+--
+
+LOCK TABLES `materials_used` WRITE;
+/*!40000 ALTER TABLE `materials_used` DISABLE KEYS */;
+/*!40000 ALTER TABLE `materials_used` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `measurements`
 --
 
@@ -138,30 +215,30 @@ DROP TABLE IF EXISTS `measurements`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `measurements` (
-  `id_measurements` int(11) NOT NULL AUTO_INCREMENT,
-  `upper_length` double DEFAULT NULL,
+  `measurementsID` int(11) NOT NULL AUTO_INCREMENT,
+  `upperLength` double DEFAULT NULL,
   `shoulder` double DEFAULT NULL,
   `chest` double DEFAULT NULL,
-  `upper_waist` double DEFAULT NULL,
-  `upper_hips` double DEFAULT NULL,
-  `arm_length` double DEFAULT NULL,
-  `arm_hole` double DEFAULT NULL,
-  `back_figure` double DEFAULT NULL,
-  `front_figure` double DEFAULT NULL,
-  `front_chest` double DEFAULT NULL,
-  `back_chest` double DEFAULT NULL,
-  `bust_distance` double DEFAULT NULL,
-  `bust_point` double DEFAULT NULL,
-  `neck_deep` double DEFAULT NULL,
-  `bottom_length` double DEFAULT NULL,
-  `bottom_waist` double DEFAULT NULL,
-  `bottom_hips` double DEFAULT NULL,
+  `upperWaist` double DEFAULT NULL,
+  `upperHips` double DEFAULT NULL,
+  `armLength` double DEFAULT NULL,
+  `armHole` double DEFAULT NULL,
+  `backFigure` double DEFAULT NULL,
+  `frontFigure` double DEFAULT NULL,
+  `frontChest` double DEFAULT NULL,
+  `backChest` double DEFAULT NULL,
+  `bustDistance` double DEFAULT NULL,
+  `bustPoint` double DEFAULT NULL,
+  `neckDeep` double DEFAULT NULL,
+  `bottomLength` double DEFAULT NULL,
+  `bottomWaist` double DEFAULT NULL,
+  `bottomHips` double DEFAULT NULL,
   `thigh` double DEFAULT NULL,
   `knee` double DEFAULT NULL,
   `buttom` double DEFAULT NULL,
   `crotch` double DEFAULT NULL,
-  PRIMARY KEY (`id_measurements`),
-  UNIQUE KEY `id_measurements_UNIQUE` (`id_measurements`)
+  PRIMARY KEY (`measurementsID`),
+  UNIQUE KEY `id_measurements_UNIQUE` (`measurementsID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -175,35 +252,61 @@ LOCK TABLES `measurements` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `order`
+-- Table structure for table `order_item`
 --
 
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `order_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
-  `id_order` int(11) NOT NULL AUTO_INCREMENT,
-  `id_client` int(11) NOT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `order_date` date NOT NULL,
-  `due_date` date NOT NULL,
-  `total_price` double NOT NULL,
-  `balance` double NOT NULL,
-  `pickup_location` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id_order`),
-  UNIQUE KEY `id_order_UNIQUE` (`id_order`),
-  KEY `order_client_idx` (`id_client`),
-  CONSTRAINT `order_client` FOREIGN KEY (`id_client`) REFERENCES `clients` (`id_client`) ON UPDATE CASCADE
+CREATE TABLE `order_item` (
+  `orderID` int(11) NOT NULL AUTO_INCREMENT,
+  `quantity` int(11) NOT NULL,
+  `orderListID` int(11) NOT NULL,
+  PRIMARY KEY (`orderID`),
+  UNIQUE KEY `orderID_UNIQUE` (`orderID`),
+  KEY `orderList_idx` (`orderListID`),
+  CONSTRAINT `orderList` FOREIGN KEY (`orderListID`) REFERENCES `order_list` (`orderListID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order`
+-- Dumping data for table `order_item`
 --
 
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
+LOCK TABLES `order_item` WRITE;
+/*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order_list`
+--
+
+DROP TABLE IF EXISTS `order_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `order_list` (
+  `orderListID` int(11) NOT NULL AUTO_INCREMENT,
+  `orderDate` varchar(45) NOT NULL,
+  `dueDate` varchar(45) NOT NULL,
+  `totalPrice` double NOT NULL,
+  `balance` double NOT NULL,
+  `pickupLocation` varchar(45) DEFAULT NULL,
+  `clientID` int(11) NOT NULL,
+  PRIMARY KEY (`orderListID`),
+  UNIQUE KEY `orderListID_UNIQUE` (`orderListID`),
+  KEY `clients_idx` (`clientID`),
+  CONSTRAINT `clients` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_list`
+--
+
+LOCK TABLES `order_list` WRITE;
+/*!40000 ALTER TABLE `order_list` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order_list` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -215,4 +318,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-09  6:37:57
+-- Dump completed on 2015-03-09 23:14:31
