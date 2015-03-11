@@ -1,4 +1,5 @@
+import java.util.Iterator;
 
 public interface Observer {
-	public void update();
+	public void update(Iterator<?> iter);
 }
