@@ -69,6 +69,37 @@ LOCK TABLES `alteration_order` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `bottom_measure`
+--
+
+DROP TABLE IF EXISTS `bottom_measure`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bottom_measure` (
+  `measurementID` int(11) NOT NULL,
+  `bottomLength` double NOT NULL,
+  `waist` double NOT NULL,
+  `hips` double NOT NULL,
+  `thigh` double NOT NULL,
+  `knee` double NOT NULL,
+  `buttom` double NOT NULL,
+  `crotch` double NOT NULL,
+  PRIMARY KEY (`measurementID`),
+  UNIQUE KEY `measurementID_UNIQUE` (`measurementID`),
+  CONSTRAINT `bottomMeasure` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bottom_measure`
+--
+
+LOCK TABLES `bottom_measure` WRITE;
+/*!40000 ALTER TABLE `bottom_measure` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bottom_measure` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `clients`
 --
 
@@ -133,6 +164,7 @@ DROP TABLE IF EXISTS `garment_order`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `garment_order` (
   `orderID` int(11) NOT NULL,
+  `garmentType` varchar(45) NOT NULL,
   `gender` varchar(45) NOT NULL,
   `material` varchar(45) DEFAULT NULL,
   `special_instruction` varchar(45) DEFAULT NULL,
@@ -140,8 +172,8 @@ CREATE TABLE `garment_order` (
   PRIMARY KEY (`orderID`),
   UNIQUE KEY `id_order_UNIQUE` (`orderID`),
   KEY `garmentMeasure_idx` (`measurementID`),
-  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `garmentMeasure` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `garmentMeasure` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -191,9 +223,12 @@ CREATE TABLE `materials_used` (
   `materialID` int(11) NOT NULL AUTO_INCREMENT,
   `quantity` varchar(45) NOT NULL,
   `inventoryID` int(11) NOT NULL,
+  `itemID` int(11) NOT NULL,
   PRIMARY KEY (`materialID`),
   UNIQUE KEY `materialID_UNIQUE` (`materialID`),
   KEY `inventory_idx` (`inventoryID`),
+  KEY `order_assigned_idx` (`itemID`),
+  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -216,27 +251,6 @@ DROP TABLE IF EXISTS `measurements`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `measurements` (
   `measurementsID` int(11) NOT NULL AUTO_INCREMENT,
-  `upperLength` double DEFAULT NULL,
-  `shoulder` double DEFAULT NULL,
-  `chest` double DEFAULT NULL,
-  `upperWaist` double DEFAULT NULL,
-  `upperHips` double DEFAULT NULL,
-  `armLength` double DEFAULT NULL,
-  `armHole` double DEFAULT NULL,
-  `backFigure` double DEFAULT NULL,
-  `frontFigure` double DEFAULT NULL,
-  `frontChest` double DEFAULT NULL,
-  `backChest` double DEFAULT NULL,
-  `bustDistance` double DEFAULT NULL,
-  `bustPoint` double DEFAULT NULL,
-  `neckDeep` double DEFAULT NULL,
-  `bottomLength` double DEFAULT NULL,
-  `bottomWaist` double DEFAULT NULL,
-  `bottomHips` double DEFAULT NULL,
-  `thigh` double DEFAULT NULL,
-  `knee` double DEFAULT NULL,
-  `buttom` double DEFAULT NULL,
-  `crotch` double DEFAULT NULL,
   PRIMARY KEY (`measurementsID`),
   UNIQUE KEY `id_measurements_UNIQUE` (`measurementsID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -309,6 +323,68 @@ LOCK TABLES `order_list` WRITE;
 /*!40000 ALTER TABLE `order_list` DISABLE KEYS */;
 /*!40000 ALTER TABLE `order_list` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `top_measure`
+--
+
+DROP TABLE IF EXISTS `top_measure`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `top_measure` (
+  `measurementID` int(11) NOT NULL,
+  `upperLength` double NOT NULL,
+  `shoulder` double NOT NULL,
+  `armLength` double NOT NULL,
+  `wrist` double NOT NULL,
+  `armhole` double NOT NULL,
+  `frontChest` double NOT NULL,
+  `backChest` double NOT NULL,
+  `waist` double NOT NULL,
+  `hips` double NOT NULL,
+  `neckDeep` double NOT NULL,
+  PRIMARY KEY (`measurementID`),
+  UNIQUE KEY `measurementID_UNIQUE` (`measurementID`),
+  CONSTRAINT `topMeasure` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `top_measure`
+--
+
+LOCK TABLES `top_measure` WRITE;
+/*!40000 ALTER TABLE `top_measure` DISABLE KEYS */;
+/*!40000 ALTER TABLE `top_measure` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `women_top_measure`
+--
+
+DROP TABLE IF EXISTS `women_top_measure`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `women_top_measure` (
+  `measurementID` int(11) NOT NULL,
+  `frontFigure` double NOT NULL,
+  `bustPoint` double NOT NULL,
+  `bustDistance` double NOT NULL,
+  `backFigure` double NOT NULL,
+  PRIMARY KEY (`measurementID`),
+  UNIQUE KEY `measurementID_UNIQUE` (`measurementID`),
+  CONSTRAINT `womenMeasure` FOREIGN KEY (`measurementID`) REFERENCES `top_measure` (`measurementID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `women_top_measure`
+--
+
+LOCK TABLES `women_top_measure` WRITE;
+/*!40000 ALTER TABLE `women_top_measure` DISABLE KEYS */;
+/*!40000 ALTER TABLE `women_top_measure` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -319,4 +395,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-11  9:44:13
+-- Dump completed on 2015-03-11 13:50:35

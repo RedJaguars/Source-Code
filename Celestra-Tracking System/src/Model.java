@@ -9,7 +9,6 @@ public abstract class Model implements Subject {
 	public Model() {
 		con = DatabaseConnection.getInstance();
 		controllers = new ArrayList<>();
-		modelList = new ArrayList<>();
 	}
 	
 	@Override
