@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -5,6 +6,10 @@ import java.util.Iterator;
 public abstract class Controller implements Subject, Observer {
 	protected Model model;
 	protected ArrayList<Observer> views;
+	
+	public Controller() {
+		views = new ArrayList<>();
+	}
 	
 	@Override
 	public void update(Iterator<?> iter) {
@@ -22,9 +27,13 @@ public abstract class Controller implements Subject, Observer {
 	}
 
 	@Override
-	public void notifyObservers() {
+	public void notifyObservers(){
 		for(Observer o: views) {
-			o.update(model.getModelList());
+			try {
+				o.update(model.getModelList());
+			} catch(SQLException ex) {
+				System.out.println(ex.getMessage());
+			}
 		}
 	}
 

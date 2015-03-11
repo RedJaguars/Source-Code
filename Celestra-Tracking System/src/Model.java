@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -5,8 +6,9 @@ public abstract class Model implements Subject {
 	protected DatabaseConnection con;
 	protected ArrayList<Observer> controllers;
 	protected ArrayList<?> modelList;
+	protected static Model instance;
 	
-	public Model() {
+	protected Model() {
 		con = DatabaseConnection.getInstance();
 		controllers = new ArrayList<>();
 	}
@@ -14,13 +16,11 @@ public abstract class Model implements Subject {
 	@Override
 	public void register(Observer obv) {
 		controllers.add(obv);
-		
 	}
 
 	@Override
 	public void unregister(Observer obv) {
 		controllers.remove(obv);
-
 	}
 
 	@Override
@@ -30,7 +30,5 @@ public abstract class Model implements Subject {
 		}
 	}
 	
-	public Iterator<?> getModelList() {
-		return modelList.iterator();
-	}
+	public abstract Iterator<?> getModelList() throws SQLException; 
 }

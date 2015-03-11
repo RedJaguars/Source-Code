@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class OrderList {
+	private int listID;
 	private int receiptNo;
 	private Date dueDate;
 	private Date orderDate;
@@ -12,8 +13,49 @@ public class OrderList {
 	private Client client;
 	private ArrayList<OrderItem> items;
 	
-	public OrderList() {
-		items = new ArrayList<>();
+	private OrderList(OrderListBuilder builder) {
+		this.items = new ArrayList<>();
+		this.totalPrice = 0;
+		
+		this.receiptNo = builder.receiptNo;
+		this.dueDate = builder.dueDate;
+		this.orderDate = builder.orderDate;
+		this.balance = builder.balance;
+		this.pickupLocation = builder.pickupLocation;
+		this.client = builder.client;
+		this.listID = builder.listID;
+	}
+	
+	public static class OrderListBuilder {
+		private int listID = 0;
+		private final int receiptNo;
+		private final Date dueDate;
+		private final Date orderDate;
+		private final double balance;
+		private final String pickupLocation;
+		private final Client client;
+		
+		public OrderListBuilder(int receiptNo, Date dueDate, Date orderDate, double balance, String pickupLocation, Client client) {
+			this.receiptNo = receiptNo;
+			this.dueDate = dueDate;
+			this.orderDate = orderDate;
+			this.balance = balance;
+			this.pickupLocation = pickupLocation;
+			this.client = client;
+		}
+		
+		public OrderListBuilder listID(int id) {
+			this.listID = id;
+			return this;
+		}
+		
+		public OrderList build() {
+			return new OrderList(this);
+		}
+	}
+	
+	public int getListID() {
+		return this.listID;
 	}
 	
 	public int getReceiptNo() {
@@ -75,10 +117,12 @@ public class OrderList {
 	/* adds an OrderItem to the list of Orders */
 	public void addOrderItem(OrderItem item) {
 		items.add(item);
+		totalPrice += item.getPrice();
 	}
 	
 	/* removes an OrderItem to the list of Orders*/
 	public void removeItem(OrderItem item) {
 		items.remove(item);
+		totalPrice -= item.getPrice();
 	}
 }

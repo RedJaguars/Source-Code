@@ -2,6 +2,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.Iterator;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -137,5 +138,58 @@ public class OrderModel extends Model{
 				ps.executeUpdate();
 			}
 		}	
+		notifyObservers();
+	}
+	
+	public void cancelOrder(OrderList order) {
+		
+	}
+	
+	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
+		
+	}
+	
+	public Iterator<?> getModelList() throws SQLException{
+		modelList.clear();
+		
+		String statement = "SELECT * FROM order_list OL, clients C WHERE OL.clientID = C.clientID";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ResultSet orderListSet = ps.executeQuery();
+		
+		/*Traversing the whole list of orderList*/
+		while(orderListSet.next()) {
+			int clientID = orderListSet.getInt("C.clientID");
+			String lastName = orderListSet.getString("C.lastName");
+			String firstName = orderListSet.getString("C.firstName");
+			String gender = orderListSet.getString("C.gender");
+			String contactNo = orderListSet.getString("C.contactNo");
+			String email = orderListSet.getString("C.email");
+			Client orderClient = new Client.ClientBuilder(lastName, firstName, gender, contactNo)
+										.clientID(clientID)
+										.email(email)
+										.build();
+			
+			int listID = orderListSet.getInt("OL.orderListID");
+			int receiptNo = orderListSet.getInt("OL.receiptNo");
+			Date dueDate = orderListSet.getDate("OL.dueDate");
+			Date orderDate = orderListSet.getDate("OL.orderDate");
+			double balance = orderListSet.getDouble("OL.balance");
+			String pickupLocation = orderListSet.getString("OL.pickupLocation");
+			
+			OrderList orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, orderClient)
+									.listID(listID)
+									.build();
+			
+			statement = "SELECT * FROM order_item OI, garment_order GO WHERE OI.orderListID = ? AND OI.orderID = GO.orderID";
+			ps = con.getConnection().prepareStatement(statement);
+			ps.setInt(1, listID);
+			ResultSet orderItemSet = ps.executeQuery();
+			
+			while(orderItemSet.next()) {
+				
+			}
+		}
+		
+		return modelList.iterator();
 	}
 }

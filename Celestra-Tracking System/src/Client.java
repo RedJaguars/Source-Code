@@ -3,19 +3,51 @@ public class Client {
 	private int clientID;
 	private String lastName;
 	private String firstName;
-	private char gender;
+	private String gender;
 	private String contactNo;
 	private String email;
 	
 	public Client(){}
 	
-	public Client(int clientID, String lastName, String firstName, char gender, String contactNo, String email) {
-		this.clientID = clientID;
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.gender = gender;
-		this.contactNo = contactNo;
-		this.email = email;
+	private Client(ClientBuilder builder) {
+		this.lastName = builder.lastName;
+		this.firstName = builder.firstName;
+		this.gender = builder.gender;
+		this.contactNo = builder.contactNo;
+		
+		this.email = builder.email;
+		this.clientID = builder.clientID;
+	}
+	
+	public static class ClientBuilder {
+		private final String lastName;
+		private final String firstName;
+		private final String gender;
+		private final String contactNo;
+		
+		private String email = null;
+		private int clientID = 0;
+		
+		public ClientBuilder(String lastName, String firstName, String gender, String contact) {
+			this.lastName = lastName;
+			this.firstName = firstName;
+			this.gender = gender;
+			this.contactNo = contact;
+		}
+		
+		public ClientBuilder clientID(int id) {
+			this.clientID = id;
+			return this;
+		}
+		
+		public ClientBuilder email(String email) {
+			this.email = email;
+			return this;
+		}
+		
+		public Client build() {
+			return new Client(this);
+		}
 	}
 
 
@@ -49,12 +81,12 @@ public class Client {
 	}
 
 
-	public char getGender() {
+	public String getGender() {
 		return gender;
 	}
 
 
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
