@@ -262,6 +262,7 @@ CREATE TABLE `order_item` (
   `orderID` int(11) NOT NULL AUTO_INCREMENT,
   `quantity` int(11) NOT NULL,
   `orderListID` int(11) NOT NULL,
+  `itemPrice` double NOT NULL,
   PRIMARY KEY (`orderID`),
   UNIQUE KEY `orderID_UNIQUE` (`orderID`),
   KEY `orderList_idx` (`orderListID`),
@@ -318,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-09 23:14:31
+-- Dump completed on 2015-03-11  9:44:13
