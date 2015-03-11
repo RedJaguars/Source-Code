@@ -1,11 +1,11 @@
 
-public class WomensTopMeasurement extends TopMeasurement{
+public class WomensTopMeasure extends TopMeasurement{
 	private double frontFigure;
 	private double bustPoint;
 	private double bustDistance;
 	private double backFigure;
 	
-	public WomensTopMeasurement(double upperLength, double shoulder, double armLength, double wrist,
+	public WomensTopMeasure(double upperLength, double shoulder, double armLength, double wrist,
 			double armHole, double chest, double frontChest, double backChest,
 			double waist, double hips, double neckDeep, double frontFigure, double bustPoint,
 			double bustDistance, double backFigure) {

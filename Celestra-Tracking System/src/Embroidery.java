@@ -1,22 +1,27 @@
-import java.awt.Image;
-
+import javax.swing.ImageIcon;
 
 public class Embroidery extends OrderItem {
-	private Image logo;
+	private ImageIcon logo;
 	private double size;
-	private int numOfColors;
+	private int numOfColors;	
 	private String embroideryType;
+	private byte[] logoBytes;
 	
-	public Embroidery(int qty, double price, Image logo, double size, int numOfColors, String type) {
+	public Embroidery(int qty, double price, byte[] logo, double size, int numOfColors, String type) {
 		super(qty, price);
-		this.logo = logo;
+		this.logo = new ImageIcon(logo);
+		this.logoBytes = logo;
 		this.size = size;
 		this.numOfColors = numOfColors;
 		this.embroideryType = type;
 	}
 	
-	public Image getLogo() {
+	public ImageIcon getLogo() {
 		return this.logo;
+	}
+	
+	public byte[] getLogoBytes() {
+		return this.logoBytes;
 	}
 	
 	public double getSize() {
@@ -31,8 +36,9 @@ public class Embroidery extends OrderItem {
 		return this.embroideryType;
 	}
 	
-	public void setLogo(Image logo) {
-		this.logo = logo;
+	public void setLogo(byte[] logo) {
+		this.logo = new ImageIcon(logo);
+		this.logoBytes = logo;
 	}
 	
 	public void setSize(double size) {

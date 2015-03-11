@@ -1,12 +1,12 @@
 public class GarmentOrder extends OrderItem{
 	private String garmentType;
-	private char gender;
+	private String gender;
 	private String material;
 	private String specialInstruction;
 	private TopMeasurement topMeasure;
 	private BottomMeasurement bottomMeasure;
 	
-	public GarmentOrder(int qty, double price, String garmentType, char gender) {
+	public GarmentOrder(int qty, double price, String garmentType, String gender) {
 		super(qty, price);
 		this.garmentType = garmentType;
 		this.gender = gender;
@@ -16,7 +16,7 @@ public class GarmentOrder extends OrderItem{
 		return this.garmentType;
 	}
 	
-	public char getGender() {
+	public String getGender() {
 		return this.gender;
 	}
 	
@@ -40,7 +40,7 @@ public class GarmentOrder extends OrderItem{
 		this.garmentType = type;
 	}
 	
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 	
