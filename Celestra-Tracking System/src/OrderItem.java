@@ -1,33 +1,31 @@
 
 public class OrderItem {
-	private int itemID;
+	protected int itemID;
 	private int quantity;
+	private OrderStatus state;
 	private double itemPrice;
 	
-	private OrderItem(OrderItemBuilder builder) {
-		this.quantity = builder.quantity;
-		this.itemPrice = builder.itemPrice;
-		this.itemID = builder.itemID;
+	protected OrderItem(int qty, double price) {
+		this.quantity = qty;
+		this.itemPrice = price;
 	}
 	
-	public static class OrderItemBuilder {
-		private int itemID = 0;
-		private final int quantity;
-		private final double itemPrice;
+	public static abstract class OrderBuilder {
+		protected final int qty;
+		protected final double price;
+		protected int orderID = 0;
 		
-		public OrderItemBuilder(int qty, double price) {
-			this.quantity = qty;
-			this.itemPrice = price;
+		public OrderBuilder(int qty, double price) {
+			this.qty = qty;
+			this.price = price;
 		}
 		
-		public OrderItemBuilder itemID(int id) {
-			this.itemID = id;
+		public OrderBuilder itemID(int id) {
+			this.orderID = id;
 			return this;
 		}
 		
-		public OrderItem build() {
-			return new OrderItem(this);
-		}
+		public abstract OrderItem build();
 	}
 	
 	public int getItemID() {

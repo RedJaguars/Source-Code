@@ -10,9 +10,6 @@ public class AccountModel extends Model{
 	private PreparedStatement theStatement;
 	private DatabaseConnection connection;
 	
-	
-	
-	
 	public void addAccount(Account newAccount){
 		accountList.add(newAccount);
 		String query = "INSERT INTO account VALUES(?,?)";

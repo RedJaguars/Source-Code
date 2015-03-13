@@ -1,22 +1,54 @@
 public class GarmentOrder extends OrderItem{
-	private String garmentType;
-	private String gender;
+	private GarmentType garmentType;
+	private Gender gender;
 	private String material;
 	private String specialInstruction;
 	private TopMeasurement topMeasure;
 	private BottomMeasurement bottomMeasure;
 	
-	public GarmentOrder(int qty, double price, String garmentType, String gender) {
-		super(qty, price);
-		this.garmentType = garmentType;
-		this.gender = gender;
+	public GarmentOrder(GarmentOrderBuilder builder) {
+		super(builder.qty, builder.price);
+		this.garmentType = builder.garmentType;
+		this.gender = builder.gender;
+		this.material = builder.material;
+		this.specialInstruction = builder.specialInstruction;
 	}
 	
-	public String getGarmentType() {
+	public static class GarmentOrderBuilder extends OrderItem.OrderBuilder {
+		private final GarmentType garmentType;
+		private final Gender gender;
+		
+		private String material = null;
+		private String specialInstruction = null;
+		private TopMeasurement topMeasure = null;
+		private BottomMeasurement bottomMeasure = null;
+		
+		public GarmentOrderBuilder(int qty, double price, GarmentType garmentType, Gender gender) {
+			super(qty, price);
+			this.garmentType = garmentType;
+			this.gender = gender;
+		}
+		
+		public GarmentOrderBuilder material(String material) {
+			this.material = material;
+			return this;
+		}
+		
+		public GarmentOrderBuilder instruction(String instruction) {
+			this.specialInstruction = instruction;
+			return this;
+		}
+		
+		public OrderItem build() {
+			return new GarmentOrder(this);
+		}
+	}
+	
+	public GarmentType getGarmentType() {
 		return this.garmentType;
 	}
 	
-	public String getGender() {
+	public Gender getGender() {
 		return this.gender;
 	}
 	
@@ -36,11 +68,11 @@ public class GarmentOrder extends OrderItem{
 		return this.bottomMeasure;
 	}
 	
-	public void setGarmentType(String type) {
+	public void setGarmentType(GarmentType type) {
 		this.garmentType = type;
 	}
 	
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 	

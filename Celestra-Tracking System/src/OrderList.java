@@ -10,6 +10,7 @@ public class OrderList {
 	private double totalPrice;
 	private double balance;
 	private String pickupLocation;
+	private OrderStatus status;
 	private Client client;
 	private ArrayList<OrderItem> items;
 	
@@ -24,6 +25,7 @@ public class OrderList {
 		this.pickupLocation = builder.pickupLocation;
 		this.client = builder.client;
 		this.listID = builder.listID;
+		this.status = builder.state;
 	}
 	
 	public static class OrderListBuilder {
@@ -34,14 +36,16 @@ public class OrderList {
 		private final double balance;
 		private final String pickupLocation;
 		private final Client client;
+		private final OrderStatus state;
 		
-		public OrderListBuilder(int receiptNo, Date dueDate, Date orderDate, double balance, String pickupLocation, Client client) {
+		public OrderListBuilder(int receiptNo, Date dueDate, Date orderDate, double balance, String pickupLocation, Client client, OrderStatus status) {
 			this.receiptNo = receiptNo;
 			this.dueDate = dueDate;
 			this.orderDate = orderDate;
 			this.balance = balance;
 			this.pickupLocation = pickupLocation;
 			this.client = client;
+			this.state = status;
 		}
 		
 		public OrderListBuilder listID(int id) {
@@ -86,6 +90,10 @@ public class OrderList {
 		return this.client;
 	}
 	
+	public OrderStatus getStatus() {
+		return this.status;
+	}
+	
 	public void setReceiptNo(int recNo) {
 		this.receiptNo = recNo;
 	}
@@ -108,6 +116,10 @@ public class OrderList {
 	
 	public void setClient(Client client) {
 		this.client = client;
+	}
+	
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 	
 	public Iterator<OrderItem> getItemList() {

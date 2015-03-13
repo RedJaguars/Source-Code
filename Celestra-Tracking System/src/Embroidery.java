@@ -4,16 +4,36 @@ public class Embroidery extends OrderItem {
 	private ImageIcon logo;
 	private double size;
 	private int numOfColors;	
-	private String embroideryType;
+	private EmbroideryType embroideryType;
 	private byte[] logoBytes;
 	
-	public Embroidery(int qty, double price, byte[] logo, double size, int numOfColors, String type) {
-		super(qty, price);
-		this.logo = new ImageIcon(logo);
-		this.logoBytes = logo;
-		this.size = size;
-		this.numOfColors = numOfColors;
-		this.embroideryType = type;
+	public Embroidery(EmbroideryBuilder builder) {
+		super(builder.qty, builder.price);
+		this.logo = new ImageIcon(builder.logo);
+		this.logoBytes = builder.logo;
+		this.size = builder.size;
+		this.numOfColors = builder.numOfColors;
+		this.embroideryType = builder.type;
+		this.itemID = builder.orderID;
+	}
+	
+	public static class EmbroideryBuilder extends OrderItem.OrderBuilder {
+		private final byte[] logo;
+		private final double size;
+		private final int numOfColors;
+		private final EmbroideryType type;
+		
+		public EmbroideryBuilder(int qty, double price, byte[] logo, double size, int numOfColors, EmbroideryType type) {
+			super(qty, price);
+			this.logo = logo;
+			this.size = size;
+			this.numOfColors = numOfColors;
+			this.type = type;
+		}
+		
+		public OrderItem build() {
+			return new Embroidery(this);
+		}
 	}
 	
 	public ImageIcon getLogo() {
@@ -32,7 +52,7 @@ public class Embroidery extends OrderItem {
 		return this.numOfColors;
 	}
 	
-	public String getEmbroideryType() {
+	public EmbroideryType getEmbroideryType() {
 		return this.embroideryType;
 	}
 	
@@ -49,7 +69,7 @@ public class Embroidery extends OrderItem {
 		this.numOfColors = num;
 	}
 	
-	public void setEmbroideryType(String type) {
+	public void setEmbroideryType(EmbroideryType type) {
 		this.embroideryType = type;
 	}
 }

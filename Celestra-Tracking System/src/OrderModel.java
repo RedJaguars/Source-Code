@@ -55,8 +55,8 @@ public class OrderModel extends Model{
 				statement = "INSERT INTO garment_order VALUES(orderID, garmentType, gender, material, special_instruction) VALUES (?, ? ,?, ?, ?)";
 				ps = con.getConnection().prepareStatement(statement);
 				ps.setInt(1, orderID);
-				ps.setString(2, ((GarmentOrder) item).getGarmentType());
-				ps.setString(3, ((GarmentOrder) item).getGender());
+				ps.setString(2, ((GarmentOrder) item).getGarmentType().toString());
+				ps.setString(3, ((GarmentOrder) item).getGender().toString());
 				ps.setString(4, ((GarmentOrder) item).getMaterial());
 				ps.setString(5, ((GarmentOrder) item).getSpecialInstruction());
 				ps.executeUpdate();
@@ -126,14 +126,14 @@ public class OrderModel extends Model{
 				ps.setBlob(2, new SerialBlob(((Embroidery) item).getLogoBytes()));
 				ps.setDouble(3, ((Embroidery) item).getSize());
 				ps.setInt(4, ((Embroidery) item).getNumOfColors());
-				ps.setString(5, ((Embroidery) item).getEmbroideryType());
+				ps.setString(5, ((Embroidery) item).getEmbroideryType().toString());
 				ps.executeUpdate();
 			} else if (item instanceof Alteration) {
 				/*Adding Alteration to alteration_order*/
 				statement = "INSERT INTO alteration_order(orderID, garmentType, specialInstruction) VALUES (?, ?, ?)";
 				ps = con.getConnection().prepareStatement(statement);
 				ps.setInt(1, itemID);
-				ps.setString(2, ((Alteration) item).getGarmentType());
+				ps.setString(2, ((Alteration) item).getGarmentType().toString());
 				ps.setString(3, ((Alteration) item).getInstruction());
 				ps.executeUpdate();
 			}
@@ -175,8 +175,16 @@ public class OrderModel extends Model{
 			Date orderDate = orderListSet.getDate("OL.orderDate");
 			double balance = orderListSet.getDouble("OL.balance");
 			String pickupLocation = orderListSet.getString("OL.pickupLocation");
+			OrderStatus status;
+			switch(orderListSet.getString("OL.status")) {
+				case "Pending": 	status = OrderStatus.PENDING;
+									break;
+				case "Fulfilled": 	status = OrderStatus.FULFILLED;
+									break;
+				default: 			status = OrderStatus.CANCELLED;
+			}
 			
-			OrderList orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, orderClient)
+			OrderList orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, orderClient, status)
 									.listID(listID)
 									.build();
 			
