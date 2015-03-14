@@ -28,7 +28,8 @@ CREATE TABLE `account` (
   `accountID` int(11) NOT NULL AUTO_INCREMENT,
   `password` varchar(45) NOT NULL,
   PRIMARY KEY (`accountID`),
-  UNIQUE KEY `accountID_UNIQUE` (`accountID`)
+  UNIQUE KEY `accountID_UNIQUE` (`accountID`),
+  UNIQUE KEY `password_UNIQUE` (`password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,10 +53,8 @@ CREATE TABLE `alteration_order` (
   `orderID` int(11) NOT NULL,
   `garmentType` varchar(45) NOT NULL,
   `specialInstruction` varchar(45) DEFAULT NULL,
-  `measurementID` int(11) NOT NULL,
   PRIMARY KEY (`orderID`),
-  CONSTRAINT `alteration` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `alter_measurement` FOREIGN KEY (`orderID`) REFERENCES `measurements` (`measurementsID`) ON UPDATE CASCADE
+  CONSTRAINT `alteration` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -65,6 +64,7 @@ CREATE TABLE `alteration_order` (
 
 LOCK TABLES `alteration_order` WRITE;
 /*!40000 ALTER TABLE `alteration_order` DISABLE KEYS */;
+INSERT INTO `alteration_order` VALUES (9,'BOTTOM','I want it shorter than my short shorts'),(10,'BOTTOM','I want it shorter than my short shorts');
 /*!40000 ALTER TABLE `alteration_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +115,7 @@ CREATE TABLE `clients` (
   `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `id_client_UNIQUE` (`clientID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,6 +124,7 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
+INSERT INTO `clients` VALUES (1,'Cardano','Marc Daniel','MALE','09983413882','marccardano@gmail.com'),(2,'Lozano','Rafael ','MALE','09431322882','rafaellozano@gmail.com'),(3,'Marasigan','Olivia Mae','FEMALE','09277187822','oliviamae@yahoo.com');
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,14 +166,14 @@ DROP TABLE IF EXISTS `garment_order`;
 CREATE TABLE `garment_order` (
   `orderID` int(11) NOT NULL,
   `garmentType` varchar(45) NOT NULL,
-  `gender` varchar(45) NOT NULL,
+  `gender` varchar(1) NOT NULL,
   `material` varchar(45) DEFAULT NULL,
   `special_instruction` varchar(45) DEFAULT NULL,
   `measurementID` int(11) NOT NULL,
   PRIMARY KEY (`orderID`),
   UNIQUE KEY `id_order_UNIQUE` (`orderID`),
-  KEY `garmentMeasure_idx` (`measurementID`),
-  CONSTRAINT `garmentMeasure` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `measurement_idx` (`measurementID`),
+  CONSTRAINT `measurement` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -198,6 +199,7 @@ CREATE TABLE `inventory` (
   `inventoryName` varchar(45) NOT NULL,
   `quantityInStock` varchar(45) NOT NULL,
   `description` varchar(45) DEFAULT NULL,
+  `unit` varchar(45) NOT NULL,
   PRIMARY KEY (`inventoryID`),
   UNIQUE KEY `inventoryID_UNIQUE` (`inventoryID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -228,8 +230,8 @@ CREATE TABLE `materials_used` (
   UNIQUE KEY `materialID_UNIQUE` (`materialID`),
   KEY `inventory_idx` (`inventoryID`),
   KEY `order_assigned_idx` (`itemID`),
-  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE
+  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE,
+  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -280,8 +282,8 @@ CREATE TABLE `order_item` (
   PRIMARY KEY (`orderID`),
   UNIQUE KEY `orderID_UNIQUE` (`orderID`),
   KEY `orderList_idx` (`orderListID`),
-  CONSTRAINT `orderList` FOREIGN KEY (`orderListID`) REFERENCES `order_list` (`orderListID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `orderList` FOREIGN KEY (`orderListID`) REFERENCES `order_list` (`orderListID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,6 +292,7 @@ CREATE TABLE `order_item` (
 
 LOCK TABLES `order_item` WRITE;
 /*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
+INSERT INTO `order_item` VALUES (9,100,12,80),(10,45,13,190);
 /*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -306,13 +309,15 @@ CREATE TABLE `order_list` (
   `dueDate` varchar(45) NOT NULL,
   `totalPrice` double NOT NULL,
   `balance` double NOT NULL,
-  `pickupLocation` varchar(45) DEFAULT NULL,
+  `pickupLocation` varchar(45) NOT NULL,
   `clientID` int(11) NOT NULL,
+  `status` varchar(45) NOT NULL,
+  `receiptNo` int(11) NOT NULL,
   PRIMARY KEY (`orderListID`),
   UNIQUE KEY `orderListID_UNIQUE` (`orderListID`),
   KEY `clients_idx` (`clientID`),
   CONSTRAINT `clients` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,6 +326,7 @@ CREATE TABLE `order_list` (
 
 LOCK TABLES `order_list` WRITE;
 /*!40000 ALTER TABLE `order_list` DISABLE KEYS */;
+INSERT INTO `order_list` VALUES (12,'2015-03-14','2015-03-14',80,0,'The Beacon 3714',1,'PENDING',1000),(13,'2015-03-14','2015-03-14',190,0,'The Beacon 3714',2,'PENDING',1001);
 /*!40000 ALTER TABLE `order_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -395,4 +401,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-11 13:50:35
+-- Dump completed on 2015-03-15  2:27:52

@@ -1,10 +1,12 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class GarmentOrder extends OrderItem{
 	private GarmentType garmentType;
 	private Gender gender;
 	private String material;
 	private String specialInstruction;
-	private TopMeasurement topMeasure;
-	private BottomMeasurement bottomMeasure;
+	private ArrayList<Measurement> measurements;
 	
 	public GarmentOrder(GarmentOrderBuilder builder) {
 		super(builder.qty, builder.price);
@@ -12,21 +14,26 @@ public class GarmentOrder extends OrderItem{
 		this.gender = builder.gender;
 		this.material = builder.material;
 		this.specialInstruction = builder.specialInstruction;
+		measurements = new ArrayList<>();
+		for(Measurement measure = builder.measure.next(); builder.measure.hasNext(); measure = builder.measure.next()) {
+			measurements.add(measure);
+		}
 	}
 	
+	/*Builder for GarmentOrder*/
 	public static class GarmentOrderBuilder extends OrderItem.OrderBuilder {
 		private final GarmentType garmentType;
 		private final Gender gender;
+		private final Iterator<Measurement> measure;
 		
 		private String material = null;
 		private String specialInstruction = null;
-		private TopMeasurement topMeasure = null;
-		private BottomMeasurement bottomMeasure = null;
 		
-		public GarmentOrderBuilder(int qty, double price, GarmentType garmentType, Gender gender) {
+		public GarmentOrderBuilder(int qty, double price, GarmentType garmentType, Gender gender, Iterator<Measurement> measure) {
 			super(qty, price);
 			this.garmentType = garmentType;
 			this.gender = gender;
+			this.measure = measure;
 		}
 		
 		public GarmentOrderBuilder material(String material) {
@@ -60,12 +67,22 @@ public class GarmentOrder extends OrderItem{
 		return this.specialInstruction;
 	}
 	
-	public TopMeasurement getTopMeasurement() {
-		return this.topMeasure;
+	public BottomMeasurement getBottomMeasurement() {
+		for(Measurement tempMeasure: measurements) {
+			if(tempMeasure instanceof BottomMeasurement)
+				return (BottomMeasurement) tempMeasure;
+		}
+		
+		return null;
 	}
 	
-	public BottomMeasurement getBottomMeasurement() {
-		return this.bottomMeasure;
+	public TopMeasurement getTopMeasurement() {
+		for(Measurement tempMeasure: measurements) {
+			if(tempMeasure instanceof TopMeasurement)
+				return (TopMeasurement) tempMeasure;
+		}
+		
+		return null;
 	}
 	
 	public void setGarmentType(GarmentType type) {
@@ -84,12 +101,22 @@ public class GarmentOrder extends OrderItem{
 		this.specialInstruction = instruction;
 	}
 	
-	public void setTopMeasurement(TopMeasurement measure) {
-		this.topMeasure = measure;
+	public boolean hasBottomMeasurement() {
+		for(Measurement tempMeasure: measurements) {
+			if(tempMeasure instanceof BottomMeasurement)
+				return true;
+		}
+		
+		return false;
 	}
 	
-	public void setBottomMeasurement(BottomMeasurement measure) {
-		this.bottomMeasure = measure;
+	public boolean hasTopMeasurement() {
+		for(Measurement tempMeasure: measurements) {
+			if(tempMeasure instanceof TopMeasurement)
+				return true;
+		}
+		
+		return false;
 	}
 }
  

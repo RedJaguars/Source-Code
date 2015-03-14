@@ -5,4 +5,12 @@
 */
 public enum GarmentType {
 	BOTTOM, TOP, OUTFIT;
+	
+	public static GarmentType getGarmentType(String type) {
+		switch(type) {
+		case "TOP": 	return GarmentType.TOP;
+		case "BOTTOM":	return  GarmentType.BOTTOM;
+		default:		return GarmentType.OUTFIT; 
+	}
+	}
 }

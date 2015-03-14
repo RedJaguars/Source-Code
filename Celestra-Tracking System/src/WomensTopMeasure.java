@@ -5,15 +5,35 @@ public class WomensTopMeasure extends TopMeasurement{
 	private double bustDistance;
 	private double backFigure;
 	
-	public WomensTopMeasure(double upperLength, double shoulder, double armLength, double wrist,
-			double armHole, double chest, double frontChest, double backChest,
-			double waist, double hips, double neckDeep, double frontFigure, double bustPoint,
-			double bustDistance, double backFigure) {
-		super(upperLength, shoulder, armLength, wrist, armHole, chest, frontChest, backChest, waist, hips, neckDeep);
-		this.frontFigure = frontFigure;
-		this.bustDistance = bustDistance;
-		this.bustPoint = bustPoint;
-		this.backFigure = backFigure;
+	public WomensTopMeasure(WomensTopMeasureBuilder builder) {
+		super(builder);
+		this.frontFigure = builder.frontFigure;
+		this.bustDistance = builder.bustDistance;
+		this.bustPoint = builder.bustPoint;
+		this.backFigure = builder.backFigure;
+	}
+	
+	public static class WomensTopMeasureBuilder extends TopMeasurement.TopMeasurementBuilder {
+		private double frontFigure;
+		private double bustPoint;
+		private double bustDistance;
+		private double backFigure;
+		
+		public WomensTopMeasureBuilder(double upperLength, double shoulder, double armLength, double wrist,
+				double armHole, double chest, double frontChest, double backChest,
+				double waist, double hips, double neckDeep, double frontFigure, double bustPoint,
+				double bustDistance, double backFigure) {
+			super(upperLength, shoulder, armLength, wrist, armHole, chest, frontChest, backChest, waist, hips, neckDeep);
+			this.frontFigure = frontFigure;
+			this.bustDistance = bustDistance;
+			this.bustPoint = bustPoint;
+			this.backFigure = backFigure;
+		}
+		
+		public WomensTopMeasure build() {
+			return new WomensTopMeasure(this);
+		}
+
 	}
 	
 	public double getBustDistance() {

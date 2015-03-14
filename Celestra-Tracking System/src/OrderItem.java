@@ -40,6 +40,10 @@ public class OrderItem {
 		return this.itemPrice;
 	}
 	
+	public OrderStatus getStatus() {
+		return this.state;
+	}
+	
 	public void setItemID(int id) {
 		this.itemID = id;
 	}
@@ -50,5 +54,9 @@ public class OrderItem {
 	
 	public void setPrice(double price) {
 		this.itemPrice = price;
+	}
+	
+	public void setStatus(OrderStatus status) {
+		this.state = status;
 	}
 }

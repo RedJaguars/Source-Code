@@ -2,6 +2,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class AccountModel extends Model{
@@ -63,6 +64,10 @@ public class AccountModel extends Model{
 			
 		}
 		
+	}
+	
+	public Iterator<Account> getModelList() {
+		return null;
 	}
 	
 }

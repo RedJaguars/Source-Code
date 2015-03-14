@@ -5,12 +5,13 @@ import java.util.Iterator;
 public abstract class Model implements Subject {
 	protected DatabaseConnection con;
 	protected ArrayList<Observer> controllers;
-	protected ArrayList<?> modelList;
+	protected ArrayList<Object> modelList;
 	protected static Model instance;
 	
 	protected Model() {
 		con = DatabaseConnection.getInstance();
 		controllers = new ArrayList<>();
+		modelList = new ArrayList<>();
 	}
 	
 	@Override

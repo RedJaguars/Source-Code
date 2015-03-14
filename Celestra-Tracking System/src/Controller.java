@@ -32,7 +32,7 @@ public abstract class Controller implements Subject, Observer {
 			try {
 				o.update(model.getModelList());
 			} catch(SQLException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			}
 		}
 	}

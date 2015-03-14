@@ -7,16 +7,20 @@ public class OrderController extends Controller{
 		super();
 		model = new OrderModel();
 		model.register(this);
+		new OrderConsoleView(this);
+		notifyObservers();
 	}
 	
 	public void addNewOrder(int receiptNo, Date dueDate, Date orderDate, double balance, 
-							String pickupLocation, Iterator<OrderItem> items, Client client) throws SQLException{
+							String pickupLocation, Iterator<OrderItem> items, Client client,
+							OrderStatus status) throws SQLException{
 		
-		OrderList orderToAdd = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, client)
+		OrderList orderToAdd = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, client, status)
 								.build();
-		for(OrderItem itemToAdd = items.next(); items.hasNext(); itemToAdd = items.next()) {
+		do {
+			OrderItem itemToAdd = items.next();
 			orderToAdd.addOrderItem(itemToAdd);
-		}
+		} while(items.hasNext());
 		((OrderModel)model).addNewOrder(orderToAdd);
 	}	
 	

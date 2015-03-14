@@ -8,16 +8,42 @@ public class BottomMeasurement extends Measurement{
 	private double buttom;
 	private double crotch;
 	
-	public BottomMeasurement(double bottomLength, double waist, double hips, double thigh, 
-							double knee, double buttom, double crotch) {
+	private BottomMeasurement(BottomMeasurementBuilder builder) {
 		super();
-		this.bottomLength = bottomLength;
-		this.waist = waist;
-		this.hips = hips;
-		this.thigh = thigh;
-		this.knee = knee;
-		this.buttom = buttom;
-		this.crotch = crotch;
+		this.bottomLength = builder.bottomLength;
+		this.waist = builder.waist;
+		this.hips = builder.hips;
+		this.thigh = builder.thigh;
+		this.knee = builder.knee;
+		this.buttom = builder.buttom;
+		this.crotch = builder.crotch;
+		this.measurementID = builder.id;
+	}
+	
+	public static class BottomMeasurementBuilder extends Measurement.MeasurementBuilder {
+		private double bottomLength;
+		private double waist;
+		private double hips;
+		private double thigh;
+		private double knee;
+		private double buttom;
+		private double crotch;
+		
+		public BottomMeasurementBuilder(double bottomLength, double waist, double hips, double thigh, 
+								double knee, double buttom, double crotch) {
+			super();
+			this.bottomLength = bottomLength;
+			this.waist = waist;
+			this.hips = hips;
+			this.thigh = thigh;
+			this.knee = knee;
+			this.buttom = buttom;
+			this.crotch = crotch;
+		}
+		
+		public BottomMeasurement build() {
+			return new BottomMeasurement(this);
+		}
 	}
 	
 	public double getBottomLength() {
