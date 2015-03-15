@@ -201,7 +201,8 @@ CREATE TABLE `inventory` (
   `description` varchar(45) DEFAULT NULL,
   `unit` varchar(45) NOT NULL,
   PRIMARY KEY (`inventoryID`),
-  UNIQUE KEY `inventoryID_UNIQUE` (`inventoryID`)
+  UNIQUE KEY `inventoryID_UNIQUE` (`inventoryID`),
+  UNIQUE KEY `inventoryName_UNIQUE` (`inventoryName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -403,4 +404,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-15  9:06:10
+-- Dump completed on 2015-03-15  9:37:57
