@@ -64,7 +64,7 @@ CREATE TABLE `alteration_order` (
 
 LOCK TABLES `alteration_order` WRITE;
 /*!40000 ALTER TABLE `alteration_order` DISABLE KEYS */;
-INSERT INTO `alteration_order` VALUES (9,'BOTTOM','I want it shorter than my short shorts'),(10,'BOTTOM','I want it shorter than my short shorts');
+INSERT INTO `alteration_order` VALUES (32,'SKIRT','I want it shorter than my short shorts');
 /*!40000 ALTER TABLE `alteration_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,15 +166,15 @@ DROP TABLE IF EXISTS `garment_order`;
 CREATE TABLE `garment_order` (
   `orderID` int(11) NOT NULL,
   `garmentType` varchar(45) NOT NULL,
-  `gender` varchar(1) NOT NULL,
+  `gender` varchar(45) NOT NULL,
   `material` varchar(45) DEFAULT NULL,
   `special_instruction` varchar(45) DEFAULT NULL,
   `measurementID` int(11) NOT NULL,
   PRIMARY KEY (`orderID`),
   UNIQUE KEY `id_order_UNIQUE` (`orderID`),
   KEY `measurement_idx` (`measurementID`),
-  CONSTRAINT `measurement` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `measurement` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON UPDATE CASCADE,
+  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -255,7 +255,7 @@ CREATE TABLE `measurements` (
   `measurementsID` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`measurementsID`),
   UNIQUE KEY `id_measurements_UNIQUE` (`measurementsID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -264,6 +264,7 @@ CREATE TABLE `measurements` (
 
 LOCK TABLES `measurements` WRITE;
 /*!40000 ALTER TABLE `measurements` DISABLE KEYS */;
+INSERT INTO `measurements` VALUES (4);
 /*!40000 ALTER TABLE `measurements` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +284,7 @@ CREATE TABLE `order_item` (
   UNIQUE KEY `orderID_UNIQUE` (`orderID`),
   KEY `orderList_idx` (`orderListID`),
   CONSTRAINT `orderList` FOREIGN KEY (`orderListID`) REFERENCES `order_list` (`orderListID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +293,7 @@ CREATE TABLE `order_item` (
 
 LOCK TABLES `order_item` WRITE;
 /*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
-INSERT INTO `order_item` VALUES (9,100,12,80),(10,45,13,190);
+INSERT INTO `order_item` VALUES (32,45,35,190);
 /*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,7 +318,7 @@ CREATE TABLE `order_list` (
   UNIQUE KEY `orderListID_UNIQUE` (`orderListID`),
   KEY `clients_idx` (`clientID`),
   CONSTRAINT `clients` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +327,7 @@ CREATE TABLE `order_list` (
 
 LOCK TABLES `order_list` WRITE;
 /*!40000 ALTER TABLE `order_list` DISABLE KEYS */;
-INSERT INTO `order_list` VALUES (12,'2015-03-14','2015-03-14',80,0,'The Beacon 3714',1,'PENDING',1000),(13,'2015-03-14','2015-03-14',190,0,'The Beacon 3714',2,'PENDING',1001);
+INSERT INTO `order_list` VALUES (35,'2015-03-15','2015-03-15',190,0,'The Beacon 3714',2,'PENDING',1001);
 /*!40000 ALTER TABLE `order_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -361,6 +362,7 @@ CREATE TABLE `top_measure` (
 
 LOCK TABLES `top_measure` WRITE;
 /*!40000 ALTER TABLE `top_measure` DISABLE KEYS */;
+INSERT INTO `top_measure` VALUES (4,40,20,38,12,12,30,30,45,40,6);
 /*!40000 ALTER TABLE `top_measure` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -401,4 +403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-15  2:27:52
+-- Dump completed on 2015-03-15  8:44:31
