@@ -197,7 +197,7 @@ DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory` (
   `inventoryID` int(11) NOT NULL AUTO_INCREMENT,
   `inventoryName` varchar(45) NOT NULL,
-  `quantityInStock` varchar(45) NOT NULL,
+  `quantityInStock` double NOT NULL,
   `description` varchar(45) DEFAULT NULL,
   `unit` varchar(45) NOT NULL,
   PRIMARY KEY (`inventoryID`),
@@ -230,8 +230,8 @@ CREATE TABLE `materials_used` (
   UNIQUE KEY `materialID_UNIQUE` (`materialID`),
   KEY `inventory_idx` (`inventoryID`),
   KEY `order_assigned_idx` (`itemID`),
-  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE,
-  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -277,7 +277,7 @@ DROP TABLE IF EXISTS `order_item`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `order_item` (
   `orderID` int(11) NOT NULL AUTO_INCREMENT,
-  `quantity` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '1',
   `orderListID` int(11) NOT NULL,
   `itemPrice` double NOT NULL,
   PRIMARY KEY (`orderID`),
@@ -317,7 +317,7 @@ CREATE TABLE `order_list` (
   PRIMARY KEY (`orderListID`),
   UNIQUE KEY `orderListID_UNIQUE` (`orderListID`),
   KEY `clients_idx` (`clientID`),
-  CONSTRAINT `clients` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `clients` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -381,7 +381,7 @@ CREATE TABLE `women_top_measure` (
   `backFigure` double NOT NULL,
   PRIMARY KEY (`measurementID`),
   UNIQUE KEY `measurementID_UNIQUE` (`measurementID`),
-  CONSTRAINT `womenMeasure` FOREIGN KEY (`measurementID`) REFERENCES `top_measure` (`measurementID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `womenMeasure` FOREIGN KEY (`measurementID`) REFERENCES `top_measure` (`measurementID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -403,4 +403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-15  8:44:31
+-- Dump completed on 2015-03-15  9:06:10
