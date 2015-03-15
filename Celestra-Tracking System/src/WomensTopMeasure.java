@@ -20,10 +20,10 @@ public class WomensTopMeasure extends TopMeasurement{
 		private double backFigure;
 		
 		public WomensTopMeasureBuilder(double upperLength, double shoulder, double armLength, double wrist,
-				double armHole, double chest, double frontChest, double backChest,
+				double armHole, double frontChest, double backChest,
 				double waist, double hips, double neckDeep, double frontFigure, double bustPoint,
 				double bustDistance, double backFigure) {
-			super(upperLength, shoulder, armLength, wrist, armHole, chest, frontChest, backChest, waist, hips, neckDeep);
+			super(upperLength, shoulder, armLength, wrist, armHole, frontChest, backChest, waist, hips, neckDeep);
 			this.frontFigure = frontFigure;
 			this.bustDistance = bustDistance;
 			this.bustPoint = bustPoint;

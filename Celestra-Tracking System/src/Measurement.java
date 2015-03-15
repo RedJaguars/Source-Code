@@ -2,7 +2,8 @@
 public abstract class Measurement {
 	protected int measurementID;
 	
-	protected Measurement() {
+	protected Measurement(MeasurementBuilder builder) {
+		this.measurementID = builder.id;
 	}
 	
 	protected abstract static class MeasurementBuilder {

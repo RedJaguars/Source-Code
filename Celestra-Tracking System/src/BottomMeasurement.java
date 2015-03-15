@@ -9,7 +9,7 @@ public class BottomMeasurement extends Measurement{
 	private double crotch;
 	
 	private BottomMeasurement(BottomMeasurementBuilder builder) {
-		super();
+		super(builder);
 		this.bottomLength = builder.bottomLength;
 		this.waist = builder.waist;
 		this.hips = builder.hips;

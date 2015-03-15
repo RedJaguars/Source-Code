@@ -1,22 +1,22 @@
 
 public class Alteration extends OrderItem{
-	private GarmentType garmentType;
+	private Garment garment;
 	private String specialInstruction;
 	
 	private Alteration(AlterationBuilder builder) {
 		super(builder.qty, builder.price);
-		this.garmentType = builder.garmentType;
+		this.garment = builder.garment;
 		this.specialInstruction = builder.instruction;
 		this.itemID = builder.orderID;
 	}
 	
 	public static class AlterationBuilder extends OrderItem.OrderBuilder{
-		private final GarmentType garmentType;
+		private final Garment garment;
 		private final String instruction;
 		
-		public AlterationBuilder(int qty, double price, GarmentType garmentType, String instruction) {
+		public AlterationBuilder(int qty, double price, Garment garment, String instruction) {
 			super(qty, price);
-			this.garmentType = garmentType;
+			this.garment = garment;
 			this.instruction = instruction;
 		}
 		
@@ -25,16 +25,16 @@ public class Alteration extends OrderItem{
 		}
 	}
 	
-	public GarmentType getGarmentType() {
-		return this.garmentType;
+	public Garment getGarment() {
+		return this.garment;
 	}
 	
 	public String getInstruction() {
 		return this.specialInstruction;
 	}
 	
-	public void setGarmentType(GarmentType type) {
-		this.garmentType = type;
+	public void setGarment(Garment type) {
+		this.garment = type;
 	}
 	
 	public void setInstruction(String instruction) {

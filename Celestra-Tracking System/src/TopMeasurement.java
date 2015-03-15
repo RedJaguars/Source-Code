@@ -5,7 +5,6 @@ public class TopMeasurement extends Measurement{
 	private double armLength;
 	private double wrist;
 	private double armHole;
-	private double chest;
 	private double frontChest;
 	private double backChest;
 	private double waist;
@@ -13,13 +12,12 @@ public class TopMeasurement extends Measurement{
 	private double neckDeep;
 	
 	public TopMeasurement(TopMeasurementBuilder builder) {
-		super();
+		super(builder);
 		this.upperLength = builder.upperLength;
 		this.shoulder = builder.shoulder;
 		this.armLength = builder.armLength;
 		this.wrist = builder.wrist;
 		this.armHole = builder.armHole;
-		this.chest = builder.chest;
 		this.frontChest = builder.frontChest;
 		this.backChest = builder.backChest;
 		this.waist = builder.waist;
@@ -33,7 +31,6 @@ public class TopMeasurement extends Measurement{
 		private double armLength;
 		private double wrist;
 		private double armHole;
-		private double chest;
 		private double frontChest;
 		private double backChest;
 		private double waist;
@@ -41,15 +38,13 @@ public class TopMeasurement extends Measurement{
 		private double neckDeep;
 		
 		public TopMeasurementBuilder(double upperLength, double shoulder, double armLength, double wrist,
-							double armHole, double chest, double frontChest, double backChest,
+							double armHole, double frontChest, double backChest,
 							double waist, double hips, double neckDeep) {
-			super();
 			this.upperLength = upperLength;
 			this.shoulder = shoulder;
 			this.armLength = armLength;
 			this.wrist = wrist;
 			this.armHole = armHole;
-			this.chest = chest;
 			this.frontChest = frontChest;
 			this.backChest = backChest;
 			this.waist = waist;
@@ -76,14 +71,6 @@ public class TopMeasurement extends Measurement{
 
 	public void setShoulder(double shoulder) {
 		this.shoulder = shoulder;
-	}
-
-	public double getChest() {
-		return chest;
-	}
-
-	public void setChest(double chest) {
-		this.chest = chest;
 	}
 	
 	public double getFrontChest() {

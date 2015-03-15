@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class GarmentOrder extends OrderItem{
-	private GarmentType garmentType;
+	private Garment garment;
 	private Gender gender;
 	private String material;
 	private String specialInstruction;
@@ -10,28 +10,28 @@ public class GarmentOrder extends OrderItem{
 	
 	public GarmentOrder(GarmentOrderBuilder builder) {
 		super(builder.qty, builder.price);
-		this.garmentType = builder.garmentType;
+		this.garment = builder.garment;
 		this.gender = builder.gender;
 		this.material = builder.material;
 		this.specialInstruction = builder.specialInstruction;
 		measurements = new ArrayList<>();
-		for(Measurement measure = builder.measure.next(); builder.measure.hasNext(); measure = builder.measure.next()) {
-			measurements.add(measure);
-		}
+		do {
+			measurements.add(builder.measure.next());
+		} while(builder.measure.hasNext());
 	}
 	
 	/*Builder for GarmentOrder*/
 	public static class GarmentOrderBuilder extends OrderItem.OrderBuilder {
-		private final GarmentType garmentType;
+		private final Garment garment;
 		private final Gender gender;
 		private final Iterator<Measurement> measure;
 		
 		private String material = null;
 		private String specialInstruction = null;
 		
-		public GarmentOrderBuilder(int qty, double price, GarmentType garmentType, Gender gender, Iterator<Measurement> measure) {
+		public GarmentOrderBuilder(int qty, double price, Garment garment, Gender gender, Iterator<Measurement> measure) {
 			super(qty, price);
-			this.garmentType = garmentType;
+			this.garment = garment;
 			this.gender = gender;
 			this.measure = measure;
 		}
@@ -51,8 +51,8 @@ public class GarmentOrder extends OrderItem{
 		}
 	}
 	
-	public GarmentType getGarmentType() {
-		return this.garmentType;
+	public Garment getGarment() {
+		return this.garment;
 	}
 	
 	public Gender getGender() {
@@ -85,8 +85,8 @@ public class GarmentOrder extends OrderItem{
 		return null;
 	}
 	
-	public void setGarmentType(GarmentType type) {
-		this.garmentType = type;
+	public void setGarmentType(Garment type) {
+		this.garment = type;
 	}
 	
 	public void setGender(Gender gender) {
