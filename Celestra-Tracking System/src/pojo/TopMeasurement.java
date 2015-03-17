@@ -1,4 +1,4 @@
-
+package pojo;
 public class TopMeasurement extends Measurement{
 	private double upperLength;
 	private double shoulder;

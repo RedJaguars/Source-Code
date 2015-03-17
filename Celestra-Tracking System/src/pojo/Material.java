@@ -1,4 +1,4 @@
-
+package pojo;
 public class Material {
 	private int inventoryID;
 	private String inventoryName;

@@ -1,4 +1,4 @@
-
+package pojo;
 public enum OrderStatus {
 	PENDING, FULFILLED, CANCELLED;
 	

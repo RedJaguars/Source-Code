@@ -1,3 +1,4 @@
+package pojo;
 
 public class OrderItem {
 	protected int itemID;

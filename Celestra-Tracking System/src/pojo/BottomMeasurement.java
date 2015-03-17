@@ -1,3 +1,4 @@
+package pojo;
 
 public class BottomMeasurement extends Measurement{
 	private double bottomLength;

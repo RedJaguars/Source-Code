@@ -1,4 +1,4 @@
-
+package pojo;
 public class WomensTopMeasure extends TopMeasurement{
 	private double frontFigure;
 	private double bustPoint;

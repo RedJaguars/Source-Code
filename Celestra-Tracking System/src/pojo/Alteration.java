@@ -1,4 +1,4 @@
-
+package pojo;
 public class Alteration extends OrderItem{
 	private Garment garment;
 	private String specialInstruction;

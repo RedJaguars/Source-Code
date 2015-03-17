@@ -1,4 +1,4 @@
-
+package pojo;
 public class Client {
 	private int clientID;
 	private String lastName;

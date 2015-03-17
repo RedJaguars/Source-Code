@@ -10,7 +10,7 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {
         String user = "root";
-        String pwd = "0553011725";
+        String pwd = "notTodayZurg";
         String url = "jdbc:mysql://localhost:3306/celestra_database";
 
         try {

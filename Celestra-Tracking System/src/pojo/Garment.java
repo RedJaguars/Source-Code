@@ -1,4 +1,4 @@
-
+package pojo;
 public enum Garment {
 	COAT(GarmentType.TOP),
 	POLO(GarmentType.TOP),

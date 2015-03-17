@@ -1,3 +1,4 @@
+package pojo;
 import javax.swing.ImageIcon;
 
 public class Embroidery extends OrderItem {

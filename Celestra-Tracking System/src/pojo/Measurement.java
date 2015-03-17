@@ -1,4 +1,4 @@
-
+package pojo;
 public abstract class Measurement {
 	protected int measurementID;
 	

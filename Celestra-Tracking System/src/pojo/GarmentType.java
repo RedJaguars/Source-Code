@@ -3,6 +3,7 @@
 	TOP:	Includes shirts, blouses, jackets, blazers, anything of the like;
 	OUTFIT:	A combination of Top and bottom, this includes items like Dresses and Scrubs
 */
+package pojo;
 public enum GarmentType {
 	BOTTOM, TOP, OUTFIT;
 	
