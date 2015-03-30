@@ -18,6 +18,7 @@ public class AddOrderPanel implements ActionListener {
     private JTextField txtAddress;
     private JTextField txtContact;
     private JTextField txtQuantity;
+    private JTextField price;
     
     private JComboBox cmbType;
     private JComboBox cmbMonth;
@@ -48,7 +49,7 @@ public class AddOrderPanel implements ActionListener {
         
         JLabel lblCustomerName = new JLabel("Customer Name:");
         lblCustomerName.setBounds(60, 50, 120, 20);
-        lblCustomerName.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblCustomerName.setFont(new Font("Tahoma", Font.PLAIN, 13));
         
         txtCustomerName = new JTextField();
         txtCustomerName.setBounds(170, 50, 380, 20);
@@ -130,8 +131,16 @@ public class AddOrderPanel implements ActionListener {
         String[] yearChoices = {"2015", "2016", "2017", "2018"};
         
         cmbYear = new JComboBox(yearChoices);
-        cmbYear.setBounds(340, 470, 50, 20);
+        cmbYear.setBounds(340, 470, 70, 20);
         cmbYear.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
+        JLabel priceLabel = new JLabel("Price:");
+        priceLabel.setBounds(60, 480, 70, 50);
+        priceLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        
+        price = new JTextField();
+        price.setBounds(120, 495, 50, 20);
+
         
         btnSubmit = new JButton("Submit");
         btnSubmit.setBounds(120, 530, 168, 20);
@@ -163,6 +172,8 @@ public class AddOrderPanel implements ActionListener {
         addOrderPanel.add(cmbMonth);
         addOrderPanel.add(cmbDay);
         addOrderPanel.add(cmbYear);
+        addOrderPanel.add(priceLabel);
+        addOrderPanel.add(price);
         addOrderPanel.add(btnSubmit);
         addOrderPanel.add(btnCancel);
         

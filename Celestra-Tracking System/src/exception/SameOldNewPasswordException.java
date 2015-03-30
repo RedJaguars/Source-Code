@@ -15,6 +15,6 @@ public class SameOldNewPasswordException extends Exception {
     }
     
     public String getMessage() {
-        return "New password must be different from the old one!";
+        return "Invalid: Current password is the same as the new password.";
     }
 }

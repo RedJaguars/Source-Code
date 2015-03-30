@@ -15,6 +15,6 @@ public class InvalidOldPasswordException extends Exception {
     }
     
     public String getMessage() {
-        return "Password does not match with the old one!";
+        return "Invalid: Password does not match with the old one.";
     }
 }

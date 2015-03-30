@@ -84,7 +84,8 @@ public class MainFrame extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        this.setTitle("Celestra Tracking");
+
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = new Dimension(800, 600);
         this.setBounds(ss.width/2 - frameSize.width/2, 
@@ -92,7 +93,6 @@ public class MainFrame extends JFrame implements ActionListener {
                         frameSize.width, frameSize.height);
         
         btnManageOrder.doClick();
-        this.setDefaultCloseOperation(3);
     }
     
     public void actionPerformed(ActionEvent arg0) {
@@ -110,7 +110,9 @@ public class MainFrame extends JFrame implements ActionListener {
             secondPanel.removeAll();
             repaint();
         } else if(arg0.getSource() == this.btnChangePassword){
-            new ChangePasswordView();
+            secondPanel.removeAll();
+            0
+        	//new ChangePasswordView();
         } else if(arg0.getSource() == this.btnExit){
             System.out.println("exit");
         }

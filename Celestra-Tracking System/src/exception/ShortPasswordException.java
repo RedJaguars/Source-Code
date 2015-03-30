@@ -6,6 +6,6 @@ public class ShortPasswordException extends Exception {
     }
     
     public String getMessage() {
-        return "Password too short! Please make it at least a minimum of 6 Characters";
+        return "Invalid: The new password must have at least 6 characters.";
     }
 }

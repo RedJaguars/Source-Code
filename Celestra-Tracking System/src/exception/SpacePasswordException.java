@@ -6,6 +6,6 @@ public class SpacePasswordException extends Exception {
     }
     
     public String getMessage() {
-        return "Please check the password format. The password cannot contain a space.";
+        return "Invalid: The password cannot contain a space.";
     }
 }

@@ -26,7 +26,7 @@ public class OrderItemController extends Controller {
             ResultSet rs = statement.executeQuery();
             try {
                 while(rs.next()) {
-                    OrderItemModel orderItem = new OrderItemModel();
+                    OrderItemModel orderItem = new OrderItemModel();	
                     orderItem.getItem(OrderItemModel.ORDER_ID).setValue(rs.getInt(1));
                     orderItem.getItem(OrderItemModel.QUANTITY).setValue(rs.getInt(2));
                     orderItem.getItem(OrderItemModel.ORDER_LIST_ID).setValue(rs.getInt(3));

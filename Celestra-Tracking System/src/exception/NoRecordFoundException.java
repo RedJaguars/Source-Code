@@ -15,6 +15,6 @@ public class NoRecordFoundException extends Exception {
     }
     
     public String getMessage() {
-        return "No record found!";
+        return "Invalid: No record found.";
     }
 }

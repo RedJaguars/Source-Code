@@ -15,6 +15,6 @@ public class ConfirmPasswordException extends Exception {
     }
     
     public String getMessage() {
-        return "Password does not match!";
+        return "Invalid: Password does not match.";
     }
 }
