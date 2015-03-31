@@ -3,7 +3,9 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import objects.Material;
 import objects.Unit;
@@ -41,5 +43,21 @@ public class InventoryModel extends Model {
 		
 		return modelList.iterator();
 	}
+	
+	public String getData(int row) throws SQLException {
+		Iterator<?> inventoryItemList = getModelList();
+		List<Material> list = new ArrayList<Material>();
+		int size = 0;
+		while(inventoryItemList.hasNext()) {
+			list.add((Material) inventoryItemList.next());
+			size++;
+		}
+        Material material = list.get(row);
+        
+        return "Inventory Name: " + material.getInventoryName() + '\n' +
+               "Quantity in Stock: " + material.getQuantityInStock() + '\n' +
+               "Description: " + material.getDescription() + '\n' +
+               "Unit: " + material.getUnit();
+    } 
 
 }

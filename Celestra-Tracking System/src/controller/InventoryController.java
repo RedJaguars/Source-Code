@@ -22,4 +22,8 @@ public class InventoryController extends Controller {
 	public Iterator<?> retrieveInventoryList() throws SQLException {
 		return ((InventoryModel)model).getModelList();
 	}
+	
+	public String getData(int row) throws SQLException {
+		return ((InventoryModel)model).getData(row);
+	}
 }

@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -31,7 +32,7 @@ import objects.Material;
 import view.OrderFrame.doActionListener;
 
 public class ItemFrame extends JFrame{
-	private JTextField textField;
+	private JTextArea txtAreaItemDetails;
 	private JTextField textField_1;
 	private JTextField textField_3;
 	
@@ -98,10 +99,11 @@ public class ItemFrame extends JFrame{
 		lblNewLabel.setBounds(53, 57, 115, 16);
 		panel_1.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(53, 500, 460, 183);
-		panel_1.add(textField);
-		textField.setColumns(10);
+		txtAreaItemDetails = new JTextArea();
+		txtAreaItemDetails.setBounds(53, 500, 460, 183);
+		panel_1.add(txtAreaItemDetails);
+		txtAreaItemDetails.setColumns(10);
+		txtAreaItemDetails.setEditable(false);
 		
 		JLabel lblOrderDetails = new JLabel("Item Details");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -117,7 +119,6 @@ public class ItemFrame extends JFrame{
 		panel_1.add(btnReduceQuantity);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(Color.RED);
 		panel_2.setBounds(57, 126, 847, 302);
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
@@ -214,7 +215,12 @@ public class ItemFrame extends JFrame{
                 if(e.getClickCount() == 1) {
                     JTable target = (JTable)e.getSource();
                     int row = target.getSelectedRow();
-                    //mainFrame.setInventoryDetails(inventoryController.getData(row));
+                    try {
+						txtAreaItemDetails.setText(inventoryController.getData(row));
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
             }
         });
