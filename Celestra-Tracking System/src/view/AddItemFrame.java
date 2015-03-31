@@ -12,18 +12,24 @@ import java.awt.Toolkit;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import controller.InventoryController;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class AddItemFrame extends JFrame{
-	private JTextField textField;
+	private JTextArea txtAreaItemName;
 	private JTextArea txtAreaDescription;
-	private JTextField textField_2;
+	private JTextArea txtAreaQuantity;
 	
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
+	private InventoryController inventoryController;
+	
 	public AddItemFrame() {
+		inventoryController = new InventoryController();
+		
 		getContentPane().setLayout(null);
 		
 		JLabel lblAddNewItem = new JLabel("Add New Item");
@@ -31,25 +37,25 @@ public class AddItemFrame extends JFrame{
 		lblAddNewItem.setBounds(25, 53, 142, 16);
 		getContentPane().add(lblAddNewItem);
 		
-		textField = new JTextField();
-		textField.setBounds(155, 112, 241, 22);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		txtAreaItemName = new JTextArea();
+		txtAreaItemName.setBounds(155, 112, 241, 22);
+		getContentPane().add(txtAreaItemName);
+		txtAreaItemName.setColumns(10);
 		
 		txtAreaDescription = new JTextArea();
 		txtAreaDescription.setColumns(10);
 		txtAreaDescription.setBounds(155, 174, 241, 203);
 		getContentPane().add(txtAreaDescription);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(155, 417, 241, 22);
-		getContentPane().add(textField_2);
+		txtAreaQuantity = new JTextArea();
+		txtAreaQuantity.setColumns(10);
+		txtAreaQuantity.setBounds(155, 417, 241, 22);
+		getContentPane().add(txtAreaQuantity);
 		
-		JLabel lblNewLabel = new JLabel("Item Name:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(25, 115, 103, 16);
-		getContentPane().add(lblNewLabel);
+		JLabel lblItemName = new JLabel("Item Name:");
+		lblItemName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblItemName.setBounds(25, 115, 103, 16);
+		getContentPane().add(lblItemName);
 		
 		JLabel lblDescription = new JLabel("Description:");
 		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -65,7 +71,6 @@ public class AddItemFrame extends JFrame{
 		btnSubmit.addActionListener(new doActionListener());
 		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnSubmit.setBounds(51, 535, 149, 36);
-		btnSubmit.addActionListener(new doActionListener());
 		getContentPane().add(btnSubmit);
 		
 		btnCancel = new JButton("Cancel");
@@ -91,6 +96,16 @@ public class AddItemFrame extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnSubmit) {
 				//also checks if inventory was successfully added into the database
+				try {
+					inventoryController.addInventory(txtAreaItemName.getText(), Double.parseDouble(txtAreaQuantity.getText()), txtAreaDescription.getText(), "INCH");
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				dispose();
 			} else if(e.getSource() == btnCancel) {
 				dispose();
