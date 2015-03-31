@@ -24,7 +24,7 @@ public class ChangePassword extends JFrame{
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
-	AccountController accountController;
+	private AccountController accountController;
 	
 	public ChangePassword() {
 		accountController = new AccountController();
@@ -100,14 +100,16 @@ public class ChangePassword extends JFrame{
 				String confirmNewPass = textField_2.getText();
 				try {
 					accountController.changePassword(newPass, oldPass, confirmNewPass);
+					new OrderFrame();
+					dispose();
 				} catch (Exception e1) {
 					//System.out.println("Caught");
 					 e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, e1.getMessage());
-					
+					textField.setText("");
+					textField_1.setText("");
+					textField_2.setText("");
 				}
-				new OrderFrame();
-				dispose();
 			} else if(e.getSource() == btnCancel) {
 				dispose();
 			} 
