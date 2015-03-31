@@ -20,7 +20,6 @@ public class AccountModel extends Model{
 	private ArrayList<Account> accountList;
 	private ResultSet theResultSet;
 	private PreparedStatement theStatement;
-	private DatabaseConnection connection;
 	
 	public AccountModel() {
 		super();
@@ -30,7 +29,6 @@ public class AccountModel extends Model{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection = connection.getInstance();
 	
 	}
 	
@@ -38,7 +36,7 @@ public class AccountModel extends Model{
 		String query;
 		query = "SELECT * FROM account";
 		try {
-			theStatement = connection.getConnection().prepareStatement(query);
+			theStatement = con.getConnection().prepareStatement(query);
 			theResultSet = theStatement.executeQuery();
 			while(theResultSet.next()){
 				if(theResultSet.getInt("accountID") != user){
@@ -60,7 +58,7 @@ public class AccountModel extends Model{
 		accountList.add(newAccount);
 		String query = "INSERT INTO account VALUES(?,?)";
 		try{
-			theStatement = connection.getConnection().prepareStatement(query);
+			theStatement = con.getConnection().prepareStatement(query);
 			theStatement.setInt(1, newAccount.getAccountID());
 			theStatement.setString(2, newAccount.getPassword());
 		}catch(SQLException e){
@@ -73,7 +71,7 @@ public class AccountModel extends Model{
 		String query = "SELECT * FROM account";
 		Account account;
 		try {
-			theStatement = connection.getConnection().prepareStatement(query);
+			theStatement = con.getConnection().prepareStatement(query);
 			theResultSet = theStatement.executeQuery();
 			while(theResultSet.next()){
 				account = new Account(Integer.parseInt(theResultSet.getString("accountID")), theResultSet.getString("password"));
@@ -95,7 +93,7 @@ public class AccountModel extends Model{
 		String query;
 		query = "SELECT password FROM account WHERE accountID = 1";
 		try {
-			theStatement = connection.getConnection().prepareStatement(query);
+			theStatement = con.getConnection().prepareStatement(query);
 			theResultSet = theStatement.executeQuery();
 			while(theResultSet.next()){
 				oldPasswordFromDB = theResultSet.getString("password");
@@ -130,7 +128,7 @@ public class AccountModel extends Model{
 		
 		query = "UPDATE account SET password=?  WHERE accountID=?";
 		try{
-			theStatement = connection.getConnection().prepareStatement(query);
+			theStatement = con.getConnection().prepareStatement(query);
 			theStatement.setString(1, newPassword);
 			theStatement.setInt(2, 1);
 			theStatement.execute();
