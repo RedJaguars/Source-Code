@@ -10,17 +10,24 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import controller.AccountController;
+
 public class ChangePassword extends JFrame{
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JPasswordField textField;
+	private JPasswordField textField_1;
+	private JPasswordField textField_2;
 	
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
+	AccountController accountController;
+	
 	public ChangePassword() {
+		accountController = new AccountController();
 		getContentPane().setLayout(null);
 		
 		JLabel lblAddNewItem = new JLabel("Change Password");
@@ -28,17 +35,17 @@ public class ChangePassword extends JFrame{
 		lblAddNewItem.setBounds(25, 53, 189, 36);
 		getContentPane().add(lblAddNewItem);
 		
-		textField = new JTextField();
+		textField = new JPasswordField();//current
 		textField.setBounds(189, 113, 218, 22);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
+		textField_1 = new JPasswordField();//new
 		textField_1.setColumns(10);
 		textField_1.setBounds(189, 172, 218, 22);
 		getContentPane().add(textField_1);
 		
-		textField_2 = new JTextField();
+		textField_2 = new JPasswordField();//confirm
 		textField_2.setColumns(10);
 		textField_2.setBounds(189, 245, 218, 22);
 		getContentPane().add(textField_2);
@@ -87,6 +94,19 @@ public class ChangePassword extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnSubmit) {
 				//checks if successfully altered
+				String newPass = textField_1.getText();
+				String oldPass = textField.getText();
+				System.out.println(oldPass);
+				String confirmNewPass = textField_2.getText();
+				try {
+					accountController.changePassword(newPass, oldPass, confirmNewPass);
+				} catch (Exception e1) {
+					//System.out.println("Caught");
+					 e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+					
+				}
+				new OrderFrame();
 				dispose();
 			} else if(e.getSource() == btnCancel) {
 				dispose();

@@ -10,14 +10,20 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import controller.AccountController;
+import model.AccountModel;
+
 public class Login extends JFrame {
-	private JTextField textField;
+	private JPasswordField textField;
 	private JButton btnCancel;
 	private JButton btnSubmit;
-	
+	private AccountController accountController;
 	public Login() {
+		accountController = new AccountController();
 		getContentPane().setLayout(null);
 		
 		JLabel lblAddNewItem = new JLabel("Login");
@@ -25,7 +31,7 @@ public class Login extends JFrame {
 		lblAddNewItem.setBounds(25, 54, 66, 36);
 		getContentPane().add(lblAddNewItem);
 		
-		textField = new JTextField();
+		textField = new JPasswordField();
 		textField.setBounds(189, 197, 218, 22);
 		getContentPane().add(textField);
 		textField.setColumns(10);
@@ -67,7 +73,14 @@ public class Login extends JFrame {
 				dispose();
 			} else if(e.getSource() == btnSubmit) {
 				//database checking
-				new OrderFrame();
+				String password = textField.getText();
+				try {
+					if(accountController.login(1, password))
+						new OrderFrame();
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+					e1.printStackTrace();
+				}
 				dispose();
 			}
 		}

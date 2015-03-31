@@ -21,6 +21,8 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JDesktopPane;
 
+import controller.AccountController;
+
 public class OrderFrame extends JFrame{
 	private JTextField textField;
 	
@@ -30,8 +32,10 @@ public class OrderFrame extends JFrame{
 	private JButton btnChangePassword;
 	private JButton btnChangeStatus;
 	private JButton btnExit;
+	private AccountController accountContoller;
 	
 	public OrderFrame() {
+		accountContoller = new AccountController();
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();

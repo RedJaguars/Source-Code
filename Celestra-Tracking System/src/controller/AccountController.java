@@ -7,8 +7,11 @@ public class AccountController extends Controller {
 		 model = new AccountModel();
 	 }
 	 
-	 public void changePassword(int id, String newPass) {
-		 ((AccountModel) model).changePassword(newPass, id);
+	 public void changePassword(String newPass, String oldPassword, String confirmNewPassword) throws Exception{
+		 ((AccountModel) model).changePassword(newPass, oldPassword, confirmNewPassword);
+	 }
+	 public boolean login(int user, String password) throws Exception{
+		return ((AccountModel) model).login(user, password);
 	 }
 	
 }
