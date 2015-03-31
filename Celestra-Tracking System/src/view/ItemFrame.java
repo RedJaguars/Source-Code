@@ -8,13 +8,26 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
+import controller.InventoryController;
+import objects.Material;
 import view.OrderFrame.doActionListener;
 
 public class ItemFrame extends JFrame{
@@ -29,7 +42,14 @@ public class ItemFrame extends JFrame{
 	private JButton btnAddNewItem;
 	private JButton btnExit;
 	
+	private JTable tableInventory;
+	private JScrollPane inventoryPane;
+	
+	private InventoryController inventoryController;
+	
 	public ItemFrame() {
+		inventoryController = new InventoryController();
+		
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -97,10 +117,25 @@ public class ItemFrame extends JFrame{
 		panel_1.add(btnReduceQuantity);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(Color.WHITE);
+		panel_2.setBackground(Color.RED);
 		panel_2.setBounds(57, 126, 847, 302);
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		tableInventory = new JTable();
+		tableInventory.setBounds(57, 126, 847, 302);
+		if(inventoryPane != null) {
+            panel_2.remove(inventoryPane);
+        }
+        try {
+			tableInventory = createTable(inventoryController.retrieveInventoryList());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        tableInventory.setBounds(15, 50, 555, 240);
+        inventoryPane = new JScrollPane(tableInventory);
+        panel_2.add(inventoryPane);
 		
 		JButton button_4 = new JButton("Submit");
 		button_4.setBounds(851, 619, 88, 34);
@@ -164,4 +199,45 @@ public class ItemFrame extends JFrame{
 			
 		}
 	}
+	
+	public JTable createTable(Iterator<?> inventoryItemList) {
+		List<Material> list = new ArrayList<Material>();
+		int size = 0;
+		while(inventoryItemList.hasNext()) {
+			list.add((Material) inventoryItemList.next());
+			size++;
+		}
+		
+        JTable inventoryListTable = new UneditableJTable(size, 4);
+        inventoryListTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 1) {
+                    JTable target = (JTable)e.getSource();
+                    int row = target.getSelectedRow();
+                    //mainFrame.setInventoryDetails(inventoryController.getData(row));
+                }
+            }
+        });
+        TableColumnModel columnModel = inventoryListTable.getColumnModel();
+        TableModel model = inventoryListTable.getModel();
+        
+        String header[] = {"Inventory Name", "Quantity In Stock", "Description", "Unit"};
+        
+        for(int i = 0; i < inventoryListTable.getColumnCount(); i++) {  
+            TableColumn column1 = inventoryListTable.getTableHeader().getColumnModel().getColumn(i);  
+            column1.setHeaderValue(header[i]);
+            columnModel.getColumn(i).setWidth(111);
+        }   
+        
+        Material inventoryItem = new Material();
+        for(int i = 0; i < list.size(); i++) {
+            inventoryItem = list.get(i);
+            
+            model.setValueAt(inventoryItem.getInventoryName(), i, 0);
+            model.setValueAt(inventoryItem.getQuantityInStock(), i, 1);
+            model.setValueAt(inventoryItem.getDescription(), i, 2);
+            model.setValueAt(inventoryItem.getUnit(), i, 3);
+        }
+        return inventoryListTable;
+    }
 }

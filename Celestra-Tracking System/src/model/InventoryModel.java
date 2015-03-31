@@ -24,6 +24,8 @@ public class InventoryModel extends Model {
 		ps.setString(3, mat.getDescription());
 		ps.setString(4, mat.getUnit().toString());
 		ps.executeUpdate();
+		
+		System.out.println("Successfully Added.");
 	}
 	
 	@Override
