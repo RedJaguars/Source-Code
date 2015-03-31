@@ -115,7 +115,7 @@ CREATE TABLE `clients` (
   `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`clientID`),
   UNIQUE KEY `id_client_UNIQUE` (`clientID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +124,7 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES (1,'Cardano','Marc Daniel','MALE','09983413882','marccardano@gmail.com'),(2,'Lozano','Rafael ','MALE','09431322882','rafaellozano@gmail.com'),(3,'Marasigan','Olivia Mae','FEMALE','09277187822','oliviamae@yahoo.com');
+INSERT INTO `clients` VALUES (1,'Cardano','Marc Daniel','MALE','09983413882','marccardano@gmail.com'),(2,'Lozano','Rafael ','MALE','09431322882','rafaellozano@gmail.com'),(3,'Marasigan','Olivia Mae','FEMALE','09277187822','oliviamae@yahoo.com'),(4,'Miko Garcia','Miko Garcia','MALE','09277187822','example@gmail.com'),(5,'Miko','Miko','MALE','09277187822','example@gmail.com'),(6,'Miko','Miko','MALE','09277187822','example@gmail.com'),(7,'','','FEMALE','','example@gmail.com');
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,8 +173,8 @@ CREATE TABLE `garment_order` (
   PRIMARY KEY (`orderID`),
   UNIQUE KEY `id_order_UNIQUE` (`orderID`),
   KEY `measurement_idx` (`measurementID`),
-  CONSTRAINT `measurement` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON UPDATE CASCADE,
-  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `garmentOrder` FOREIGN KEY (`orderID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `measurement` FOREIGN KEY (`measurementID`) REFERENCES `measurements` (`measurementsID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -231,8 +231,8 @@ CREATE TABLE `materials_used` (
   UNIQUE KEY `materialID_UNIQUE` (`materialID`),
   KEY `inventory_idx` (`inventoryID`),
   KEY `order_assigned_idx` (`itemID`),
-  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE
+  CONSTRAINT `inventory` FOREIGN KEY (`inventoryID`) REFERENCES `inventory` (`inventoryID`) ON UPDATE CASCADE,
+  CONSTRAINT `order_assigned` FOREIGN KEY (`itemID`) REFERENCES `order_item` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -285,7 +285,7 @@ CREATE TABLE `order_item` (
   UNIQUE KEY `orderID_UNIQUE` (`orderID`),
   KEY `orderList_idx` (`orderListID`),
   CONSTRAINT `orderList` FOREIGN KEY (`orderListID`) REFERENCES `order_list` (`orderListID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -294,7 +294,7 @@ CREATE TABLE `order_item` (
 
 LOCK TABLES `order_item` WRITE;
 /*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
-INSERT INTO `order_item` VALUES (32,45,35,190);
+INSERT INTO `order_item` VALUES (32,45,35,190),(33,5000,36,100),(34,12,38,100),(35,1,39,100);
 /*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -307,8 +307,8 @@ DROP TABLE IF EXISTS `order_list`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `order_list` (
   `orderListID` int(11) NOT NULL AUTO_INCREMENT,
-  `orderDate` varchar(45) NOT NULL,
-  `dueDate` varchar(45) NOT NULL,
+  `orderDate` date NOT NULL,
+  `dueDate` date NOT NULL,
   `totalPrice` double NOT NULL,
   `balance` double NOT NULL,
   `pickupLocation` varchar(45) NOT NULL,
@@ -319,7 +319,7 @@ CREATE TABLE `order_list` (
   UNIQUE KEY `orderListID_UNIQUE` (`orderListID`),
   KEY `clients_idx` (`clientID`),
   CONSTRAINT `clients` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,7 +328,7 @@ CREATE TABLE `order_list` (
 
 LOCK TABLES `order_list` WRITE;
 /*!40000 ALTER TABLE `order_list` DISABLE KEYS */;
-INSERT INTO `order_list` VALUES (35,'2015-03-15','2015-03-15',190,0,'The Beacon 3714',2,'PENDING',1001);
+INSERT INTO `order_list` VALUES (35,'2015-03-15','2015-03-15',190,0,'The Beacon 3714',2,'PENDING',1001),(36,'2015-03-18','2015-01-01',100,0,'oaisdncoie rcoirev',4,'PENDING',100),(37,'2015-03-27','2015-01-01',100,0,'32A Opal St Greenheight Village',5,'PENDING',100),(38,'2015-03-27','2015-01-01',100,0,'1231o23ifn13f',6,'PENDING',100),(39,'2015-03-30','2015-01-01',100,0,'',7,'PENDING',100);
 /*!40000 ALTER TABLE `order_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,4 +404,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-15  9:37:57
+-- Dump completed on 2015-03-31 22:14:53
