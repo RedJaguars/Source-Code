@@ -2,6 +2,9 @@ package view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -13,18 +16,34 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.JDesktopPane;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
-import controller.AccountController;
+import objects.Material;
+import objects.OrderItem;
+import objects.OrderList;
+import objects.OrderList.OrderListBuilder;
+import controller.OrderController;
 
 public class OrderFrame extends JFrame{
-	private JTextField textField;
+	private JTextArea txtAreaOrderDetails;
+	
+	private JTable tableOrder;
+	private JScrollPane orderPane;
 	
 	private JButton btnManageOrder;
 	private JButton btnManageItems;
@@ -32,10 +51,12 @@ public class OrderFrame extends JFrame{
 	private JButton btnChangePassword;
 	private JButton btnChangeStatus;
 	private JButton btnExit;
-	private AccountController accountContoller;
+	
+	private OrderController orderController;
 	
 	public OrderFrame() {
-		accountContoller = new AccountController();
+		orderController = new OrderController();
+		
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -87,10 +108,11 @@ public class OrderFrame extends JFrame{
 		lblNewLabel.setBounds(53, 57, 115, 16);
 		panel_1.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(53, 500, 557, 183);
-		panel_1.add(textField);
-		textField.setColumns(10);
+		txtAreaOrderDetails = new JTextArea();
+		txtAreaOrderDetails.setBounds(53, 500, 557, 183);
+		panel_1.add(txtAreaOrderDetails);
+		txtAreaOrderDetails.setColumns(10);
+		txtAreaOrderDetails.setEditable(false);
 		
 		JLabel lblOrderDetails = new JLabel("Order Details");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -115,6 +137,21 @@ public class OrderFrame extends JFrame{
 		panel_2.setBounds(57, 126, 847, 302);
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		tableOrder = new JTable();
+		tableOrder.setBounds(57, 126, 847, 302);
+		if(orderPane != null) {
+            panel_2.remove(orderPane);
+        }
+        try {
+        	tableOrder = createTable(orderController.retrieveOrderList());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        tableOrder.setBounds(15, 50, 555, 240);
+        orderPane = new JScrollPane(tableOrder);
+        panel_2.add(orderPane);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenHeight = screenSize.height;
@@ -150,5 +187,52 @@ public class OrderFrame extends JFrame{
 			
 		}
 	}
-
+	
+	public JTable createTable(Iterator<?> orderList) {
+		int size = 0;
+		List<OrderList> list = new ArrayList<OrderList>();
+		while(orderList.hasNext()) {
+			list.add((OrderList) orderList.next());
+			size++;
+		}
+		
+		JTable orderItemListTable = new UneditableJTable(size, 7);
+		orderItemListTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 1) {
+					JTable target = (JTable)e.getSource();
+					int row = target.getSelectedRow();
+					try {
+						txtAreaOrderDetails.setText(orderController.getData(row));
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		TableColumnModel columnModel = orderItemListTable.getColumnModel();
+		TableModel model = orderItemListTable.getModel();
+		
+		String[] header = {"Receipt No.", "Due Date", "Order Date", "Balance", "Pickup Location", "Client", "Status"};
+		
+		for(int i = 0; i < orderItemListTable.getColumnCount(); i++) {
+			TableColumn column = orderItemListTable.getTableHeader().getColumnModel().getColumn(i);
+			column.setHeaderValue(header[i]);
+			columnModel.getColumn(i).setWidth(111);
+		}
+		
+		for(int i = 0; i < list.size(); i++) {
+			model.setValueAt(list.get(i).getReceiptNo(), i, 0);
+			model.setValueAt(list.get(i).getDueDate(), i, 1);
+			model.setValueAt(list.get(i).getOrderDate(), i, 2);
+			model.setValueAt(list.get(i).getBalance(), i, 3);
+			model.setValueAt(list.get(i).getPickupLocation(), i, 4);
+			model.setValueAt(list.get(i).getClient().getLastName(), i, 5);
+			model.setValueAt(list.get(i).getStatus(), i, 6);
+		}
+		
+		return orderItemListTable;
+	}
 }

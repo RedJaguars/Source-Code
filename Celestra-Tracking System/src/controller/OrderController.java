@@ -7,6 +7,7 @@ import objects.Client;
 import objects.OrderItem;
 import objects.OrderList;
 import objects.OrderStatus;
+import model.InventoryModel;
 import model.OrderModel;
 
 public class OrderController extends Controller{	
@@ -36,5 +37,13 @@ public class OrderController extends Controller{
 	
 	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
 		((OrderModel)model).modifyOrder(original, modified);
+	}
+	
+	public Iterator<?> retrieveOrderList() throws SQLException {
+		return ((OrderModel)model).getModelList();
+	}
+	
+	public String getData(int row) throws SQLException {
+		return ((OrderModel)model).getData(row);
 	}
 }

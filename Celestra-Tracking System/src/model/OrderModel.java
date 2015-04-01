@@ -3,6 +3,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.sql.Date;
 import java.util.Iterator;
 
@@ -16,6 +17,7 @@ import objects.EmbroideryType;
 import objects.Garment;
 import objects.GarmentOrder;
 import objects.Gender;
+import objects.Material;
 import objects.Measurement;
 import objects.OrderItem;
 import objects.OrderList;
@@ -358,4 +360,23 @@ public class OrderModel extends Model{
 		
 		return modelList.iterator();
 	}
+	
+	public String getData(int row) throws SQLException {
+		Iterator<?> orderList = getModelList();
+		List<OrderList> list = new ArrayList<OrderList>();
+		int size = 0;
+		while(orderList.hasNext()) {
+			list.add((OrderList) orderList.next());
+			size++;
+		}
+        OrderList orderList1 = list.get(row);
+        
+        return "Receipt No.: " + orderList1.getReceiptNo() + '\n' +
+               "Due Date: " + orderList1.getDueDate() + '\n' +
+               "Order Date: " + orderList1.getOrderDate() + '\n' +
+               "Balance: " + orderList1.getBalance() + '\n' +
+               "Client: " + orderList1.getClient().getFirstName() + orderList1.getClient().getLastName() + '\n' +
+               "Pickup Location: " + orderList1.getPickupLocation() + '\n' +
+               "Status: " + orderList1.getStatus();
+    } 
 }
