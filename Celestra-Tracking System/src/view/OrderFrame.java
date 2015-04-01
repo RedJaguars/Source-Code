@@ -40,8 +40,9 @@ import objects.OrderList.OrderListBuilder;
 import controller.OrderController;
 
 public class OrderFrame extends JFrame{
-	private JTextArea txtAreaOrderDetails;
+	private int selectedRow;
 	
+	private JTextArea txtAreaOrderDetails;
 	private JTable tableOrder;
 	private JScrollPane orderPane;
 	
@@ -122,6 +123,7 @@ public class OrderFrame extends JFrame{
 		btnChangeStatus = new JButton("Change Status");
 		btnChangeStatus.addActionListener(new doActionListener());
 		btnChangeStatus.setBounds(704, 500, 200, 50);
+		btnChangeStatus.setEnabled(false);
 		panel_1.add(btnChangeStatus);
 		
 		JButton button_6 = new JButton("Cancel Order");
@@ -179,7 +181,7 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnChangePassword) {
 				new ChangePassword();
 			} else if(e.getSource() == btnChangeStatus) {
-				new ChangeOrderStatus();
+				new ChangeOrderStatus(selectedRow);
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
@@ -201,9 +203,10 @@ public class OrderFrame extends JFrame{
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 1) {
 					JTable target = (JTable)e.getSource();
-					int row = target.getSelectedRow();
+					selectedRow = target.getSelectedRow();
 					try {
-						txtAreaOrderDetails.setText(orderController.getData(row));
+						txtAreaOrderDetails.setText(orderController.getData(selectedRow));
+						btnChangeStatus.setEnabled(true);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

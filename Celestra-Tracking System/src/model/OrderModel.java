@@ -362,14 +362,7 @@ public class OrderModel extends Model{
 	}
 	
 	public String getData(int row) throws SQLException {
-		Iterator<?> orderList = getModelList();
-		List<OrderList> list = new ArrayList<OrderList>();
-		int size = 0;
-		while(orderList.hasNext()) {
-			list.add((OrderList) orderList.next());
-			size++;
-		}
-        OrderList orderList1 = list.get(row);
+		OrderList orderList1 = getSelectedOrderList(row);
         
         return "Receipt No.: " + orderList1.getReceiptNo() + '\n' +
                "Due Date: " + orderList1.getDueDate() + '\n' +
@@ -379,4 +372,17 @@ public class OrderModel extends Model{
                "Pickup Location: " + orderList1.getPickupLocation() + '\n' +
                "Status: " + orderList1.getStatus();
     } 
+	
+	public OrderList getSelectedOrderList(int row) throws SQLException {
+		Iterator<?> orderList = getModelList();
+		List<OrderList> list = new ArrayList<OrderList>();
+		int size = 0;
+		while(orderList.hasNext()) {
+			list.add((OrderList) orderList.next());
+			size++;
+		}
+        OrderList orderList1 = list.get(row);
+        
+        return orderList1;
+	}
 }

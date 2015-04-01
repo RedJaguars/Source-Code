@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import controller.OrderController;
+
 public class ChangeOrderStatus extends JFrame{
 	private JTextField textField_2;
 	private JTextArea txtAreaOrderStatus;
@@ -21,7 +23,15 @@ public class ChangeOrderStatus extends JFrame{
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
-	public ChangeOrderStatus() {
+	private int selectedRow;
+	
+	private OrderController orderController;
+	
+	public ChangeOrderStatus(int row) {
+		selectedRow = row;
+		
+		orderController = new OrderController();
+		
 		getContentPane().setLayout(null);
 		
 		JLabel lblAddNewItem = new JLabel("Change Order Status");
@@ -88,6 +98,7 @@ public class ChangeOrderStatus extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnSubmit) {
 				//checks if successfully altered
+				//orderController.modifyOrder(orderController.getSelectedOrderList(selectedRow), modified);
 				dispose();
 			} else if(e.getSource() == btnCancel) {
 				dispose();

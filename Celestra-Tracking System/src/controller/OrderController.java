@@ -46,4 +46,8 @@ public class OrderController extends Controller{
 	public String getData(int row) throws SQLException {
 		return ((OrderModel)model).getData(row);
 	}
+	
+	public OrderList getSelectedOrderList(int row) throws SQLException {
+		return ((OrderModel)model).getSelectedOrderList(row);
+	}
 }
