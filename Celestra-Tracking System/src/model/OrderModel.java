@@ -9,6 +9,8 @@ import java.util.Iterator;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import com.mysql.jdbc.Statement;
+
 import objects.Alteration;
 import objects.BottomMeasurement;
 import objects.Client;
@@ -175,7 +177,13 @@ public class OrderModel extends Model{
 	}
 	
 	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
-		
+		String query = "UPDATE order_list SET balance = ?, status = ? WHERE orderListID = ?";
+		PreparedStatement statement = con.getConnection().prepareStatement(query);
+		statement.setDouble(1, modified.getBalance());
+		statement.setString(2, modified.getStatus().toString());
+		statement.setInt(3, original.getListID());
+		statement.executeUpdate();
+		getModelList();
 	}
 	
 	public Iterator<?> getModelList() throws SQLException{
@@ -385,4 +393,12 @@ public class OrderModel extends Model{
         
         return orderList1;
 	}
+	public OrderList createModifiedOrderList(OrderList originalOrderList,
+			String newStatus, double newBalance) {
+		OrderStatus newOrderStatus = OrderStatus.getStatus(newStatus);
+		originalOrderList.setStatus(newOrderStatus);
+		originalOrderList.setBalance(newBalance);
+		
+		return originalOrderList;
+	} 
 }

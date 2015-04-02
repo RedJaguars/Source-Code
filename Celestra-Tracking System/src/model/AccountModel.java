@@ -17,7 +17,6 @@ import objects.Account;
 
 
 public class AccountModel extends Model{
-	private ArrayList<Account> accountList;
 	private ResultSet theResultSet;
 	private PreparedStatement theStatement;
 	
@@ -55,7 +54,6 @@ public class AccountModel extends Model{
 	}
 	
 	public void addAccount(Account newAccount){
-		accountList.add(newAccount);
 		String query = "INSERT INTO account VALUES(?,?)";
 		try{
 			theStatement = con.getConnection().prepareStatement(query);
@@ -64,27 +62,16 @@ public class AccountModel extends Model{
 		}catch(SQLException e){
 			System.out.println("Error in inserting new account into database!");
 		}
-	}
-	
-	
-	public void getAccountsFromDB(){
-		String query = "SELECT * FROM account";
-		Account account;
 		try {
-			theStatement = con.getConnection().prepareStatement(query);
-			theResultSet = theStatement.executeQuery();
-			while(theResultSet.next()){
-				account = new Account(Integer.parseInt(theResultSet.getString("accountID")), theResultSet.getString("password"));
-				accountList.add(account);
-			}
-			
+			updateModelList();
 		} catch (SQLException e) {
-			System.out.println("Error in fetching all accounts from database!");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
+	
+	
+	
 
 	public void changePassword(String newPassword, String oldPassword, String confirmNewPassword) throws Exception{// not sure if the checking of the oldPassword and the confirmNewPassword is done here
 		

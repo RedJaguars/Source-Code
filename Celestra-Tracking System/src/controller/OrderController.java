@@ -17,6 +17,9 @@ public class OrderController extends Controller{
 		model.register(this);
 		notifyObservers();
 	}
+	public OrderList createModifiedOrderList(OrderList originalOrderList, String newDescription, double newBalance){
+		return ((OrderModel) model).createModifiedOrderList(originalOrderList, newDescription, newBalance);
+	}
 	
 	public void addNewOrder(int receiptNo, Date dueDate, Date orderDate, double balance, 
 							String pickupLocation, Iterator<OrderItem> items, Client client,

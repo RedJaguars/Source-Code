@@ -6,19 +6,24 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JFormattedTextField;
 
+import objects.OrderList;
 import controller.OrderController;
 
 public class ChangeOrderStatus extends JFrame{
-	private JTextField textField_2;
 	private JTextArea txtAreaOrderStatus;
-	private JTextField textField;
+	private JFormattedTextField textField;
+	private NumberFormat numberFormat;
 	
 	private JButton btnSubmit;
 	private JButton btnCancel;
@@ -28,6 +33,10 @@ public class ChangeOrderStatus extends JFrame{
 	private OrderController orderController;
 	
 	public ChangeOrderStatus(int row) {
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		numberFormat = NumberFormat.getInstance();
+		numberFormat.setGroupingUsed(false);
+		
 		selectedRow = row;
 		
 		orderController = new OrderController();
@@ -44,20 +53,30 @@ public class ChangeOrderStatus extends JFrame{
 		txtAreaOrderStatus.setBounds(29, 165, 367, 212);
 		getContentPane().add(txtAreaOrderStatus);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(155, 417, 241, 22);
-		getContentPane().add(textField_2);
+//		textField_2 = new JFormattedTextField(numberFormat);
+//		textField_2.setColumns(10);
+//		textField_2.setBounds(155, 417, 241, 22);
+//		getContentPane().add(textField_2);
 		
 		JLabel lblNewLabel = new JLabel("Order Details:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel.setBounds(25, 115, 103, 16);
 		getContentPane().add(lblNewLabel);
 		
-		JLabel lblQuantity = new JLabel("Current balance:");
+		JLabel lblQuantity = null;
+		try {
+			lblQuantity = new JLabel("Current balance:" + orderController.getSelectedOrderList(selectedRow).getBalance());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblQuantity.setBounds(25, 420, 118, 16);
+		lblQuantity.setBounds(25, 420, 200, 16);
 		getContentPane().add(lblQuantity);
+		
+		
+		
+		
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new doActionListener());
@@ -76,7 +95,7 @@ public class ChangeOrderStatus extends JFrame{
 		lblNewBalance.setBounds(25, 460, 118, 16);
 		getContentPane().add(lblNewBalance);
 		
-		textField = new JTextField();
+		textField = new JFormattedTextField(numberFormat);
 		textField.setColumns(10);
 		textField.setBounds(155, 458, 241, 22);
 		getContentPane().add(textField);
@@ -98,7 +117,21 @@ public class ChangeOrderStatus extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnSubmit) {
 				//checks if successfully altered
-				//orderController.modifyOrder(orderController.getSelectedOrderList(selectedRow), modified);
+				OrderList originalOrderList = null;
+				try {
+					originalOrderList = orderController.getSelectedOrderList(selectedRow);
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				try {
+					System.out.println("'" + txtAreaOrderStatus.getText() +  "'");
+					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, txtAreaOrderStatus.getText(), Double.parseDouble(textField.getText())));
+				} catch (NumberFormatException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				new OrderFrame();
 				dispose();
 			} else if(e.getSource() == btnCancel) {
 				dispose();

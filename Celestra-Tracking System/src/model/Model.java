@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import objects.Observer;
+import objects.OrderList;
 import objects.Subject;
 import database.DatabaseConnection;
 
@@ -36,5 +37,7 @@ public abstract class Model implements Subject {
 		}
 	}
 	
-	public abstract Iterator<?> getModelList() throws SQLException; 
+	public abstract Iterator<?> getModelList() throws SQLException;
+
+	
 }

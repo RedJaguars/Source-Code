@@ -182,6 +182,7 @@ public class OrderFrame extends JFrame{
 				new ChangePassword();
 			} else if(e.getSource() == btnChangeStatus) {
 				new ChangeOrderStatus(selectedRow);
+				dispose();
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
