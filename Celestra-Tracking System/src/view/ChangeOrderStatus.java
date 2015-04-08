@@ -1,22 +1,10 @@
 package view;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.text.NumberFormat;
-
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JFormattedTextField;
-
+import javax.swing.*;
 import objects.OrderList;
 import controller.OrderController;
 
@@ -24,6 +12,12 @@ public class ChangeOrderStatus extends JFrame{
 	private JTextArea txtAreaOrderStatus;
 	private JFormattedTextField textField;
 	private NumberFormat numberFormat;
+	
+	private JRadioButton cancelled;
+	private JRadioButton pending;
+	private JRadioButton fulfilled;
+	private ButtonGroup status;
+	
 	
 	private JButton btnSubmit;
 	private JButton btnCancel;
@@ -48,10 +42,28 @@ public class ChangeOrderStatus extends JFrame{
 		lblAddNewItem.setBounds(25, 53, 209, 30);
 		getContentPane().add(lblAddNewItem);
 		
-		txtAreaOrderStatus = new JTextArea();
-		txtAreaOrderStatus.setColumns(10);
-		txtAreaOrderStatus.setBounds(29, 165, 367, 212);
-		getContentPane().add(txtAreaOrderStatus);
+		status = new ButtonGroup();
+		pending = new JRadioButton("PENDING", true);
+		cancelled = new JRadioButton("CANCELLED");
+		fulfilled = new JRadioButton("FULFILLED");
+		pending.setBounds(30, 165, 100, 20);
+		cancelled.setBounds(130, 165, 130, 20);
+		fulfilled.setBounds(260, 165, 100, 20);
+		pending.setActionCommand("PENDING");
+		cancelled.setActionCommand("CANCELLED");
+		fulfilled.setActionCommand("FULFILLED");
+		status.add(pending);
+		status.add(cancelled);
+		status.add(fulfilled);
+		
+		getContentPane().add(pending);
+		getContentPane().add(cancelled);
+		getContentPane().add(fulfilled);
+		
+//		txtAreaOrderStatus = new JTextArea();
+//		txtAreaOrderStatus.setColumns(10);
+//		txtAreaOrderStatus.setBounds(29, 165, 367, 212);
+//		getContentPane().add(txtAreaOrderStatus);
 		
 //		textField_2 = new JFormattedTextField(numberFormat);
 //		textField_2.setColumns(10);
@@ -118,6 +130,9 @@ public class ChangeOrderStatus extends JFrame{
 			if(e.getSource() == btnSubmit) {
 				//checks if successfully altered
 				OrderList originalOrderList = null;
+				String selectedStatus;
+				selectedStatus =  status.getSelection().getActionCommand();
+				
 				try {
 					originalOrderList = orderController.getSelectedOrderList(selectedRow);
 				} catch (SQLException e2) {
@@ -125,8 +140,8 @@ public class ChangeOrderStatus extends JFrame{
 					e2.printStackTrace();
 				}
 				try {
-					System.out.println("'" + txtAreaOrderStatus.getText() +  "'");
-					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, txtAreaOrderStatus.getText(), Double.parseDouble(textField.getText())));
+
+					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, selectedStatus, Double.parseDouble(textField.getText())));
 				} catch (NumberFormatException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -134,6 +149,7 @@ public class ChangeOrderStatus extends JFrame{
 				new OrderFrame();
 				dispose();
 			} else if(e.getSource() == btnCancel) {
+				new OrderFrame();
 				dispose();
 			} 
 			
