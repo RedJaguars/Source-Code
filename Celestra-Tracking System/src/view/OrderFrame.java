@@ -107,7 +107,7 @@ public class OrderFrame extends JFrame{
 		
 		JLabel lblNewLabel = new JLabel("List of Orders");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(53, 57, 115, 16);
+		lblNewLabel.setBounds(53, 57, 150, 16);
 		panel_1.add(lblNewLabel);
 		
 		txtAreaOrderDetails = new JTextArea();
@@ -118,7 +118,7 @@ public class OrderFrame extends JFrame{
 		
 		JLabel lblOrderDetails = new JLabel("Order Details");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblOrderDetails.setBounds(53, 458, 115, 16);
+		lblOrderDetails.setBounds(53, 458, 150, 16);
 		panel_1.add(lblOrderDetails);
 		
 		btnChangeStatus = new JButton("Change Status");
