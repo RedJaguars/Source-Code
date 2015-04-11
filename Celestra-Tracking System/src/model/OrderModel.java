@@ -9,8 +9,6 @@ import java.util.Iterator;
 
 import javax.sql.rowset.serial.SerialBlob;
 
-import com.mysql.jdbc.Statement;
-
 import objects.Alteration;
 import objects.BottomMeasurement;
 import objects.Client;
@@ -176,14 +174,15 @@ public class OrderModel extends Model{
 		
 	}
 	
-	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
-		String query = "UPDATE order_list SET balance = ?, status = ? WHERE orderListID = ?";
-		PreparedStatement statement = con.getConnection().prepareStatement(query);
-		statement.setDouble(1, modified.getBalance());
-		statement.setString(2, modified.getStatus().toString());
-		statement.setInt(3, original.getListID());
-		statement.executeUpdate();
-		getModelList();
+	public void modifyOrder(OrderItem originalOrder, String orderType, Alteration modifiedOrder) throws SQLException {
+		if(orderType.equals("ALTERATION")) {
+			String statement = "UPDATE alteration_order SET specialInstruction = ? where orderID = ?";
+			PreparedStatement ps = con.getConnection().prepareStatement(statement);
+			ps.setString(1, modifiedOrder.getInstruction());
+			ps.setInt(2, originalOrder.getItemID());
+			ps.executeUpdate();
+			ps.close();
+		}
 	}
 	
 	public Iterator<?> getModelList() throws SQLException{
@@ -369,7 +368,7 @@ public class OrderModel extends Model{
 		return modelList.iterator();
 	}
 	
-	public String getData(int row) throws SQLException {
+	public String getOrderListData(int row) throws SQLException {
 		OrderList orderList1 = getSelectedOrderList(row);
         
         return "Receipt No.: " + orderList1.getReceiptNo() + '\n' +
@@ -393,12 +392,96 @@ public class OrderModel extends Model{
         
         return orderList1;
 	}
-	public OrderList createModifiedOrderList(OrderList originalOrderList,
-			String newStatus, double newBalance) {
-		OrderStatus newOrderStatus = OrderStatus.getStatus(newStatus);
-		originalOrderList.setStatus(newOrderStatus);
-		originalOrderList.setBalance(newBalance);
+	
+	public Iterator<?> getOrderItemModelList(OrderList orderList) throws SQLException {
+		modelList.removeAll(modelList);
 		
-		return originalOrderList;
-	} 
+		String statement = "SELECT * FROM order_list OL, order_item OI, alteration_order AO "
+				+ "WHERE OL.orderListID = OI.orderListID"
+				+ " and OI.orderID = AO.orderID";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ResultSet alterationOrderItemListSet = ps.executeQuery();
+		
+		while(alterationOrderItemListSet.next()) {
+			int quantity = alterationOrderItemListSet.getInt("OI.quantity");
+			double price = alterationOrderItemListSet.getDouble("OI.itemPrice");
+			int itemID = alterationOrderItemListSet.getInt("OI.orderID");
+			
+			String garmentType = alterationOrderItemListSet.getString("AO.garmentType");
+			Garment garment = Garment.getGarment(garmentType);
+			String specialInstruction = alterationOrderItemListSet.getString("AO.specialInstruction");
+			
+			OrderItem alterationItem = new Alteration.AlterationBuilder(quantity, price, garment, specialInstruction)
+			.itemID(itemID)
+			.build();
+			
+			modelList.add(alterationItem);
+		}
+		
+		statement = "SELECT * FROM order_list OL, order_item OI, embroidery_order EO "
+				+ "WHERE OL.orderListID = OI.orderListID"
+				+ " and OI.orderID = EO.orderID";
+		ps = con.getConnection().prepareStatement(statement);
+		ResultSet embroideryOrderItemListSet = ps.executeQuery();
+		
+		while(embroideryOrderItemListSet.next()) {
+			int quantity = alterationOrderItemListSet.getInt("OI.quantity");
+			double price = alterationOrderItemListSet.getDouble("OI.itemPrice");
+			int itemID = alterationOrderItemListSet.getInt("OI.orderID");
+			
+			byte[] logo = embroideryOrderItemListSet.getBytes("EO.logo");
+			double size = embroideryOrderItemListSet.getDouble("EO.size");
+			int numOfColors = embroideryOrderItemListSet.getInt("EO.numOfColors");
+			String embroidery = embroideryOrderItemListSet.getString("EO.embroideryType");
+			EmbroideryType embroideryType = EmbroideryType.getEmbroideryType(embroidery);
+			
+			OrderItem embroideryItem = new Embroidery.EmbroideryBuilder(quantity, price, logo, size, numOfColors, embroideryType)
+			.itemID(itemID)
+			.build();
+			
+			modelList.add(embroideryItem);
+		}
+		
+		//Made to Order
+		
+		return modelList.iterator();
+	}
+	
+	public ArrayList<OrderItem> getOrderItemList(OrderList orderList) throws SQLException {
+		Iterator<?> orderItemList = getOrderItemModelList(orderList);
+		ArrayList<OrderItem> list = new ArrayList<OrderItem>();
+		while(orderItemList.hasNext()) {
+			list.add((OrderItem) orderItemList.next());
+		}
+       
+        return list;
+	}
+	
+	public ArrayList<Integer> getOrderItemIDList(OrderList orderList) throws SQLException {
+		ArrayList<OrderItem> orderItemList = getOrderItemList(orderList);
+		ArrayList<Integer> orderItemIDList = new ArrayList<Integer>();
+		int size = 0;
+		for(OrderItem item : orderItemList) {
+			orderItemIDList.add(item.getItemID());
+			size++;
+		}
+		
+		return orderItemIDList;
+	}
+	
+	public String determinePanel(OrderList orderList, int selectedIndex) throws SQLException {
+		String type = "";
+		OrderItem orderItem = getOrderItem(orderList, selectedIndex);
+		if(orderItem instanceof Embroidery) {
+			type = "EMBOIDERY";
+		} else if(orderItem instanceof Alteration) {
+			type = "ALTERATION";
+		} //made to order
+		return type;	
+	}
+	
+	public OrderItem getOrderItem(OrderList orderList, int selectedIndex) throws SQLException {
+		ArrayList<OrderItem> orderItemList = getOrderItemList(orderList);
+		return orderItemList.get(selectedIndex);
+	}
 }
