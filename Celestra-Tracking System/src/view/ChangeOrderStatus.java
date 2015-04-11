@@ -76,7 +76,7 @@ public class ChangeOrderStatus extends JFrame{
 		
 		JLabel lblQuantity = null;
 		try {
-			lblQuantity = new JLabel("Current balance:" + orderController.getSelectedOrderList(selectedRow).getBalance());
+			lblQuantity = new JLabel("Current balance: " + orderController.getSelectedOrderList(selectedRow).getBalance());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,10 +140,8 @@ public class ChangeOrderStatus extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				new OrderFrame();
 				dispose();
 			} else if(e.getSource() == btnCancel) {
-				new OrderFrame();
 				dispose();
 			} 
 			
