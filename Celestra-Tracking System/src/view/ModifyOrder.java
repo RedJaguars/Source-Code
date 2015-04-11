@@ -16,6 +16,7 @@ import javax.swing.*;
 
 import controller.OrderController;
 import objects.Alteration;
+import objects.Embroidery;
 import objects.OrderList;
 
 public class ModifyOrder extends JFrame {
@@ -127,7 +128,12 @@ public class ModifyOrder extends JFrame {
 		}
 		
 		if(orderType.equals("EMBROIDERY")) {
-			panel_2.add(new ModifyEmbroideryOrder());
+			try {
+				panel_2.add(new ModifyEmbroideryOrder((Embroidery) orderController.getOrderItem(selectedOrderList, selectedIndex)));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			panel_2.revalidate();
 			panel_2.repaint();
 		} else if(orderType.equals("ALTERATION")) {

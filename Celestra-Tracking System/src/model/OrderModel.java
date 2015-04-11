@@ -174,15 +174,26 @@ public class OrderModel extends Model{
 		
 	}
 	
-	public void modifyOrder(OrderItem originalOrder, String orderType, Alteration modifiedOrder) throws SQLException {
+	public void modifyOrderItem(OrderItem originalOrder, String orderType, OrderItem modifiedOrder) throws SQLException {
 		if(orderType.equals("ALTERATION")) {
 			String statement = "UPDATE alteration_order SET specialInstruction = ? where orderID = ?";
 			PreparedStatement ps = con.getConnection().prepareStatement(statement);
-			ps.setString(1, modifiedOrder.getInstruction());
+			ps.setString(1, ((Alteration) modifiedOrder).getInstruction());
 			ps.setInt(2, originalOrder.getItemID());
 			ps.executeUpdate();
 			ps.close();
+		} else if(orderType.equals("EMBROIDERY")) {
+			String statement = "UPDATE embroider_order SET logo = ?, size = ?, numOfColors = ?, embroideryType = ? where orderID = ?";
+			PreparedStatement ps = con.getConnection().prepareStatement(statement);
+			ps.setBlob(1, new SerialBlob(((Embroidery) modifiedOrder).getLogoBytes()));
+			ps.setDouble(2, ((Embroidery) modifiedOrder).getSize());
+			ps.setInt(3, ((Embroidery) modifiedOrder).getNumOfColors());
+			ps.setString(4, ((Embroidery) modifiedOrder).getEmbroideryType().toString());
+			ps.setInt(5, originalOrder.getItemID());
+			ps.executeUpdate();
+			ps.close();
 		}
+		//made to order
 	}
 	
 	public Iterator<?> getModelList() throws SQLException{
@@ -484,4 +495,23 @@ public class OrderModel extends Model{
 		ArrayList<OrderItem> orderItemList = getOrderItemList(orderList);
 		return orderItemList.get(selectedIndex);
 	}
+	
+	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
+		String query = "UPDATE order_list SET balance = ?, status = ? WHERE orderListID = ?";
+		PreparedStatement statement = con.getConnection().prepareStatement(query);
+		statement.setDouble(1, modified.getBalance());
+		statement.setString(2, modified.getStatus().toString());
+		statement.setInt(3, original.getListID());
+		statement.executeUpdate();
+		getModelList();
+	}
+	
+	public OrderList createModifiedOrderList(OrderList originalOrderList,
+			String newStatus, double newBalance) {
+		OrderStatus newOrderStatus = OrderStatus.getStatus(newStatus);
+		originalOrderList.setStatus(newOrderStatus);
+		originalOrderList.setBalance(newBalance);
+		
+		return originalOrderList;
+	} 
 }

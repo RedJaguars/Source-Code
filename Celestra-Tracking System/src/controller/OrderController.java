@@ -34,12 +34,20 @@ public class OrderController extends Controller{
 		((OrderModel)model).addNewOrder(orderToAdd);
 	}	
 	
+	public OrderList createModifiedOrderList(OrderList originalOrderList, String newDescription, double newBalance){
+		return ((OrderModel) model).createModifiedOrderList(originalOrderList, newDescription, newBalance);
+	}
+	
+	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
+		((OrderModel)model).modifyOrder(original, modified);
+	}
+	
 	public void cancelOrder(OrderList orderToCancel) {
 		((OrderModel)model).cancelOrder(orderToCancel);
 	}
 	
-	public void modifyOrder(OrderItem originalOrder, String orderType, Alteration modifiedOrder) throws SQLException {
-		((OrderModel)model).modifyOrder(originalOrder, orderType, modifiedOrder);
+	public void modifyOrderItem(OrderItem originalOrder, String orderType, OrderItem modifiedOrder) throws SQLException {
+		((OrderModel)model).modifyOrderItem(originalOrder, orderType, modifiedOrder);
 	}
 	
 	public Iterator<?> retrieveOrderList() throws SQLException {

@@ -62,7 +62,7 @@ public class ModifyAlterationOrder extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if(e.getSource() == btnCancel) {
-				
+					javax.swing.SwingUtilities.getWindowAncestor(ModifyAlterationOrder.this).dispose();
 			} else if (e.getSource() == btnModifyOrder) {
 				try {
 					int qty = alterationOrder.getQuantity();
@@ -74,7 +74,7 @@ public class ModifyAlterationOrder extends JPanel {
 					OrderItem modifiedOrder = new Alteration.AlterationBuilder(qty, price, garment, instruction)
 					.itemID(id)
 					.build();
-					orderController.modifyOrder(alterationOrder, "ALTERATION", (Alteration) modifiedOrder);
+					orderController.modifyOrderItem(alterationOrder, "ALTERATION", (Alteration) modifiedOrder);
 					javax.swing.SwingUtilities.getWindowAncestor(ModifyAlterationOrder.this).dispose();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block

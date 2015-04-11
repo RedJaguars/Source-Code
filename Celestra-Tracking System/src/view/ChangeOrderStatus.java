@@ -18,7 +18,6 @@ public class ChangeOrderStatus extends JFrame{
 	private JRadioButton fulfilled;
 	private ButtonGroup status;
 	
-	
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
@@ -86,10 +85,6 @@ public class ChangeOrderStatus extends JFrame{
 		lblQuantity.setBounds(25, 420, 200, 16);
 		getContentPane().add(lblQuantity);
 		
-		
-		
-		
-		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new doActionListener());
 		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -140,7 +135,6 @@ public class ChangeOrderStatus extends JFrame{
 					e2.printStackTrace();
 				}
 				try {
-
 					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, selectedStatus, Double.parseDouble(textField.getText())));
 				} catch (NumberFormatException | SQLException e1) {
 					// TODO Auto-generated catch block
