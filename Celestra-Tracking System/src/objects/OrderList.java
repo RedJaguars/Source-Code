@@ -139,4 +139,8 @@ public class OrderList {
 		items.remove(item);
 		totalPrice -= item.getPrice();
 	}
+
+	public void cancelOrder() {
+		this.status = OrderStatus.CANCELLED;
+	}
 }

@@ -222,29 +222,30 @@ public class ItemFrame extends JFrame{
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
-					System.out.println("ROWS: " + selectedRows[i]);
+//					System.out.println("ROWS: " + selectedRows[i]);
 				}
 				try {
 					inventoryController.decreaseStock(selectedRows, (double)decreaseSpinner.getValue());
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-				//((AbstractTableModel)tableInventory.getModel()).fireTableDataChanged();
 				try {
+					
+					panel_2.remove(tableInventory);
 					tableInventory = createTable(inventoryController.retrieveInventoryList());
+					panel_2.add(tableInventory);
 					tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
 					tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
+				
 				panel_2.revalidate();
 				panel_2.repaint();
 				tableInventory.repaint();
 				tableInventory.revalidate();
+				System.out.println("DECREASE HIT");
 				
-				
-				//				new ItemFrame();
-//				dispose();
 			}
 			
 		}

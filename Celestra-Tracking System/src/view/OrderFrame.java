@@ -54,6 +54,7 @@ public class OrderFrame extends JFrame{
 	private JButton btnExit;
 	private JButton btnModifyOrder;
 	private JButton btnAddOrder;
+	private JButton btnCancelOrder;
 	
 	private OrderList selectedOrderList;
 	
@@ -127,9 +128,9 @@ public class OrderFrame extends JFrame{
 		btnChangeStatus.setEnabled(false);
 		panel_1.add(btnChangeStatus);
 		
-		JButton button_6 = new JButton("Cancel Order");
-		button_6.setBounds(704, 563, 200, 50);
-		panel_1.add(button_6);
+		btnCancelOrder = new JButton("Cancel Order");
+		btnCancelOrder.setBounds(704, 563, 200, 50);
+		panel_1.add(btnCancelOrder);
 		
 		btnModifyOrder = new JButton("Modify Order");
 		btnModifyOrder.addActionListener(new doActionListener());
@@ -192,6 +193,10 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnAddOrder) {
 				//addneworder view
 			}
+//			else if(e.getSource() == btnCancelOrder){
+//				orderController.cancelOrder(tableOrder.getModel());
+//				
+//			}
 			
 		}
 	}

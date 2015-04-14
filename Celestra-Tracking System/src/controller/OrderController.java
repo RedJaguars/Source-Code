@@ -42,7 +42,7 @@ public class OrderController extends Controller{
 		((OrderModel)model).modifyOrder(original, modified);
 	}
 	
-	public void cancelOrder(OrderList orderToCancel) {
+	public void cancelOrder(OrderList orderToCancel) throws SQLException {
 		((OrderModel)model).cancelOrder(orderToCancel);
 	}
 	

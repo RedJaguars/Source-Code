@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+import database.DatabaseConnection;
 import objects.Alteration;
 import objects.BottomMeasurement;
 import objects.Client;
@@ -17,7 +18,6 @@ import objects.EmbroideryType;
 import objects.Garment;
 import objects.GarmentOrder;
 import objects.Gender;
-import objects.Material;
 import objects.Measurement;
 import objects.OrderItem;
 import objects.OrderList;
@@ -170,8 +170,11 @@ public class OrderModel extends Model{
 		notifyObservers();
 	}
 	
-	public void cancelOrder(OrderList order) {
+	public void cancelOrder(OrderList order) throws SQLException {
+		OrderList modified = order;
+		modified.cancelOrder();
 		
+		modifyOrder(order, modified);
 	}
 	
 	public void modifyOrderItem(OrderItem originalOrder, String orderType, OrderItem modifiedOrder) throws SQLException {
@@ -198,181 +201,182 @@ public class OrderModel extends Model{
 	
 	public Iterator<?> getModelList() throws SQLException{
 		modelList.removeAll(modelList);
-		
-		String statement = "SELECT * FROM order_list OL, clients C WHERE OL.clientID = C.clientID";
+	
+		String statement = "SELECT * FROM order_list OL";
 		PreparedStatement ps = con.getConnection().prepareStatement(statement);
 		ResultSet orderListSet = ps.executeQuery();
 		
 		/*Traversing the whole list of orderList*/
 		while(orderListSet.next()) {
-			int clientID = orderListSet.getInt("C.clientID");
-			String lastName = orderListSet.getString("C.lastName");
-			String firstName = orderListSet.getString("C.firstName");
-			String gender = orderListSet.getString("C.gender");
-			String contactNo = orderListSet.getString("C.contactNo");
-			String email = orderListSet.getString("C.email");
-			Client orderClient = new Client.ClientBuilder(lastName, firstName, gender, contactNo)
-										.clientID(clientID)
-										.email(email)
-										.build();
-			
-			int listID = orderListSet.getInt("OL.orderListID");
-			int receiptNo = orderListSet.getInt("OL.receiptNo");
-			Date dueDate = orderListSet.getDate("OL.dueDate");
-			Date orderDate = orderListSet.getDate("OL.orderDate");
-			double balance = orderListSet.getDouble("OL.balance");
-			String pickupLocation = orderListSet.getString("OL.pickupLocation");
-			OrderStatus status = OrderStatus.getStatus(orderListSet.getString("OL.status"));
-			
-			
-			OrderList orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, orderClient, status)
-									.listID(listID)
-									.build();
-			
-			/*Getting the OrderItems of the OrderList*/
-			
-			/*Getting GarmentOrders*/
-			statement = "SELECT * FROM order_item OI, garment_order GO WHERE OI.orderListID = ? AND OI.orderID = GO.orderID";
-			ps = con.getConnection().prepareStatement(statement);
-			ps.setInt(1, listID);
-			ResultSet garmentItemSet = ps.executeQuery();
-			
-			int itemID;
-			int qty;
-			double price;
-			Garment garment;
-			String instruction;
-			
-			while(garmentItemSet.next()) {
-				itemID = garmentItemSet.getInt("OI.orderID");
-				qty = garmentItemSet.getInt("OI.quantity");
-				price = garmentItemSet.getDouble("OI.itemPrice");
-				String material = garmentItemSet.getString("GO.material");
-				instruction = garmentItemSet.getString("GO.special_instruction");
-				Gender garmentGender = Gender.getGender(garmentItemSet.getString("GO.gender"));
-				garment = Garment.getGarment(garmentItemSet.getString("GO.garmentType"));
-				int measurementID = garmentItemSet.getInt("GO.measurementID");
-				System.out.println(measurementID);
-				
-				/*Getting the measurements of the garment*/
-				ResultSet measurementSet;
-				ArrayList<Measurement> measurement = new ArrayList<>();
-				
-				/*Getting Bottom Measurement if it exists*/
-				statement = "SELECT * FROM bottom_measure BM WHERE measurementID = ?";
-				ps = con.getConnection().prepareStatement(statement);
-				ps.setInt(1, measurementID);
-				measurementSet = ps.executeQuery();
-					
-				while(measurementSet.next()) {
-					double bottomLength = measurementSet.getDouble("BM.bottomLength");
-					double waist = measurementSet.getDouble("BM.waist");
-					double hips = measurementSet.getDouble("BM.hips");
-					double thigh = measurementSet.getDouble("BM.thigh");
-					double knee = measurementSet.getDouble("knee"); 
-					double buttom = measurementSet.getDouble("BM.buttom");
-					double crotch = measurementSet.getDouble("BM.crotch");
-					BottomMeasurement bottomMeasure = (BottomMeasurement) new BottomMeasurement.BottomMeasurementBuilder(bottomLength, waist, hips, thigh, knee, buttom, crotch)
-															.measurementID(measurementID)
-															.build();
-					measurement.add(bottomMeasure);
-				}
-				
-				measurementSet.close();
-				
-				statement = "SELECT * FROM top_measure TM WHERE measurementID = ?";
-				ps = con.getConnection().prepareStatement(statement);
-				ps.setInt(1, measurementID);
-				measurementSet = ps.executeQuery();
-				
-				while(!measurementSet.isClosed() && measurementSet.next()) {
-					TopMeasurement topMeasure = null;
-					double upperLength = measurementSet.getDouble("TM.upperLength");
-					double shoulder = measurementSet.getDouble("TM.shoulder");
-					double armLength = measurementSet.getDouble("TM.armLength");
-					double wrist = measurementSet.getDouble("TM.wrist");
-					double armHole = measurementSet.getDouble("TM.armHole");
-					double frontChest = measurementSet.getDouble("TM.frontChest");
-					double backChest = measurementSet.getDouble("TM.backChest");
-					double waist = measurementSet.getDouble("TM.waist");
-					double hips = measurementSet.getDouble("TM.hips");
-					double neckDeep = measurementSet.getDouble("TM.neckDeep");
-					
-					if(garmentGender.toString().equals("FEMALE")) {
-						measurementSet.close();
-						statement = "SELECT * FROM women_top_measure WHERE measurementID = ?";
-						ps = con.getConnection().prepareStatement(statement);
-						ps.setInt(1, measurementID);
-						measurementSet = ps.executeQuery();
-							
-						while(measurementSet.next()) {
-							double frontFigure = measurementSet.getDouble("TM.frontFigure");
-							double bustPoint = measurementSet.getDouble("TM.bustPoint");
-							double bustDistance = measurementSet.getDouble("TM.bustDistance");
-							double backFigure = measurementSet.getDouble("TM.backFigure");
-							
-							topMeasure = (WomensTopMeasure) new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
-																											backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
-																		.measurementID(measurementID)
-																		.build();
-						}
-					} else {
-						topMeasure = (TopMeasurement) new TopMeasurement.TopMeasurementBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
-																										backChest, waist, hips, neckDeep)
-																	.measurementID(measurementID)
-																	.build();
-					}
-					
-					measurement.add(topMeasure);
-						
-				} 
-				
-				GarmentOrder garmentOrder = (GarmentOrder)new GarmentOrder.GarmentOrderBuilder(qty, price, garment, garmentGender, measurement.iterator())
-																.material(material)
-																.instruction(instruction)
-																.itemID(itemID)
-																.build();
-				
-				orderList.addOrderItem(garmentOrder);
-			}
-			
-			statement = "SELECT * FROM order_item OI, embroidery_order E WHERE OI.orderListID = ? AND OI.orderID = E.orderID";
-			ps = con.getConnection().prepareStatement(statement);
-			ps.setInt(1, listID);
-			ResultSet embroiderySet = ps.executeQuery();
-			
-			while(embroiderySet.next()) {
-				itemID = embroiderySet.getInt("OI.orderID");
-				qty = embroiderySet.getInt("OI.quantity");
-				price = embroiderySet.getDouble("OI.itemPrice");
-				SerialBlob logoBlob = new SerialBlob(embroiderySet.getBlob("logo"));
-				byte[] logoBytes = logoBlob.getBytes(1, (int)logoBlob.length());
-				double size = embroiderySet.getDouble("E.size");
-				int colorNum = embroiderySet.getInt("E.numOfColors");
-				EmbroideryType embType = EmbroideryType.getEmbroideryType(embroiderySet.getString("E.embroideryType"));
-				
-				Embroidery embOrder = (Embroidery)new Embroidery.EmbroideryBuilder(qty, price, logoBytes, size, colorNum, embType)
-													.itemID(itemID)
-													.build();
-				orderList.addOrderItem(embOrder);
-			}
-			
-			statement = "SELECT * FROM order_item OI, alteration_order A WHERE OI.orderListID = ? AND OI.orderID = A.orderID";
-			ps = con.getConnection().prepareStatement(statement);
-			ps.setInt(1, listID);
-			ResultSet alterationSet = ps.executeQuery();
-			
-			while(alterationSet.next()) {
-				qty = alterationSet.getInt("OI.quantity");
-				price = alterationSet.getDouble("OI.itemPrice");
-				instruction = alterationSet.getString("A.specialInstruction");
-				garment = Garment.getGarment(alterationSet.getString("A.garmentType"));
-				
-				Alteration alterationOrder = (Alteration)new Alteration.AlterationBuilder(qty, price, garment, instruction)
-													.itemID(listID)
-													.build();	
-				orderList.addOrderItem(alterationOrder);
-			}
+//			int clientID = orderListSet.getInt("OL.clientID");
+////			String lastName = orderListSet.getString("C.lastName");
+////			String firstName = orderListSet.getString("C.firstName");
+////			String gender = orderListSet.getString("C.gender");
+////			String contactNo = orderListSet.getString("C.contactNo");
+////			String email = orderListSet.getString("C.email");
+////			Client orderClient = new Client.ClientBuilder(lastName, firstName, gender, contactNo)
+////										.clientID(clientID)
+////										.email(email)
+////										.build();
+//			Client orderClient = ClientModel.getClientByID(clientID);
+//			int listID = orderListSet.getInt("OL.orderListID");
+//			int receiptNo = orderListSet.getInt("OL.receiptNo");
+//			Date dueDate = orderListSet.getDate("OL.dueDate");
+//			Date orderDate = orderListSet.getDate("OL.orderDate");
+//			double balance = orderListSet.getDouble("OL.balance");
+//			String pickupLocation = orderListSet.getString("OL.pickupLocation");
+//			OrderStatus status = OrderStatus.getStatus(orderListSet.getString("OL.status"));
+//			
+//			
+//			OrderList orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, orderClient, status)
+//									.listID(listID)
+//									.build();
+//			
+//			/*Getting the OrderItems of the OrderList*/
+//			
+//			/*Getting GarmentOrders*/
+//			statement = "SELECT * FROM order_item OI, garment_order GO WHERE OI.orderListID = ? AND OI.orderID = GO.orderID";
+//			ps = con.getConnection().prepareStatement(statement);
+//			ps.setInt(1, listID);
+//			ResultSet garmentItemSet = ps.executeQuery();
+//			
+//			int itemID;
+//			int qty;
+//			double price;
+//			Garment garment;
+//			String instruction;
+//			
+//			while(garmentItemSet.next()) {
+//				itemID = garmentItemSet.getInt("OI.orderID");
+//				qty = garmentItemSet.getInt("OI.quantity");
+//				price = garmentItemSet.getDouble("OI.itemPrice");
+//				String material = garmentItemSet.getString("GO.material");
+//				instruction = garmentItemSet.getString("GO.special_instruction");
+//				Gender garmentGender = Gender.getGender(garmentItemSet.getString("GO.gender"));
+//				garment = Garment.getGarment(garmentItemSet.getString("GO.garmentType"));
+//				int measurementID = garmentItemSet.getInt("GO.measurementID");
+//				System.out.println(measurementID);
+//				
+//				/*Getting the measurements of the garment*/
+//				ResultSet measurementSet;
+//				ArrayList<Measurement> measurement = new ArrayList<>();
+//				
+//				/*Getting Bottom Measurement if it exists*/
+//				statement = "SELECT * FROM bottom_measure BM WHERE measurementID = ?";
+//				ps = con.getConnection().prepareStatement(statement);
+//				ps.setInt(1, measurementID);
+//				measurementSet = ps.executeQuery();
+//					
+//				while(measurementSet.next()) {
+//					double bottomLength = measurementSet.getDouble("BM.bottomLength");
+//					double waist = measurementSet.getDouble("BM.waist");
+//					double hips = measurementSet.getDouble("BM.hips");
+//					double thigh = measurementSet.getDouble("BM.thigh");
+//					double knee = measurementSet.getDouble("knee"); 
+//					double buttom = measurementSet.getDouble("BM.buttom");
+//					double crotch = measurementSet.getDouble("BM.crotch");
+//					BottomMeasurement bottomMeasure = (BottomMeasurement) new BottomMeasurement.BottomMeasurementBuilder(bottomLength, waist, hips, thigh, knee, buttom, crotch)
+//															.measurementID(measurementID)
+//															.build();
+//					measurement.add(bottomMeasure);
+//				}
+//				
+//				measurementSet.close();
+//				
+//				statement = "SELECT * FROM top_measure TM WHERE measurementID = ?";
+//				ps = con.getConnection().prepareStatement(statement);
+//				ps.setInt(1, measurementID);
+//				measurementSet = ps.executeQuery();
+//				
+//				while(!measurementSet.isClosed() && measurementSet.next()) {
+//					TopMeasurement topMeasure = null;
+//					double upperLength = measurementSet.getDouble("TM.upperLength");
+//					double shoulder = measurementSet.getDouble("TM.shoulder");
+//					double armLength = measurementSet.getDouble("TM.armLength");
+//					double wrist = measurementSet.getDouble("TM.wrist");
+//					double armHole = measurementSet.getDouble("TM.armHole");
+//					double frontChest = measurementSet.getDouble("TM.frontChest");
+//					double backChest = measurementSet.getDouble("TM.backChest");
+//					double waist = measurementSet.getDouble("TM.waist");
+//					double hips = measurementSet.getDouble("TM.hips");
+//					double neckDeep = measurementSet.getDouble("TM.neckDeep");
+//					
+//					if(garmentGender.toString().equals("FEMALE")) {
+//						measurementSet.close();
+//						statement = "SELECT * FROM women_top_measure WHERE measurementID = ?";
+//						ps = con.getConnection().prepareStatement(statement);
+//						ps.setInt(1, measurementID);
+//						measurementSet = ps.executeQuery();
+//							
+//						while(measurementSet.next()) {
+//							double frontFigure = measurementSet.getDouble("TM.frontFigure");
+//							double bustPoint = measurementSet.getDouble("TM.bustPoint");
+//							double bustDistance = measurementSet.getDouble("TM.bustDistance");
+//							double backFigure = measurementSet.getDouble("TM.backFigure");
+//							
+//							topMeasure = (WomensTopMeasure) new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
+//																											backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
+//																		.measurementID(measurementID)
+//																		.build();
+//						}
+//					} else {
+//						topMeasure = (TopMeasurement) new TopMeasurement.TopMeasurementBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
+//																										backChest, waist, hips, neckDeep)
+//																	.measurementID(measurementID)
+//																	.build();
+//					}
+//					
+//					measurement.add(topMeasure);
+//						
+//				} 
+//				
+//				GarmentOrder garmentOrder = (GarmentOrder)new GarmentOrder.GarmentOrderBuilder(qty, price, garment, garmentGender, measurement.iterator())
+//																.material(material)
+//																.instruction(instruction)
+//																.itemID(itemID)
+//																.build();
+//				
+//				orderList.addOrderItem(garmentOrder);
+//			}
+//			
+//			statement = "SELECT * FROM order_item OI, embroidery_order E WHERE OI.orderListID = ? AND OI.orderID = E.orderID";
+//			ps = con.getConnection().prepareStatement(statement);
+//			ps.setInt(1, listID);
+//			ResultSet embroiderySet = ps.executeQuery();
+//			
+//			while(embroiderySet.next()) {
+//				itemID = embroiderySet.getInt("OI.orderID");
+//				qty = embroiderySet.getInt("OI.quantity");
+//				price = embroiderySet.getDouble("OI.itemPrice");
+//				SerialBlob logoBlob = new SerialBlob(embroiderySet.getBlob("logo"));
+//				byte[] logoBytes = logoBlob.getBytes(1, (int)logoBlob.length());
+//				double size = embroiderySet.getDouble("E.size");
+//				int colorNum = embroiderySet.getInt("E.numOfColors");
+//				EmbroideryType embType = EmbroideryType.getEmbroideryType(embroiderySet.getString("E.embroideryType"));
+//				
+//				Embroidery embOrder = (Embroidery)new Embroidery.EmbroideryBuilder(qty, price, logoBytes, size, colorNum, embType)
+//													.itemID(itemID)
+//													.build();
+//				orderList.addOrderItem(embOrder);
+//			}
+//			
+//			statement = "SELECT * FROM order_item OI, alteration_order A WHERE OI.orderListID = ? AND OI.orderID = A.orderID";
+//			ps = con.getConnection().prepareStatement(statement);
+//			ps.setInt(1, listID);
+//			ResultSet alterationSet = ps.executeQuery();
+//			
+//			while(alterationSet.next()) {
+//				qty = alterationSet.getInt("OI.quantity");
+//				price = alterationSet.getDouble("OI.itemPrice");
+//				instruction = alterationSet.getString("A.specialInstruction");
+//				garment = Garment.getGarment(alterationSet.getString("A.garmentType"));
+//				
+//				Alteration alterationOrder = (Alteration)new Alteration.AlterationBuilder(qty, price, garment, instruction)
+//													.itemID(listID)
+//													.build();	
+//				orderList.addOrderItem(alterationOrder);
+//			}
+			OrderList orderList = getOrderListByID(orderListSet.getInt("OL.orderListID"));
 			modelList.add(orderList);
 		}
 		
@@ -514,4 +518,185 @@ public class OrderModel extends Model{
 		
 		return originalOrderList;
 	} 
+	public static OrderList getOrderListByID(int id) throws SQLException {
+		String statement = "SELECT * FROM order_list OL WHERE OL.orderListID = " + id;
+		PreparedStatement ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+		ResultSet orderListSet = ps.executeQuery();
+		OrderList orderList;
+		
+		/*Traversing the whole list of orderList*/
+		orderListSet.first();
+			int clientID = orderListSet.getInt("OL.clientID");
+//			String lastName = orderListSet.getString("C.lastName");
+//			String firstName = orderListSet.getString("C.firstName");
+//			String gender = orderListSet.getString("C.gender");
+//			String contactNo = orderListSet.getString("C.contactNo");
+//			String email = orderListSet.getString("C.email");
+//			Client orderClient = new Client.ClientBuilder(lastName, firstName, gender, contactNo)
+//										.clientID(clientID)
+//										.email(email)
+//										.build();
+			Client orderClient = ClientModel.getClientByID(clientID);
+			int listID = orderListSet.getInt("OL.orderListID");
+			int receiptNo = orderListSet.getInt("OL.receiptNo");
+			Date dueDate = orderListSet.getDate("OL.dueDate");
+			Date orderDate = orderListSet.getDate("OL.orderDate");
+			double balance = orderListSet.getDouble("OL.balance");
+			String pickupLocation = orderListSet.getString("OL.pickupLocation");
+			OrderStatus status = OrderStatus.getStatus(orderListSet.getString("OL.status"));
+			
+			
+			orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, orderClient, status)
+									.listID(listID)
+									.build();
+			
+			/*Getting the OrderItems of the OrderList*/
+			
+			/*Getting GarmentOrders*/
+			statement = "SELECT * FROM order_item OI, garment_order GO WHERE OI.orderListID = ? AND OI.orderID = GO.orderID";
+			ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+			ps.setInt(1, listID);
+			ResultSet garmentItemSet = ps.executeQuery();
+			
+			int itemID;
+			int qty;
+			double price;
+			Garment garment;
+			String instruction;
+			
+			while(garmentItemSet.next()) {
+				itemID = garmentItemSet.getInt("OI.orderID");
+				qty = garmentItemSet.getInt("OI.quantity");
+				price = garmentItemSet.getDouble("OI.itemPrice");
+				String material = garmentItemSet.getString("GO.material");
+				instruction = garmentItemSet.getString("GO.special_instruction");
+				Gender garmentGender = Gender.getGender(garmentItemSet.getString("GO.gender"));
+				garment = Garment.getGarment(garmentItemSet.getString("GO.garmentType"));
+				int measurementID = garmentItemSet.getInt("GO.measurementID");
+				System.out.println(measurementID);
+				
+				/*Getting the measurements of the garment*/
+				ResultSet measurementSet;
+				ArrayList<Measurement> measurement = new ArrayList<>();
+				
+				/*Getting Bottom Measurement if it exists*/
+				statement = "SELECT * FROM bottom_measure BM WHERE measurementID = ?";
+				ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+				ps.setInt(1, measurementID);
+				measurementSet = ps.executeQuery();
+					
+				while(measurementSet.next()) {
+					double bottomLength = measurementSet.getDouble("BM.bottomLength");
+					double waist = measurementSet.getDouble("BM.waist");
+					double hips = measurementSet.getDouble("BM.hips");
+					double thigh = measurementSet.getDouble("BM.thigh");
+					double knee = measurementSet.getDouble("knee"); 
+					double buttom = measurementSet.getDouble("BM.buttom");
+					double crotch = measurementSet.getDouble("BM.crotch");
+					BottomMeasurement bottomMeasure = (BottomMeasurement) new BottomMeasurement.BottomMeasurementBuilder(bottomLength, waist, hips, thigh, knee, buttom, crotch)
+															.measurementID(measurementID)
+															.build();
+					measurement.add(bottomMeasure);
+				}
+				
+				measurementSet.close();
+				
+				statement = "SELECT * FROM top_measure TM WHERE measurementID = ?";
+				ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+				ps.setInt(1, measurementID);
+				measurementSet = ps.executeQuery();
+				
+				while(!measurementSet.isClosed() && measurementSet.next()) {
+					TopMeasurement topMeasure = null;
+					double upperLength = measurementSet.getDouble("TM.upperLength");
+					double shoulder = measurementSet.getDouble("TM.shoulder");
+					double armLength = measurementSet.getDouble("TM.armLength");
+					double wrist = measurementSet.getDouble("TM.wrist");
+					double armHole = measurementSet.getDouble("TM.armHole");
+					double frontChest = measurementSet.getDouble("TM.frontChest");
+					double backChest = measurementSet.getDouble("TM.backChest");
+					double waist = measurementSet.getDouble("TM.waist");
+					double hips = measurementSet.getDouble("TM.hips");
+					double neckDeep = measurementSet.getDouble("TM.neckDeep");
+					
+					if(garmentGender.toString().equals("FEMALE")) {
+						measurementSet.close();
+						statement = "SELECT * FROM women_top_measure WHERE measurementID = ?";
+						ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+						ps.setInt(1, measurementID);
+						measurementSet = ps.executeQuery();
+							
+						while(measurementSet.next()) {
+							double frontFigure = measurementSet.getDouble("TM.frontFigure");
+							double bustPoint = measurementSet.getDouble("TM.bustPoint");
+							double bustDistance = measurementSet.getDouble("TM.bustDistance");
+							double backFigure = measurementSet.getDouble("TM.backFigure");
+							
+							topMeasure = (WomensTopMeasure) new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
+																											backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
+																		.measurementID(measurementID)
+																		.build();
+						}
+					} else {
+						topMeasure = (TopMeasurement) new TopMeasurement.TopMeasurementBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
+																										backChest, waist, hips, neckDeep)
+																	.measurementID(measurementID)
+																	.build();
+					}
+					
+					measurement.add(topMeasure);
+						
+				} 
+				
+				GarmentOrder garmentOrder = (GarmentOrder)new GarmentOrder.GarmentOrderBuilder(qty, price, garment, garmentGender, measurement.iterator())
+																.material(material)
+																.instruction(instruction)
+																.itemID(itemID)
+																.build();
+				
+				orderList.addOrderItem(garmentOrder);
+			}
+			
+			statement = "SELECT * FROM order_item OI, embroidery_order E WHERE OI.orderListID = ? AND OI.orderID = E.orderID";
+			ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+			ps.setInt(1, listID);
+			ResultSet embroiderySet = ps.executeQuery();
+			
+			while(embroiderySet.next()) {
+				itemID = embroiderySet.getInt("OI.orderID");
+				qty = embroiderySet.getInt("OI.quantity");
+				price = embroiderySet.getDouble("OI.itemPrice");
+				SerialBlob logoBlob = new SerialBlob(embroiderySet.getBlob("logo"));
+				byte[] logoBytes = logoBlob.getBytes(1, (int)logoBlob.length());
+				double size = embroiderySet.getDouble("E.size");
+				int colorNum = embroiderySet.getInt("E.numOfColors");
+				EmbroideryType embType = EmbroideryType.getEmbroideryType(embroiderySet.getString("E.embroideryType"));
+				
+				Embroidery embOrder = (Embroidery)new Embroidery.EmbroideryBuilder(qty, price, logoBytes, size, colorNum, embType)
+													.itemID(itemID)
+													.build();
+				orderList.addOrderItem(embOrder);
+			}
+			
+			statement = "SELECT * FROM order_item OI, alteration_order A WHERE OI.orderListID = ? AND OI.orderID = A.orderID";
+			ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
+			ps.setInt(1, listID);
+			ResultSet alterationSet = ps.executeQuery();
+			
+			while(alterationSet.next()) {
+				qty = alterationSet.getInt("OI.quantity");
+				price = alterationSet.getDouble("OI.itemPrice");
+				instruction = alterationSet.getString("A.specialInstruction");
+				garment = Garment.getGarment(alterationSet.getString("A.garmentType"));
+				
+				Alteration alterationOrder = (Alteration)new Alteration.AlterationBuilder(qty, price, garment, instruction)
+													.itemID(listID)
+													.build();	
+				orderList.addOrderItem(alterationOrder);
+			}	
+		
+		return orderList;
+	}
+	
 }
+
