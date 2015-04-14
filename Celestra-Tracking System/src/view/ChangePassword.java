@@ -100,7 +100,6 @@ public class ChangePassword extends JFrame{
 				String confirmNewPass = textField_2.getText();
 				try {
 					accountController.changePassword(newPass, oldPass, confirmNewPass);
-					new OrderFrame();
 					dispose();
 				} catch (Exception e1) {
 					//System.out.println("Caught");

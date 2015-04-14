@@ -18,7 +18,6 @@ public class ChangeOrderStatus extends JFrame{
 	private JRadioButton fulfilled;
 	private ButtonGroup status;
 	
-	
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
@@ -77,7 +76,7 @@ public class ChangeOrderStatus extends JFrame{
 		
 		JLabel lblQuantity = null;
 		try {
-			lblQuantity = new JLabel("Current balance:" + orderController.getSelectedOrderList(selectedRow).getBalance());
+			lblQuantity = new JLabel("Current balance: " + orderController.getSelectedOrderList(selectedRow).getBalance());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,10 +84,6 @@ public class ChangeOrderStatus extends JFrame{
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblQuantity.setBounds(25, 420, 200, 16);
 		getContentPane().add(lblQuantity);
-		
-		
-		
-		
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new doActionListener());
@@ -140,16 +135,13 @@ public class ChangeOrderStatus extends JFrame{
 					e2.printStackTrace();
 				}
 				try {
-
 					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, selectedStatus, Double.parseDouble(textField.getText())));
 				} catch (NumberFormatException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				new OrderFrame();
 				dispose();
 			} else if(e.getSource() == btnCancel) {
-				new OrderFrame();
 				dispose();
 			} 
 			

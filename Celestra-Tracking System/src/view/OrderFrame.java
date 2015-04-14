@@ -52,6 +52,10 @@ public class OrderFrame extends JFrame{
 	private JButton btnChangePassword;
 	private JButton btnChangeStatus;
 	private JButton btnExit;
+	private JButton btnModifyOrder;
+	private JButton btnAddOrder;
+	
+	private OrderList selectedOrderList;
 	
 	private OrderController orderController;
 	
@@ -96,13 +100,10 @@ public class OrderFrame extends JFrame{
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
-		JButton button_4 = new JButton("Add New Order");
-		button_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		button_4.setBounds(739, 40, 200, 50);
-		panel_1.add(button_4);
+		btnAddOrder = new JButton("Add New Order");
+		btnAddOrder.addActionListener(new doActionListener());
+		btnAddOrder.setBounds(739, 40, 200, 50);
+		panel_1.add(btnAddOrder);
 		
 		JLabel lblNewLabel = new JLabel("Orders");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -130,9 +131,11 @@ public class OrderFrame extends JFrame{
 		button_6.setBounds(704, 563, 200, 50);
 		panel_1.add(button_6);
 		
-		JButton button_7 = new JButton("Modify Order");
-		button_7.setBounds(704, 626, 200, 50);
-		panel_1.add(button_7);
+		btnModifyOrder = new JButton("Modify Order");
+		btnModifyOrder.addActionListener(new doActionListener());
+		btnModifyOrder.setBounds(704, 626, 200, 50);
+		btnModifyOrder.setEnabled(false);
+		panel_1.add(btnModifyOrder);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
@@ -181,10 +184,13 @@ public class OrderFrame extends JFrame{
 				new ChangePassword();
 			} else if(e.getSource() == btnChangeStatus) {
 				new ChangeOrderStatus(selectedRow);
-				dispose();
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
+			} else if(e.getSource() == btnModifyOrder) {
+				new ModifyOrder(selectedOrderList);
+			} else if(e.getSource() == btnAddOrder) {
+				//addneworder view
 			}
 			
 		}
@@ -205,8 +211,10 @@ public class OrderFrame extends JFrame{
 					JTable target = (JTable)e.getSource();
 					selectedRow = target.getSelectedRow();
 					try {
-						txtAreaOrderDetails.setText(orderController.getData(selectedRow));
+						txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
+						setSelectedOrderList(orderController.getSelectedOrderList(selectedRow));
 						btnChangeStatus.setEnabled(true);
+						btnModifyOrder.setEnabled(true);
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -236,5 +244,9 @@ public class OrderFrame extends JFrame{
 		}
 		
 		return orderItemListTable;
+	}
+	
+	public void setSelectedOrderList(OrderList orderList) {
+		selectedOrderList = orderList;
 	}
 }
