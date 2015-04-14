@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mysql.jdbc.UpdatableResultSet;
+
 import objects.Material;
 import objects.Unit;
 
@@ -58,6 +60,21 @@ public class InventoryModel extends Model {
                "Quantity in Stock: " + material.getQuantityInStock() + '\n' +
                "Description: " + material.getDescription() + '\n' +
                "Unit: " + material.getUnit();
-    } 
+    }
+
+	public void decreaseStock(int[] stocksToReduce, double quantity) throws SQLException {
+		String query = "UPDATE inventory SET quantityInStock = quantityInStock - ? WHERE inventoryID = ?";
+		
+		
+		for(int i=0;i<stocksToReduce.length;i++){	
+			System.out.println("YES");
+			PreparedStatement statement = con.getConnection().prepareStatement(query);
+			statement.setDouble(1, quantity);
+			statement.setInt(2, i);
+			statement.execute();
+		}
+		getModelList();
+		notifyObservers();
+	} 
 
 }

@@ -12,6 +12,7 @@ public class InventoryController extends Controller {
 	public InventoryController() {
 		super();
 		model = new InventoryModel();
+		model.register(this);
 	}
 	
 	public void addInventory(String inventoryName, double quantityInStock, String description, String unit) throws Exception {
@@ -25,5 +26,8 @@ public class InventoryController extends Controller {
 	
 	public String getData(int row) throws SQLException {
 		return ((InventoryModel)model).getData(row);
+	}
+	public void decreaseStock(int[] stocksToReduce, double quantity) throws SQLException{
+		((InventoryModel)model).decreaseStock(stocksToReduce, quantity);
 	}
 }

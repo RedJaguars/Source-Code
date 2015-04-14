@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,9 +21,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -36,43 +40,59 @@ public class ItemFrame extends JFrame{
 	private JTextField textField_1;
 	private JTextField textField_3;
 	
-	private JButton btnManageOrder;
-	private JButton btnManageItems;
-	private JButton btnManageSales;
+	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	
+	
+	private JSpinner increaseSpinner;
+	private JSpinner decreaseSpinner;
+	
+	private JButton btnReduceQuantity;
+	private JButton btnOrder;
+	private JButton btnItems;
+	private JButton btnSales;
 	private JButton btnChangePassword;
 	private JButton btnAddNewItem;
 	private JButton btnExit;
+	
+	private SpinnerNumberModel numberSpinnerBounds;
 	
 	private JTable tableInventory;
 	private JScrollPane inventoryPane;
 	
 	private InventoryController inventoryController;
+	private TableModel model;
 	
 	public ItemFrame() {
 		inventoryController = new InventoryController();
 		
+		numberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
+		
 		getContentPane().setLayout(null);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(Color.LIGHT_GRAY);
 		panel.setBounds(0, 0, 292, 721);
 		getContentPane().add(panel);
+		
 		panel.setLayout(null);
 		
-		btnManageOrder = new JButton("Manage Order");
-		btnManageOrder.setBounds(28, 209, 200, 50);
-		btnManageOrder.addActionListener(new doActionListener());
-		panel.add(btnManageOrder);
 		
-		btnManageItems = new JButton("Manage Items");
-		btnManageItems.setBounds(28, 280, 200, 50);
-		btnManageItems.addActionListener(new doActionListener());
-		panel.add(btnManageItems);
+		btnOrder = new JButton("Orders");
+		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.addActionListener(new doActionListener());
+		panel.add(btnOrder);
 		
-		btnManageSales = new JButton("Manage Sales");
-		btnManageSales.setBounds(28, 352, 200, 50);
-		btnManageSales.addActionListener(new doActionListener());
-		panel.add(btnManageSales);
+		btnItems = new JButton("Items");
+		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.addActionListener(new doActionListener());
+		panel.add(btnItems);
+		
+		btnSales = new JButton("Sales");
+		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.addActionListener(new doActionListener());
+		panel.add(btnSales);
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
@@ -84,7 +104,7 @@ public class ItemFrame extends JFrame{
 		btnExit.setBounds(28, 612, 200, 50);
 		panel.add(btnExit);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBounds(293, 0, 969, 721);
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
@@ -110,15 +130,13 @@ public class ItemFrame extends JFrame{
 		lblOrderDetails.setBounds(53, 458, 115, 16);
 		panel_1.add(lblOrderDetails);
 		
-		JButton btnReduceQuantity = new JButton("Submit");
-		btnReduceQuantity.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnReduceQuantity.setBounds(851, 546, 88, 34);
+		btnReduceQuantity = new JButton("Decrease");
+		btnReduceQuantity.addActionListener(new doActionListener());
+			
+		btnReduceQuantity.setBounds(851, 546, 110, 34);
 		panel_1.add(btnReduceQuantity);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setBounds(57, 126, 847, 302);
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
@@ -131,26 +149,28 @@ public class ItemFrame extends JFrame{
         try {
 			tableInventory = createTable(inventoryController.retrieveInventoryList());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         tableInventory.setBounds(15, 50, 555, 240);
         inventoryPane = new JScrollPane(tableInventory);
         panel_2.add(inventoryPane);
 		
-		JButton button_4 = new JButton("Submit");
-		button_4.setBounds(851, 619, 88, 34);
-		panel_1.add(button_4);
+		JButton btnIncreaseStock = new JButton("Increase");
+		btnIncreaseStock.setBounds(851, 619, 110, 34);
+		panel_1.add(btnIncreaseStock);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(721, 552, 106, 22);
-		panel_1.add(textField_1);
-		textField_1.setColumns(10);
+		//textField_1 = new JTextField();
+		increaseSpinner = new JSpinner(numberSpinnerBounds);
+		increaseSpinner.setBounds(721, 552, 106, 22);
+		panel_1.add(increaseSpinner);
+		//textField_1.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(721, 625, 106, 22);
-		panel_1.add(textField_3);
+		decreaseSpinner = new JSpinner(numberSpinnerBounds);
+		//textField_3.setColumns(10);
+	
+		decreaseSpinner.setBounds(721, 625, 106, 22);
+		panel_1.add(decreaseSpinner);
+		
 		
 		JLabel lblAddQuantity = new JLabel("Add Quantity");
 		lblAddQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -176,26 +196,55 @@ public class ItemFrame extends JFrame{
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 	}
 	
 	public class doActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnManageOrder) {
+			if(e.getSource() == btnOrder) {
 				new OrderFrame();
 				dispose();
-			} else if(e.getSource() == btnManageItems) {
+			} else if(e.getSource() == btnItems) {
 				//nothing happens. stays on this frame.
-			} else if(e.getSource() == btnManageSales) {
+			} else if(e.getSource() == btnSales) {
 				new SalesFrame();
 				dispose();
 			} else if(e.getSource() == btnChangePassword) {
 				new ChangePassword();
 			} else if(e.getSource() == btnAddNewItem) {
 				new AddItemFrame();
+			
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
+			}else if(e.getSource() == btnReduceQuantity){
+				int[] selectedRows = tableInventory.getSelectedRows();
+				for(int i=0;i<selectedRows.length;i++){
+					selectedRows[i] = selectedRows[i]+1;
+					System.out.println("ROWS: " + selectedRows[i]);
+				}
+				try {
+					inventoryController.decreaseStock(selectedRows, (double)decreaseSpinner.getValue());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				//((AbstractTableModel)tableInventory.getModel()).fireTableDataChanged();
+				try {
+					tableInventory = createTable(inventoryController.retrieveInventoryList());
+					tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
+					tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				panel_2.revalidate();
+				panel_2.repaint();
+				tableInventory.repaint();
+				tableInventory.revalidate();
+				
+				
+				//				new ItemFrame();
+//				dispose();
 			}
 			
 		}
@@ -218,14 +267,13 @@ public class ItemFrame extends JFrame{
                     try {
 						txtAreaItemDetails.setText(inventoryController.getData(row));
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
                 }
             }
         });
         TableColumnModel columnModel = inventoryListTable.getColumnModel();
-        TableModel model = inventoryListTable.getModel();
+        model = inventoryListTable.getModel();
         
         String header[] = {"Inventory Name", "Quantity In Stock", "Description", "Unit"};
         

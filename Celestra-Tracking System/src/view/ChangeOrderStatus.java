@@ -39,7 +39,7 @@ public class ChangeOrderStatus extends JFrame{
 		
 		JLabel lblAddNewItem = new JLabel("Change Order Status");
 		lblAddNewItem.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAddNewItem.setBounds(25, 53, 209, 30);
+		lblAddNewItem.setBounds(25, 53, 290, 30);
 		getContentPane().add(lblAddNewItem);
 		
 		status = new ButtonGroup();

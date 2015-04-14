@@ -15,6 +15,7 @@ public class OrderList {
 	private Client client;
 	private ArrayList<OrderItem> items;
 	
+	
 	private OrderList(OrderListBuilder builder) {
 		this.items = new ArrayList<>();
 		this.totalPrice = 0;

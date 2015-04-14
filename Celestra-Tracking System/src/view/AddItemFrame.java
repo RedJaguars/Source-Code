@@ -105,9 +105,11 @@ public class AddItemFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+				new ItemFrame();
 				dispose();
+				
 			} else if(e.getSource() == btnCancel) {
+				new ItemFrame();
 				dispose();
 			} 
 			

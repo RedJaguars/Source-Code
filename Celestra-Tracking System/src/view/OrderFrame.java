@@ -46,9 +46,9 @@ public class OrderFrame extends JFrame{
 	private JTable tableOrder;
 	private JScrollPane orderPane;
 	
-	private JButton btnManageOrder;
-	private JButton btnManageItems;
-	private JButton btnManageSales;
+	private JButton btnOrder;
+	private JButton btnItems;
+	private JButton btnSales;
 	private JButton btnChangePassword;
 	private JButton btnChangeStatus;
 	private JButton btnExit;
@@ -66,20 +66,20 @@ public class OrderFrame extends JFrame{
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		btnManageOrder = new JButton("Manage Order");
-		btnManageOrder.setBounds(28, 209, 200, 50);
-		btnManageOrder.addActionListener(new doActionListener());
-		panel.add(btnManageOrder);
+		btnOrder = new JButton("Order");
+		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.addActionListener(new doActionListener());
+		panel.add(btnOrder);
 		
-		btnManageItems = new JButton("Manage Items");
-		btnManageItems.setBounds(28, 280, 200, 50);
-		btnManageItems.addActionListener(new doActionListener());
-		panel.add(btnManageItems);
+		btnItems = new JButton("Items");
+		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.addActionListener(new doActionListener());
+		panel.add(btnItems);
 		
-		btnManageSales = new JButton("Manage Sales");
-		btnManageSales.setBounds(28, 352, 200, 50);
-		btnManageSales.addActionListener(new doActionListener());
-		panel.add(btnManageSales);
+		btnSales = new JButton("Sales");
+		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.addActionListener(new doActionListener());
+		panel.add(btnSales);
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
@@ -104,7 +104,7 @@ public class OrderFrame extends JFrame{
 		button_4.setBounds(739, 40, 200, 50);
 		panel_1.add(button_4);
 		
-		JLabel lblNewLabel = new JLabel("List of Orders");
+		JLabel lblNewLabel = new JLabel("Orders");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNewLabel.setBounds(53, 57, 150, 16);
 		panel_1.add(lblNewLabel);
@@ -148,7 +148,6 @@ public class OrderFrame extends JFrame{
         try {
         	tableOrder = createTable(orderController.retrieveOrderList());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         tableOrder.setBounds(15, 50, 555, 240);
@@ -170,12 +169,12 @@ public class OrderFrame extends JFrame{
 	public class doActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnManageOrder) {
+			if(e.getSource() == btnOrder) {
 				//nothing happens. stays on this frame.
-			} else if(e.getSource() == btnManageItems) {
+			} else if(e.getSource() == btnItems) {
 				new ItemFrame();
 				dispose();
-			} else if(e.getSource() == btnManageSales) {
+			} else if(e.getSource() == btnSales) {
 				new SalesFrame();
 				dispose();
 			} else if(e.getSource() == btnChangePassword) {
@@ -209,7 +208,6 @@ public class OrderFrame extends JFrame{
 						txtAreaOrderDetails.setText(orderController.getData(selectedRow));
 						btnChangeStatus.setEnabled(true);
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
