@@ -30,4 +30,7 @@ public class InventoryController extends Controller {
 	public void decreaseStock(int[] stocksToReduce, double quantity) throws SQLException{
 		((InventoryModel)model).decreaseStock(stocksToReduce, quantity);
 	}
+	public void increaseStock(int[] stocksToReduce, double quantity) throws SQLException{
+		((InventoryModel)model).increaseStock(stocksToReduce, quantity);
+	}
 }

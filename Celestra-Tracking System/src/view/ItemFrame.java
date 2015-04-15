@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +27,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -48,6 +50,7 @@ public class ItemFrame extends JFrame{
 	private JSpinner increaseSpinner;
 	private JSpinner decreaseSpinner;
 	
+	private JButton btnIncreaseStock;
 	private JButton btnReduceQuantity;
 	private JButton btnOrder;
 	private JButton btnItems;
@@ -56,7 +59,9 @@ public class ItemFrame extends JFrame{
 	private JButton btnAddNewItem;
 	private JButton btnExit;
 	
-	private SpinnerNumberModel numberSpinnerBounds;
+	private SpinnerNumberModel decreaseNumberSpinnerBounds;
+	private SpinnerNumberModel increaseNumberSpinnerBounds;
+
 	
 	private JTable tableInventory;
 	private JScrollPane inventoryPane;
@@ -67,51 +72,78 @@ public class ItemFrame extends JFrame{
 	public ItemFrame() {
 		inventoryController = new InventoryController();
 		
-		numberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
+		decreaseNumberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
+		increaseNumberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
+
 		
 		getContentPane().setLayout(null);
+		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
-		panel = new JPanel();
-		panel.setBackground(Color.LIGHT_GRAY);
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.decode("#677B42"));
 		panel.setBounds(0, 0, 292, 721);
 		getContentPane().add(panel);
-		
 		panel.setLayout(null);
 		
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		btnOrder = new JButton("Orders");
+		btnOrder = new JButton("Order");
 		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.setBackground(Color.decode("#A8A76D"));
+		btnOrder.setFocusPainted(false);
+		btnOrder.setBorderPainted(false);
 		btnOrder.addActionListener(new doActionListener());
 		panel.add(btnOrder);
 		
 		btnItems = new JButton("Items");
 		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.setBackground(Color.decode("#F4F2AB"));
+		btnItems.setFocusPainted(false);
+		btnItems.setBorderPainted(false);
 		btnItems.addActionListener(new doActionListener());
 		panel.add(btnItems);
 		
 		btnSales = new JButton("Sales");
 		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.setBackground(Color.decode("#A8A76D"));
+		btnSales.setFocusPainted(false);
+		btnSales.setBorderPainted(false);
 		btnSales.addActionListener(new doActionListener());
 		panel.add(btnSales);
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
+		btnChangePassword.setBackground(Color.decode("#A8A76D"));
+		btnChangePassword.setFocusPainted(false);
+		btnChangePassword.setBorderPainted(false);
 		btnChangePassword.addActionListener(new doActionListener());
 		panel.add(btnChangePassword);
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new doActionListener());
 		btnExit.setBounds(28, 612, 200, 50);
+		btnExit.setBackground(Color.decode("#A8A76D"));
+		btnExit.setFocusPainted(false);
+		btnExit.setBorderPainted(false);
 		panel.add(btnExit);
 		
-		panel_1 = new JPanel();
-		panel_1.setBounds(293, 0, 969, 721);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(292, 0, 1070, 721);
+		panel_1.setBackground(Color.decode("#E5EDB8"));
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
+		ImageIcon icon;
+		
 		btnAddNewItem = new JButton("Add New Item");
 		btnAddNewItem.addActionListener(new doActionListener());
-		btnAddNewItem.setBounds(739, 40, 200, 50);
+		btnAddNewItem.setBackground(Color.decode("#A8A76D"));
+		icon = new ImageIcon("src/images/add.png");
+		btnAddNewItem.setIcon(icon);
+		//btnAddNewItem.setFocusPainted(false);
+		btnAddNewItem.setBorderPainted(false);
+		btnAddNewItem.setContentAreaFilled(false);
+		btnAddNewItem.setBounds(895, 135, 165, 68);
 		panel_1.add(btnAddNewItem);
 		
 		JLabel lblNewLabel = new JLabel("List of Items");
@@ -131,8 +163,10 @@ public class ItemFrame extends JFrame{
 		panel_1.add(lblOrderDetails);
 		
 		btnReduceQuantity = new JButton("Decrease");
-		btnReduceQuantity.addActionListener(new doActionListener());
-			
+		btnReduceQuantity.setBackground(Color.decode("#A8A76D"));
+		btnReduceQuantity.setFocusPainted(false);
+		btnReduceQuantity.setBorderPainted(false);
+		btnReduceQuantity.addActionListener(new doActionListener());	
 		btnReduceQuantity.setBounds(851, 546, 110, 34);
 		panel_1.add(btnReduceQuantity);
 		
@@ -155,35 +189,45 @@ public class ItemFrame extends JFrame{
         inventoryPane = new JScrollPane(tableInventory);
         panel_2.add(inventoryPane);
 		
-		JButton btnIncreaseStock = new JButton("Increase");
+		btnIncreaseStock = new JButton("Increase");
 		btnIncreaseStock.setBounds(851, 619, 110, 34);
+		btnIncreaseStock.setBackground(Color.decode("#A8A76D"));
+		btnIncreaseStock.setFocusPainted(false);
+		btnIncreaseStock.setBorderPainted(false);
+		btnIncreaseStock.addActionListener(new doActionListener());
 		panel_1.add(btnIncreaseStock);
 		
 		//textField_1 = new JTextField();
-		increaseSpinner = new JSpinner(numberSpinnerBounds);
-		increaseSpinner.setBounds(721, 552, 106, 22);
+		increaseSpinner = new JSpinner(increaseNumberSpinnerBounds);
+		increaseSpinner.setBounds(721, 625, 106, 22);
 		panel_1.add(increaseSpinner);
 		//textField_1.setColumns(10);
 		
-		decreaseSpinner = new JSpinner(numberSpinnerBounds);
+		decreaseSpinner = new JSpinner(decreaseNumberSpinnerBounds);
 		//textField_3.setColumns(10);
 	
-		decreaseSpinner.setBounds(721, 625, 106, 22);
+		decreaseSpinner.setBounds(721, 552, 106, 22);
 		panel_1.add(decreaseSpinner);
 		
 		
 		JLabel lblAddQuantity = new JLabel("Add Quantity");
 		lblAddQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAddQuantity.setBounds(566, 555, 115, 16);
+		lblAddQuantity.setBounds(566, 628, 115, 16);
 		panel_1.add(lblAddQuantity);
 		
 		JLabel lblReduceQuantity = new JLabel("Reduce Quantity");
 		lblReduceQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblReduceQuantity.setBounds(566, 628, 115, 16);
+		lblReduceQuantity.setBounds(566, 555, 130, 16);
 		panel_1.add(lblReduceQuantity);
 		
 		JButton btnModifyItem = new JButton("Modify Item");
-		btnModifyItem.setBounds(284, 457, 200, 34);
+		icon = new ImageIcon("src/images/modify.png");
+		btnModifyItem.setIcon(icon);
+		//btnModifyItem.setFocusPainted(false);
+		btnModifyItem.setBorderPainted(false);
+		btnModifyItem.setContentAreaFilled(false);
+		btnModifyItem.setBounds(895, 205, 165, 68);
+		//btnModifyItem.setEnabled(false);
 		panel_1.add(btnModifyItem);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -194,6 +238,7 @@ public class ItemFrame extends JFrame{
 		
 		this.setSize(screenWidth, screenHeight - taskBarSize);
 		this.setResizable(false);
+		this.setTitle("Celestra Tailoring and Embroidery");
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
@@ -222,7 +267,6 @@ public class ItemFrame extends JFrame{
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
-//					System.out.println("ROWS: " + selectedRows[i]);
 				}
 				try {
 					inventoryController.decreaseStock(selectedRows, (double)decreaseSpinner.getValue());
@@ -244,7 +288,33 @@ public class ItemFrame extends JFrame{
 				panel_2.repaint();
 				tableInventory.repaint();
 				tableInventory.revalidate();
-				System.out.println("DECREASE HIT");
+				
+			}
+			else if(e.getSource() == btnIncreaseStock){
+				int[] selectedRows = tableInventory.getSelectedRows();
+				for(int i=0;i<selectedRows.length;i++){
+					selectedRows[i] = selectedRows[i]+1;
+				}
+				try {
+					inventoryController.increaseStock(selectedRows, (double)increaseSpinner.getValue());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					
+					panel_2.remove(tableInventory);
+					tableInventory = createTable(inventoryController.retrieveInventoryList());
+					panel_2.add(tableInventory);
+					tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
+					tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				
+				panel_2.revalidate();
+				panel_2.repaint();
+				tableInventory.repaint();
+				tableInventory.revalidate();
 				
 			}
 			

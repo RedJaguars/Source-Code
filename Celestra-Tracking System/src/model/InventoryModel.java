@@ -67,24 +67,29 @@ public class InventoryModel extends Model {
 		
 		PreparedStatement statement = con.getConnection().prepareStatement(query);
 		for(int i=0;i<stocksToReduce.length;i++){	
-//			System.out.println("The stock: " + stocksToReduce[i]);
 			statement.setDouble(1, quantity);
-			statement.setInt(2, i);
-//			System.out.println("Done added batch on: " + stocksToReduce[i]);
+			statement.setInt(2, stocksToReduce[i]);
+			System.out.println("Done added batch on: " + stocksToReduce[i]);
 			statement.addBatch();
 		}
-//		int [] numUpdates= statement.executeBatch();             
-//		  for (int i=0; i < numUpdates.length; i++) {            
-//		    if (numUpdates[i] == -2)
-//		      System.out.println("Execution " + i + 
-//		        ": unknown number of rows updated");
-//		    else
-//		      System.out.println("Execution " + i + 
-//		        "successful: " +  numUpdates[i] + " rows updated");
-//		  }
 		statement.executeBatch();
 		getModelList();
 		notifyObservers();
-	} 
+	}
+	
+	public void increaseStock(int[] stocksToIncrease, double quantity) throws SQLException {
+		String query = "UPDATE inventory SET quantityInStock = quantityInStock + ? WHERE inventoryID = ?";
+		
+		PreparedStatement statement = con.getConnection().prepareStatement(query);
+		for(int i=0;i<stocksToIncrease.length;i++){	
+			statement.setDouble(1, quantity);
+			statement.setInt(2, stocksToIncrease[i]);
+			System.out.println("Done added batch on: " + stocksToIncrease[i]);
+			statement.addBatch();
+		}
+		statement.executeBatch();
+		getModelList();
+		notifyObservers();
+	}
 
 }

@@ -1,4 +1,4 @@
-
+package view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -138,5 +138,6 @@ public class AddNewOrder extends JFrame {
 		});
 		button_6.setBounds(1219, 901, 200, 50);
 		getContentPane().add(button_6);
+		this.setVisible(true);
 	}
 }

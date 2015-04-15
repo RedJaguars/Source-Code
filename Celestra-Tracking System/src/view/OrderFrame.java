@@ -1,10 +1,13 @@
 package view;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -64,46 +67,73 @@ public class OrderFrame extends JFrame{
 		orderController = new OrderController();
 		
 		getContentPane().setLayout(null);
+		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(Color.LIGHT_GRAY);
+		panel.setBackground(Color.decode("#677B42"));
 		panel.setBounds(0, 0, 292, 721);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
+		
 		btnOrder = new JButton("Order");
 		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.setBackground(Color.decode("#F4F2AB"));
+		btnOrder.setFocusPainted(false);
+		btnOrder.setBorderPainted(false);
 		btnOrder.addActionListener(new doActionListener());
 		panel.add(btnOrder);
 		
 		btnItems = new JButton("Items");
 		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.setBackground(Color.decode("#A8A76D"));
+		btnItems.setFocusPainted(false);
+		btnItems.setBorderPainted(false);
 		btnItems.addActionListener(new doActionListener());
 		panel.add(btnItems);
 		
 		btnSales = new JButton("Sales");
 		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.setBackground(Color.decode("#A8A76D"));
+		btnSales.setFocusPainted(false);
+		btnSales.setBorderPainted(false);
 		btnSales.addActionListener(new doActionListener());
 		panel.add(btnSales);
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
+		btnChangePassword.setBackground(Color.decode("#A8A76D"));
+		btnChangePassword.setFocusPainted(false);
+		btnChangePassword.setBorderPainted(false);
 		btnChangePassword.addActionListener(new doActionListener());
 		panel.add(btnChangePassword);
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new doActionListener());
 		btnExit.setBounds(28, 612, 200, 50);
+		btnExit.setBackground(Color.decode("#A8A76D"));
+		btnExit.setFocusPainted(false);
+		btnExit.setBorderPainted(false);
 		panel.add(btnExit);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(293, 0, 969, 721);
+		panel_1.setBounds(292, 0, 1070, 721);
+		panel_1.setBackground(Color.decode("#E5EDB8"));
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
-		btnAddOrder = new JButton("Add New Order");
+		ImageIcon icon;
+		
+		btnAddOrder = new JButton("Add An Order");
 		btnAddOrder.addActionListener(new doActionListener());
-		btnAddOrder.setBounds(739, 40, 200, 50);
+		icon = new ImageIcon("src/images/add.png");
+		btnAddOrder.setIcon(icon);
+		//btnAddOrder.setFocusPainted(false);
+		btnAddOrder.setBorderPainted(false);
+		btnAddOrder.setContentAreaFilled(false);
+		btnAddOrder.setBounds(895, 135, 165, 68);
+		btnAddOrder.addActionListener(new doActionListener());
 		panel_1.add(btnAddOrder);
 		
 		JLabel lblNewLabel = new JLabel("Orders");
@@ -124,18 +154,33 @@ public class OrderFrame extends JFrame{
 		
 		btnChangeStatus = new JButton("Change Status");
 		btnChangeStatus.addActionListener(new doActionListener());
-		btnChangeStatus.setBounds(704, 500, 200, 50);
-		btnChangeStatus.setEnabled(false);
+		icon = new ImageIcon("src/images/change.png");
+		btnChangeStatus.setIcon(icon);
+		//btnChangeStatus.setFocusPainted(false);
+		btnChangeStatus.setBorderPainted(false);
+		btnChangeStatus.setContentAreaFilled(false);
+		btnChangeStatus.setBounds(895, 345, 170, 68);
+		//btnChangeStatus.setEnabled(false);
 		panel_1.add(btnChangeStatus);
 		
-		btnCancelOrder = new JButton("Cancel Order");
-		btnCancelOrder.setBounds(704, 563, 200, 50);
+		JButton btnCancelOrder = new JButton("Cancel Order");
+		icon = new ImageIcon("src/images/cancel.png");
+		btnCancelOrder.setIcon(icon);
+		//btnCancelOrder.setFocusPainted(false);
+		btnCancelOrder.setBorderPainted(false);
+		btnCancelOrder.setContentAreaFilled(false);
+		btnCancelOrder.setBounds(895, 205, 165, 68);
 		panel_1.add(btnCancelOrder);
 		
 		btnModifyOrder = new JButton("Modify Order");
 		btnModifyOrder.addActionListener(new doActionListener());
-		btnModifyOrder.setBounds(704, 626, 200, 50);
-		btnModifyOrder.setEnabled(false);
+		icon = new ImageIcon("src/images/modify.png");
+		btnModifyOrder.setIcon(icon);
+		//btnModifyOrder.setFocusPainted(false);
+		btnModifyOrder.setBorderPainted(false);
+		btnModifyOrder.setContentAreaFilled(false);
+		btnModifyOrder.setBounds(895, 275, 165, 68);
+		//btnModifyOrder.setEnabled(false);
 		panel_1.add(btnModifyOrder);
 		
 		JPanel panel_2 = new JPanel();
@@ -154,7 +199,7 @@ public class OrderFrame extends JFrame{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-        tableOrder.setBounds(15, 50, 555, 240);
+        tableOrder.setBounds(10, 50, 555, 240);
         orderPane = new JScrollPane(tableOrder);
         panel_2.add(orderPane);
 		
@@ -166,6 +211,7 @@ public class OrderFrame extends JFrame{
 		
 		this.setSize(screenWidth, screenHeight - taskBarSize);
 		this.setResizable(false);
+		this.setTitle("Celestra Tailoring and Embroidery");
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -191,12 +237,25 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnModifyOrder) {
 				new ModifyOrder(selectedOrderList);
 			} else if(e.getSource() == btnAddOrder) {
-				//addneworder view
+				new AddNewOrder();
 			}
-//			else if(e.getSource() == btnCancelOrder){
-//				orderController.cancelOrder(tableOrder.getModel());
-//				
-//			}
+			else if(e.getSource() == btnCancelOrder){
+				Iterator<OrderList> orderList  = (Iterator<OrderList>)orderController.retrieveOrderList();
+				OrderList order = null;
+				while(orderList.hasNext()){
+					order = orderList.next();
+					if(order.getReceiptNo() == (int)tableOrder.getValueAt(tableOrder.getSelectedRow(), 0))
+						break;
+					
+				}
+				try {
+					orderController.cancelOrder(order);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
 			
 		}
 	}
