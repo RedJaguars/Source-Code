@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import view.ItemFrame.doActionListener;
@@ -42,6 +43,7 @@ public class SalesFrame extends JFrame{
 		
 		btnOrder = new JButton("Order");
 		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnOrder.setBackground(Color.decode("#A8A76D"));
 		btnOrder.setFocusPainted(false);
 		btnOrder.setBorderPainted(false);
@@ -50,6 +52,7 @@ public class SalesFrame extends JFrame{
 		
 		btnItems = new JButton("Items");
 		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnItems.setBackground(Color.decode("#A8A76D"));
 		btnItems.setFocusPainted(false);
 		btnItems.setBorderPainted(false);
@@ -58,6 +61,7 @@ public class SalesFrame extends JFrame{
 		
 		btnSales = new JButton("Sales");
 		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSales.setBackground(Color.decode("#F4F2AB"));
 		btnSales.setFocusPainted(false);
 		btnSales.setBorderPainted(false);
@@ -66,6 +70,7 @@ public class SalesFrame extends JFrame{
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
+		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnChangePassword.setBackground(Color.decode("#A8A76D"));
 		btnChangePassword.setFocusPainted(false);
 		btnChangePassword.setBorderPainted(false);
@@ -74,6 +79,7 @@ public class SalesFrame extends JFrame{
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new doActionListener());
+		btnExit.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnExit.setBounds(28, 612, 200, 50);
 		btnExit.setBackground(Color.decode("#A8A76D"));
 		btnExit.setFocusPainted(false);
@@ -89,13 +95,16 @@ public class SalesFrame extends JFrame{
 		ImageIcon icon;
 		
 		JButton btnViewDailyReport = new JButton("View Daily Report");
-		btnViewDailyReport.setBounds(324, 42, 200, 50);
+		btnViewDailyReport.setBounds(690, 7, 140, 68);
 		btnViewDailyReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
 		icon = new ImageIcon("src/images/sales.png");
 		btnViewDailyReport.setIcon(icon);
+		btnViewDailyReport.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnViewDailyReport.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnViewDailyReport.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnViewDailyReport.setContentAreaFilled(false);
 		btnViewDailyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewDailyReport.setFocusPainted(false);
@@ -104,22 +113,22 @@ public class SalesFrame extends JFrame{
 		panel_1.add(btnViewDailyReport);
 		
 		JLabel lblNewLabel = new JLabel("Sales Report");
-		lblNewLabel.setBounds(53, 57, 115, 16);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNewLabel.setBounds(40, 33, 155, 30);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel_1.add(lblNewLabel);
 		
 		textField = new JTextField();
-		textField.setBounds(53, 500, 886, 183);
+		textField.setBounds(37, 500, 886, 183);
 		panel_1.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblOrderDetails = new JLabel("Transaction Details");
-		lblOrderDetails.setBounds(53, 458, 165, 16);
-		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		JLabel lblOrderDetails = new JLabel("Transaction Details:");
+		lblOrderDetails.setBounds(40, 472, 210, 16);
+		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel_1.add(lblOrderDetails);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(53, 114, 886, 314);
+		panel_2.setBounds(37, 75, 1000, 380);
 		panel_2.setBackground(Color.WHITE);
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
@@ -127,7 +136,10 @@ public class SalesFrame extends JFrame{
 		JButton btnViewMonthlyReport = new JButton("View Monthly Report");
 		icon = new ImageIcon("src/images/sales.png");
 		btnViewMonthlyReport.setIcon(icon);
-		btnViewMonthlyReport.setBounds(733, 42, 200, 50);
+		btnViewMonthlyReport.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnViewMonthlyReport.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnViewMonthlyReport.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnViewMonthlyReport.setBounds(910, 7, 140, 68);
 		btnViewMonthlyReport.setContentAreaFilled(false);
 		btnViewMonthlyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewMonthlyReport.setFocusPainted(false);
@@ -137,7 +149,10 @@ public class SalesFrame extends JFrame{
 		JButton btnViewWeeklyReport = new JButton("View Weekly Report");
 		icon = new ImageIcon("src/images/sales.png");
 		btnViewWeeklyReport.setIcon(icon);
-		btnViewWeeklyReport.setBounds(529, 42, 200, 50);
+		btnViewWeeklyReport.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnViewWeeklyReport.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnViewWeeklyReport.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnViewWeeklyReport.setBounds(800, 7, 140, 68);
 		btnViewWeeklyReport.setContentAreaFilled(false);
 		btnViewWeeklyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewWeeklyReport.setFocusPainted(false);

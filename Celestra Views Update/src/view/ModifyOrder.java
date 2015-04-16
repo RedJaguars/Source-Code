@@ -81,7 +81,6 @@ public class ModifyOrder extends JFrame {
 		this.setSize(screenWidth, screenHeight - taskBarSize);
 		this.setResizable(false);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public class clickActionListener implements MouseListener {
