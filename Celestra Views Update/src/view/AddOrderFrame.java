@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.URL;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,7 +19,7 @@ import view.OrderFrame.doActionListener;
 
 public class AddOrderFrame extends JFrame{
 	private JButton btnBack, btnAdd, btnCheckOut, btnOpenFile;
-	private JLabel lblClientName, lblGender, lblContact, lblEmail, lblDate, lblQuantity, lblGarment, lblMaterials, lblSpecialInstructions;
+	private JLabel lblClientName, lblGender, lblContact, lblEmail, lblDate, lblQuantity, lblGarment, lblMaterials, lblSpecialInstructions, lblPreview;
 	private JTextField txtClientName, txtGender, txtContact, txtEmail, txtDate, txtQuantity, txtFilePath, txtLength, txtShoulder,txtChest, txtArmlength;
 	private JTextField txtArmhole, txtBackfigure, txtNeckdeep, txtWristcircum, txtWaist, txtHips, txtFrontfigure, txtBustpoint, txtBustdistance;
 	private JTextField txtBottom, txtCrotch, txtThigh, txtKnee, txtMaterials, txtSpecialInstructions;
@@ -263,7 +265,7 @@ public class AddOrderFrame extends JFrame{
 		btnOpenFile.setBounds(550, 54, 80, 30);
 		btnOpenFile.addActionListener(new doActionListener());
 		
-		JTextArea lblPreview = new JTextArea(""); //make this label
+		lblPreview = new JLabel(); //make this label
 		JLabel lblPreviewHeader = new JLabel("Preview:");
 		lblPreviewHeader.setBounds(170,75,150,30);
 		lblPreview.setBackground(Color.white);
@@ -579,7 +581,7 @@ public class AddOrderFrame extends JFrame{
 						mtobottomPanel.setVisible(false);
 					}
 				}
-			}else if(action.getSource() == btnOpenFile){
+			} else if(action.getSource() == btnOpenFile){
 				JFileChooser fcDesignChooser = new JFileChooser("hallo");
 				fcDesignChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -589,7 +591,13 @@ public class AddOrderFrame extends JFrame{
 				int result = fcDesignChooser.showOpenDialog(AddOrderFrame.this);
 				if (result == JFileChooser.APPROVE_OPTION) {
 				    File selectedFile = fcDesignChooser.getSelectedFile();
-				    //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+				    txtFilePath.setText(selectedFile.toString());
+				    String imagePath = selectedFile.getAbsolutePath();
+				    ImageIcon imageIcon = new ImageIcon(imagePath);
+				    Image image = imageIcon.getImage();
+				    Image resizedImage = image.getScaledInstance(300, 250, java.awt.Image.SCALE_SMOOTH);
+				    imageIcon = new ImageIcon(resizedImage);
+				    lblPreview.setIcon(imageIcon);
 				}
 				fcDesignChooser.setBounds(340, 45, 300, 100);
 			}else if(action.getSource() instanceof JComboBox){
