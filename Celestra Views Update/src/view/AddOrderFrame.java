@@ -21,9 +21,9 @@ public class AddOrderFrame extends JFrame{
 	private JTextField txtClientName, txtGender, txtContact, txtEmail, txtDate, txtQuantity, txtFilePath, txtLength, txtShoulder,txtChest, txtArmlength;
 	private JTextField txtArmhole, txtBackfigure, txtNeckdeep, txtWristcircum, txtWaist, txtHips, txtFrontfigure, txtBustpoint, txtBustdistance;
 	private JTextField txtBottom, txtCrotch, txtThigh, txtKnee, txtMaterials, txtSpecialInstructions;
-	private ButtonGroup bgType;
-	private JRadioButton rbAlteration, rbMadeToOrder, rbEmbroidery;
-	private JComboBox cbGarment;
+	private ButtonGroup bgType, bgGender;
+	private JRadioButton rbAlteration, rbMadeToOrder, rbEmbroidery, rbMale, rbFemale;
+	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth;
 	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel;
 	private JList addOrderList;
 	
@@ -92,11 +92,23 @@ public class AddOrderFrame extends JFrame{
 		lblGender = new JLabel("Gender:");
 		lblGender.setBounds(40,80,100,40);
 		lblGender.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtGender = new JTextField("");
-		txtGender.setBounds(150,90,50,20);
-		txtGender.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		rbMale = new JRadioButton("Male");
+		rbMale.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		rbMale.setFocusPainted(false);
+		rbMale.setContentAreaFilled(false);
+		rbMale.setBounds(150, 90, 100, 20);
+		rbFemale = new JRadioButton("Female");
+		rbFemale.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		rbFemale.setFocusPainted(false);
+		rbFemale.setContentAreaFilled(false);
+		rbFemale.setBounds(250,90, 100, 20);
+		
+		bgGender = new ButtonGroup();
+		bgGender.add(rbMale);
+		bgGender.add(rbFemale);
 		topPanel.add(lblGender);
-		topPanel.add(txtGender);
+		topPanel.add(rbMale);
+		topPanel.add(rbFemale);
 		
 		lblContact = new JLabel("Contact Number:");
 		lblContact.setBounds(40,110,100,40);
@@ -107,7 +119,7 @@ public class AddOrderFrame extends JFrame{
 		topPanel.add(lblContact);
 		topPanel.add(txtContact);
 		
-		lblEmail = new JLabel("Email:");
+		lblEmail = new JLabel("Email Address:");
 		lblEmail.setBounds(40,140,100,40);
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtEmail = new JTextField("");
@@ -119,17 +131,35 @@ public class AddOrderFrame extends JFrame{
 		lblDate = new JLabel("Due Date:");
 		lblDate.setBounds(40,650,100,40);
 		lblDate.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtDate = new JTextField("");
-		txtDate.setBounds(130,662,170,20);
-		txtDate.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		String[] months = {"January","February", "March","April","May","June","July","August","September","October","November","December"};
+		String[] days = {"1","2", "3","4","5","6","7","8","8","10","11","12","13","14", "15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
+		String[] years = {"2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"};
+		cbDueYear = new JComboBox(years);
+		cbDueDay = new JComboBox(days);
+		cbDueMonth = new JComboBox(months);
+		cbDueMonth.setBounds(205,662,100,20);
+		cbDueDay.setBounds(315,662,50,20);
+		cbDueYear.setBounds(115,662,80,20);
+		cbDueYear.setSelectedIndex(0);
+		cbDueYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cbDueYear.setBackground(Color.decode("#E5EDB8"));
+		cbDueDay.setSelectedIndex(0);
+		cbDueDay.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cbDueDay.setBackground(Color.decode("#E5EDB8"));
+		cbDueMonth.setSelectedIndex(0);
+		cbDueMonth.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cbDueMonth.setBackground(Color.decode("#E5EDB8"));
+		
 		panel_1.add(lblDate);
-		panel_1.add(txtDate);
+		panel_1.add(cbDueYear);
+		panel_1.add(cbDueMonth);
+		panel_1.add(cbDueDay);
 		
 		lblQuantity = new JLabel("Quantity:");
-		lblQuantity.setBounds(350,650,100,40);
+		lblQuantity.setBounds(390,650,100,40);
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtQuantity = new JTextField("");
-		txtQuantity.setBounds(435,662,170,20);
+		txtQuantity.setBounds(460,662,150,20);
 		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(lblQuantity);
 		panel_1.add(txtQuantity);
@@ -290,7 +320,7 @@ public class AddOrderFrame extends JFrame{
 		cbGarment.setBounds(325, 15, 150, 20);
 		cbGarment.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cbGarment.addActionListener(new doActionListener());
-		cbGarment.setBackground(Color.decode("#E5EDB8"));;
+		cbGarment.setBackground(Color.decode("#E5EDB8"));
 		
 		madetoorderPanel.add(lblGarment);
 		madetoorderPanel.add(cbGarment);
@@ -303,7 +333,7 @@ public class AddOrderFrame extends JFrame{
 		mtotopPanel.setLayout(null);
 		panel_1.add(mtotopPanel);
 		
-		JLabel lblHeader = new JLabel("Measurements:");
+		JLabel lblHeader = new JLabel("Measurements (in inches):");
 		JLabel lblLength = new JLabel("Length:");
 		JLabel lblShoulder = new JLabel("Shoulder:");
 		JLabel lblChest = new JLabel("Chest:");
@@ -318,7 +348,7 @@ public class AddOrderFrame extends JFrame{
 		JLabel lblBustpoint = new JLabel("Bust Point:");
 		JLabel lblBustdistance = new JLabel("Bust Distance:");
 		
-		lblHeader.setBounds(45,20,100,30);
+		lblHeader.setBounds(45,20,150,30);
 		lblHeader.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		lblLength.setBounds(100,50,100,30);
@@ -438,7 +468,7 @@ public class AddOrderFrame extends JFrame{
 		mtobottomPanel.setLayout(null);
 		panel_1.add(mtobottomPanel);
 		
-		JLabel lblHeader = new JLabel("Measurements:");
+		JLabel lblHeader = new JLabel("Measurements (in inches):");
 		JLabel lblLength = new JLabel("Length:");
 		JLabel lblBottom = new JLabel("Bottom:");
 		JLabel lblCrotch = new JLabel("Crotch:");
@@ -447,7 +477,7 @@ public class AddOrderFrame extends JFrame{
 		JLabel lblHips = new JLabel("Hips:");
 		JLabel lblKnee = new JLabel("Knee:");
 		
-		lblHeader.setBounds(45,20,100,30);
+		lblHeader.setBounds(45,20,150,30);
 		lblHeader.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
 		lblLength.setBounds(100,50,100,30);

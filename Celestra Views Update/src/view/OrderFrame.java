@@ -81,7 +81,7 @@ public class OrderFrame extends JFrame{
 		
 		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		btnOrder = new JButton("Order");
+		btnOrder = new JButton("Orders");
 		btnOrder.setBounds(30, 209, 200, 50);
 		btnOrder.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnOrder.setBackground(Color.decode("#F4F2AB"));

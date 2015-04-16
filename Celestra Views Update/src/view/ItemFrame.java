@@ -83,7 +83,7 @@ public class ItemFrame extends JFrame{
 		
 		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		btnOrder = new JButton("Order");
+		btnOrder = new JButton("Orders");
 		btnOrder.setBounds(28, 209, 200, 50);
 		btnOrder.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnOrder.setBackground(Color.decode("#A8A76D"));
@@ -199,7 +199,7 @@ public class ItemFrame extends JFrame{
         panel_2.add(inventoryPane);
 		
 		JButton btnIncreaseStock = new JButton("Increase");
-		btnIncreaseStock.setBounds(851, 619, 110, 34);
+		btnIncreaseStock.setBounds(851, 546, 110, 34);
 		btnIncreaseStock.setBackground(Color.decode("#A8A76D"));
 		btnIncreaseStock.setFocusPainted(false);
 		btnIncreaseStock.setBorderPainted(false);
@@ -210,7 +210,7 @@ public class ItemFrame extends JFrame{
 		btnReduceQuantity.setFocusPainted(false);
 		btnReduceQuantity.setBorderPainted(false);
 		btnReduceQuantity.addActionListener(new doActionListener());	
-		btnReduceQuantity.setBounds(851, 546, 110, 34);
+		btnReduceQuantity.setBounds(851, 619, 110, 34);
 		panel_1.add(btnReduceQuantity);
 		
 		//textField_1 = new JTextField();
