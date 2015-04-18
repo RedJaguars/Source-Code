@@ -8,15 +8,29 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
+import controller.SalesController;
+import objects.OrderList;
+import objects.Sales;
 import view.ItemFrame.doActionListener;
 
 public class SalesFrame extends JFrame{
@@ -28,7 +42,12 @@ public class SalesFrame extends JFrame{
 	private JButton btnChangePassword;
 	private JButton btnExit;
 	
+	private JTable salesTable;
+	private JScrollPane salesPane;
+	
+	private SalesController salesController;
 	public SalesFrame() {
+		salesController = new SalesController();
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -114,7 +133,7 @@ public class SalesFrame extends JFrame{
 		textField.setColumns(10);
 		
 		JLabel lblOrderDetails = new JLabel("Transaction Details");
-		lblOrderDetails.setBounds(53, 458, , 16);
+		lblOrderDetails.setBounds(53, 458, 100, 16);
 		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		panel_1.add(lblOrderDetails);
 		
@@ -123,6 +142,20 @@ public class SalesFrame extends JFrame{
 		panel_2.setBackground(Color.WHITE);
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
+		
+		salesTable = new JTable();
+		try {
+			salesTable = createTable(salesController.retrieveSalesList());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		salesPane =new JScrollPane(salesTable);
+		salesPane.setBounds(0, 0, 886, 314);
+		
+		panel_2.add(salesPane);
+		
+		
 		
 		JButton btnViewMonthlyReport = new JButton("View Monthly Report");
 		icon = new ImageIcon("src/images/sales.png");
@@ -157,6 +190,42 @@ public class SalesFrame extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
+		
+	public JTable createTable(Iterator<?> sales) {
+		int size = 0;
+		List<Sales> list = new ArrayList<Sales>();
+		while(sales.hasNext()) {
+			list.add((Sales) sales.next());
+			size++;
+		}
+		
+		JTable salesListTable = new UneditableJTable(size, 5);
+		
+		
+		TableColumnModel columnModel = salesListTable.getColumnModel();
+		TableModel model = salesListTable.getModel();
+		
+		
+		String[] headers = new String[]{"Receipt No.", "OrderDate", "Total Price", "Down Payment", "Status"};		
+		
+		for(int i = 0; i < salesListTable.getColumnCount(); i++) {
+			TableColumn column = salesListTable.getTableHeader().getColumnModel().getColumn(i);
+			column.setHeaderValue(headers[i]);
+			columnModel.getColumn(i).setWidth(111);
+		}
+		
+		for(int i = 0; i < list.size(); i++) {
+			model.setValueAt(list.get(i).getOrderList().getReceiptNo(), i, 0);
+			model.setValueAt(list.get(i).getOrderList().getOrderDate(), i, 1);
+			model.setValueAt(list.get(i).getOrderList().getTotalPrice(), i, 2);
+			model.setValueAt(list.get(i).getOrderList().getBalance(), i, 3);
+			model.setValueAt(list.get(i).getOrderList().getStatus(), i, 4);
+		}
+		
+		return salesListTable;
+	}
+	
+	
 	public class doActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -177,4 +246,5 @@ public class SalesFrame extends JFrame{
 			
 		}
 	}
+	
 }
