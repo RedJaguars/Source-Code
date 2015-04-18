@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.URL;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,14 +18,16 @@ import view.OrderFrame.doActionListener;
 
 public class AddOrderFrame extends JFrame{
 	private JButton btnBack, btnAdd, btnCheckOut, btnOpenFile;
-	private JLabel lblClientName, lblGender, lblContact, lblEmail, lblDate, lblQuantity, lblGarment, lblMaterials, lblSpecialInstructions, lblPreview;
+	private JLabel lblClientName, lblGender, lblContact, lblEmail, lblDate, lblQuantity, lblGarment, lblMaterials, lblSpecialInstructions, lblAdress;
+	private JLabel lblPrice, lblTotal, lblDownPayment, lblInputTotal, lblHeader, lblPreview;
 	private JTextField txtClientName, txtGender, txtContact, txtEmail, txtDate, txtQuantity, txtFilePath, txtLength, txtShoulder,txtChest, txtArmlength;
 	private JTextField txtArmhole, txtBackfigure, txtNeckdeep, txtWristcircum, txtWaist, txtHips, txtFrontfigure, txtBustpoint, txtBustdistance;
-	private JTextField txtBottom, txtCrotch, txtThigh, txtKnee, txtMaterials, txtSpecialInstructions;
+	private JTextField txtBottom, txtCrotch, txtThigh, txtKnee, txtAdress, txtPrice, txtDownPayment;
+	private JTextArea txtMaterials, txtSpecialInstructions;
 	private ButtonGroup bgType, bgGender;
 	private JRadioButton rbAlteration, rbMadeToOrder, rbEmbroidery, rbMale, rbFemale;
 	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth;
-	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel;
+	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel, topPanel;
 	private JList addOrderList;
 	
 	public AddOrderFrame() {
@@ -64,20 +65,13 @@ public class AddOrderFrame extends JFrame{
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
-		addOrderList = new JList();
-		addOrderList.setBackground(Color.decode("#C8CF9B"));
-		addOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
-		addOrderList.setBounds(780, 20, 330, 670);
-		panel_1.add(addOrderList);
-		
-		
-		JPanel topPanel = new JPanel();
-		topPanel.setBounds(0,0,800,220);
+		topPanel = new JPanel();
+		topPanel.setBounds(0,0,780,220);
 		topPanel.setBackground(Color.decode("#E5EDB8"));
 		topPanel.setLayout(null);
 		panel_1.add(topPanel);
 		
-		JLabel lblHeader = new JLabel("Add Order");
+		lblHeader = new JLabel("Add Order");
 		lblHeader.setBounds(40,10,150,40);
 		lblHeader.setFont(new Font("Tahoma", Font.BOLD, 18));
 		topPanel.add(lblHeader);
@@ -86,7 +80,7 @@ public class AddOrderFrame extends JFrame{
 		lblClientName.setBounds(40,50,100,40);
 		lblClientName.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtClientName = new JTextField("");
-		txtClientName.setBounds(150,60,400,20);
+		txtClientName.setBounds(150,60,430,20);
 		txtClientName.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		topPanel.add(lblClientName);
 		topPanel.add(txtClientName);
@@ -122,13 +116,22 @@ public class AddOrderFrame extends JFrame{
 		topPanel.add(txtContact);
 		
 		lblEmail = new JLabel("Email Address:");
-		lblEmail.setBounds(40,140,100,40);
+		lblEmail.setBounds(300,110,100,40);
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtEmail = new JTextField("");
-		txtEmail.setBounds(150,150,180,20);
+		txtEmail.setBounds(390,120,190,20);
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		topPanel.add(lblEmail);
 		topPanel.add(txtEmail);
+		
+		lblAdress = new JLabel("Address:");
+		lblAdress.setBounds(40,140,100,40);
+		lblAdress.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtAdress = new JTextField("");
+		txtAdress.setBounds(150,150,430,20);
+		txtAdress.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		topPanel.add(lblAdress);
+		topPanel.add(txtAdress);
 		
 		lblDate = new JLabel("Due Date:");
 		lblDate.setBounds(40,650,100,40);
@@ -139,9 +142,9 @@ public class AddOrderFrame extends JFrame{
 		cbDueYear = new JComboBox(years);
 		cbDueDay = new JComboBox(days);
 		cbDueMonth = new JComboBox(months);
-		cbDueMonth.setBounds(205,662,100,20);
-		cbDueDay.setBounds(315,662,50,20);
-		cbDueYear.setBounds(115,662,80,20);
+		cbDueMonth.setBounds(195,662,100,20);
+		cbDueDay.setBounds(305,662,50,20);
+		cbDueYear.setBounds(105,662,80,20);
 		cbDueYear.setSelectedIndex(0);
 		cbDueYear.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cbDueYear.setBackground(Color.decode("#E5EDB8"));
@@ -158,13 +161,22 @@ public class AddOrderFrame extends JFrame{
 		panel_1.add(cbDueDay);
 		
 		lblQuantity = new JLabel("Quantity:");
-		lblQuantity.setBounds(390,650,100,40);
+		lblQuantity.setBounds(370,650,100,40);
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtQuantity = new JTextField("");
-		txtQuantity.setBounds(460,662,150,20);
+		txtQuantity.setBounds(430,662,60,20);
 		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(lblQuantity);
 		panel_1.add(txtQuantity);
+		
+		lblPrice = new JLabel("Price:");
+		lblPrice.setBounds(500,650,100,40);
+		lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtPrice = new JTextField("");
+		txtPrice.setBounds(540,662,100,20);
+		txtPrice.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(lblPrice);
+		panel_1.add(txtPrice);
 		
 		btnAdd = new JButton("Add");
 		btnAdd.setBounds(650,650,100,40);
@@ -173,6 +185,40 @@ public class AddOrderFrame extends JFrame{
 		btnAdd.setFocusPainted(false);
 		btnAdd.setBorderPainted(false);
 		panel_1.add(btnAdd);
+		
+		addOrderList = new JList();
+		addOrderList.setBackground(Color.WHITE);
+		addOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
+		addOrderList.setBounds(785, 20, 325, 550);
+		panel_1.add(addOrderList);
+		
+		btnCheckOut = new JButton("Checkout");
+		btnCheckOut.setBounds(845,650,200,40);
+		btnCheckOut.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnCheckOut.setBackground(Color.decode("#A8A76D"));
+		btnCheckOut.setFocusPainted(false);
+		btnCheckOut.setBorderPainted(false);
+		panel_1.add(btnCheckOut);
+		
+		lblTotal = new JLabel("Total:");
+		lblTotal.setBounds(785,570,100,40);
+		lblTotal.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblInputTotal = new JLabel("/*TOTAL*/");
+		lblInputTotal.setBackground(Color.WHITE);
+		lblInputTotal.setBounds(885,570,100,40);
+		lblInputTotal.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(lblTotal);
+		panel_1.add(lblInputTotal);
+		
+		lblDownPayment = new JLabel("Down Payment:");
+		lblDownPayment.setBounds(785,600,100,40);
+		lblDownPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtDownPayment = new JTextField();
+		txtDownPayment.setBackground(Color.WHITE);
+		txtDownPayment.setBounds(885,610,100,20);
+		txtDownPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(lblDownPayment);
+		panel_1.add(txtDownPayment);
 		
 		rbAlteration = new JRadioButton("Alteration");
 		rbAlteration.setBounds(175, 180, 100, 20);
@@ -288,8 +334,8 @@ public class AddOrderFrame extends JFrame{
 		alterationPanel.setLayout(null);
 		panel_1.add(alterationPanel);
 		
-		txtMaterials = new JTextField();
-		txtSpecialInstructions = new JTextField();
+		txtMaterials = new JTextArea();
+		txtSpecialInstructions = new JTextArea();
 		txtMaterials.setBounds(40,40, 320, 350);
 		txtSpecialInstructions.setBounds(430, 40, 320, 350);
 		alterationPanel.add(txtMaterials);
@@ -421,13 +467,13 @@ public class AddOrderFrame extends JFrame{
 		lblMaterials = new JLabel("Materials:");
 		lblMaterials.setBounds(100,260,100,30);
 		lblMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtMaterials = new JTextField();
+		txtMaterials = new JTextArea();
 		txtMaterials.setBounds(100, 285, 200, 100);
 		
 		lblSpecialInstructions = new JLabel("Special Instructions:");
 		lblSpecialInstructions.setBounds(450,260,150,30);
 		lblSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtSpecialInstructions = new JTextField();
+		txtSpecialInstructions = new JTextArea();
 		txtSpecialInstructions.setBounds(450, 285, 200, 100);
 		
 		mtotopPanel.add(lblHeader);
@@ -520,13 +566,13 @@ public class AddOrderFrame extends JFrame{
 		lblMaterials = new JLabel("Materials:");
 		lblMaterials.setBounds(100,260,100,30);
 		lblMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtMaterials = new JTextField();
+		txtMaterials = new JTextArea();
 		txtMaterials.setBounds(100, 285, 200, 100);
 		
 		lblSpecialInstructions = new JLabel("Special Instructions:");
 		lblSpecialInstructions.setBounds(450,260,150,30);
 		lblSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtSpecialInstructions = new JTextField();
+		txtSpecialInstructions = new JTextArea();
 		txtSpecialInstructions.setBounds(450, 285, 200, 100);
 		
 		mtobottomPanel.add(lblHeader);
@@ -581,7 +627,7 @@ public class AddOrderFrame extends JFrame{
 						mtobottomPanel.setVisible(false);
 					}
 				}
-			} else if(action.getSource() == btnOpenFile){
+			}else if(action.getSource() == btnOpenFile){
 				JFileChooser fcDesignChooser = new JFileChooser("hallo");
 				fcDesignChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -590,7 +636,7 @@ public class AddOrderFrame extends JFrame{
 				
 				int result = fcDesignChooser.showOpenDialog(AddOrderFrame.this);
 				if (result == JFileChooser.APPROVE_OPTION) {
-				    File selectedFile = fcDesignChooser.getSelectedFile();
+					File selectedFile = fcDesignChooser.getSelectedFile();
 				    txtFilePath.setText(selectedFile.toString());
 				    String imagePath = selectedFile.getAbsolutePath();
 				    ImageIcon imageIcon = new ImageIcon(imagePath);
