@@ -18,7 +18,7 @@ public class SalesModel extends Model {
 	@Override
 	public Iterator<?> getModelList() throws SQLException {
 		modelList.removeAll(modelList);
-		ResultSet salesList = con.getConnection().prepareStatement("SELECT * FROM orderList").executeQuery();
+		ResultSet salesList = con.getConnection().prepareStatement("SELECT * FROM order_list").executeQuery();
 		
 		while(salesList.next()) {
 			
