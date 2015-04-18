@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 
@@ -66,6 +67,8 @@ public class OrderFrame extends JFrame{
 	private OrderList selectedOrderList;
 	
 	private OrderController orderController;
+	
+	private JPanel panelList, panel_1;
 	
 	public OrderFrame() {
 		orderController = new OrderController();
@@ -126,7 +129,7 @@ public class OrderFrame extends JFrame{
 		btnExit.setBorderPainted(false);
 		panel.add(btnExit);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBounds(292, 0, 1070, 721);
 		panel_1.setBackground(Color.decode("#E5EDB8"));
 		getContentPane().add(panel_1);
@@ -204,11 +207,10 @@ public class OrderFrame extends JFrame{
 		lblOrderDetails.setBounds(40, 472, 150, 16);
 		panel_1.add(lblOrderDetails);
 		
-		clientOrderList = new JList();
-		clientOrderList.setBackground(Color.decode("#C8CF9B"));
-		clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
-		clientOrderList.setBounds(565, 500, 470, 183);
-		panel_1.add(clientOrderList);
+		panelList = new JPanel();
+		panelList.setBackground(Color.decode("#C8CF9B"));
+		panelList.setBounds(565, 500, 470, 183);
+		panel_1.add(panelList);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
@@ -289,7 +291,8 @@ public class OrderFrame extends JFrame{
 					JTable target = (JTable)e.getSource();
 					selectedRow = target.getSelectedRow();
 					try {
-						txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
+						//txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
+						createJList();
 						setSelectedOrderList(orderController.getSelectedOrderList(selectedRow));
 						btnChangeStatus.setEnabled(true);
 						btnModifyOrder.setEnabled(true);
@@ -326,5 +329,70 @@ public class OrderFrame extends JFrame{
 	
 	public void setSelectedOrderList(OrderList orderList) {
 		selectedOrderList = orderList;
+	}
+	
+	public void createJList() {
+		ArrayList<Integer> orderItemIdList;
+		Integer[] list = null;
+		try {
+			orderItemIdList = orderController.getOrderItemIDList(selectedOrderList);
+			list = new Integer[orderItemIdList.size()];
+			list = orderItemIdList.toArray(list);
+			clientOrderList = new JList(list);
+			clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
+			clientOrderList.addMouseListener(new ClickActionListener());
+			clientOrderList.setBounds(565, 500, 470, 183);
+			panel_1.remove(panelList);
+			panel_1.add(clientOrderList);
+			panel_1.revalidate();
+			panel_1.repaint();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public class ClickActionListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getClickCount() == 1) {
+				int index = clientOrderList.locationToIndex(e.getPoint());
+				try {
+					int itemID = (int) clientOrderList.getSelectedValue();
+					String orderDetails = orderController.getOrderItemDetails(selectedOrderList, index, itemID);
+					txtAreaOrderDetails.setText(orderDetails);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }

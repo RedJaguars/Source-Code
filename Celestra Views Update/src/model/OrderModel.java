@@ -491,7 +491,9 @@ public class OrderModel extends Model{
 			type = "EMBOIDERY";
 		} else if(orderItem instanceof Alteration) {
 			type = "ALTERATION";
-		} //made to order
+		} else if (orderItem instanceof GarmentOrder) {
+			type = "GARMENT ORDER";
+		}
 		return type;	
 	}
 	
@@ -518,6 +520,7 @@ public class OrderModel extends Model{
 		
 		return originalOrderList;
 	} 
+	
 	public static OrderList getOrderListByID(int id) throws SQLException {
 		String statement = "SELECT * FROM order_list OL WHERE OL.orderListID = " + id;
 		PreparedStatement ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
@@ -698,5 +701,112 @@ public class OrderModel extends Model{
 		return orderList;
 	}
 	
+	public String getOrderItemDetails(OrderList orderList, int index, int itemID) throws SQLException {
+		String statement = "SELECT * FROM order_item OI WHERE OI.orderID = ?";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ps.setInt(1, itemID);
+		ResultSet orderItemDetails = ps.executeQuery();
+		
+		String type = determinePanel(orderList, index);
+		String str = "";
+		if(type.equals("EMBROIDERY")) {
+			statement = "SELECT * FROM embroidery_order EI WHERE EI.orderID = ?";
+			PreparedStatement es = con.getConnection().prepareStatement(statement);
+			es.setInt(1, itemID);
+			ResultSet embroideryOrderItemDetails = es.executeQuery();
+			
+			while(embroideryOrderItemDetails.next()) {
+				str = "Size: " + embroideryOrderItemDetails.getDouble("EI.size") + "\n" +
+						"Number of Colors: " + embroideryOrderItemDetails.getInt("EI.numOfColors") + "\n" +
+						"Embroidery Type: " + embroideryOrderItemDetails.getString("EI.embroideryType");
+			}
+		} else if(type.equals("ALTERATION")) {
+			statement = "SELECT * FROM alteration_order AI WHERE AI.orderID = ?";
+			PreparedStatement as = con.getConnection().prepareStatement(statement);
+			as.setInt(1, itemID);
+			ResultSet alterationOrderItemDetails = as.executeQuery();
+			
+			while(alterationOrderItemDetails.next()) {
+				str = "Garment Type: " + alterationOrderItemDetails.getString("AI.garmentType") + "\n" +
+					"Special Instruction: " + alterationOrderItemDetails.getString("AI.specialInstruction");
+			}
+		} else if(type.equals("GARMENT ORDER")) {
+			statement = "SELECT * FROM garment_order GI WHERE GI.orderID = ?";
+			PreparedStatement gs = con.getConnection().prepareStatement(statement);
+			gs.setInt(1, itemID);
+			ResultSet garmentOrderItemDetails = gs.executeQuery();
+			
+			while(garmentOrderItemDetails.next()) {
+				str = "Garment Type: " + garmentOrderItemDetails.getString("GI.garmentType") + "\n" +
+						"Gender: " + garmentOrderItemDetails.getString("GI.gender") + "\n" +
+						"Material: " + garmentOrderItemDetails.getString("GI.material") + "\n" +
+						"Special Instruction: " + garmentOrderItemDetails.getString("GI.specialInstruction");
+			}
+			
+			int measurementID = garmentOrderItemDetails.getInt("GI.measurementID");
+			
+			//top measurement
+			statement = "SELECT * FROM top_measure TM WHERE TM.measurementID = ?";
+			PreparedStatement tmsp = con.getConnection().prepareStatement(statement);
+			tmsp.setInt(1, measurementID);
+			ResultSet tmsr = tmsp.executeQuery();
+			
+			while(tmsr.next()) {
+				str += "\n" + 
+						"Upper Length: " + tmsr.getDouble("TM.upperLength") + "\n" +
+						"Shoulder: " + tmsr.getDouble("TM.shoulder") + "\n" +
+						"Arm Length: " + tmsr.getDouble("TM.armLength") + "\n" +
+						"Wrist: " + tmsr.getDouble("TM.wrist") + "\n" + 
+						"Arm Hole: " + tmsr.getDouble("TM.armhole") + "\n" +
+						"Front Chest: " + tmsr.getDouble("TM.frontChest") + "\n" +
+						"Back Chest: " + tmsr.getDouble("TM.backChest") + "\n" +
+						"Waist: " + tmsr.getDouble("TM.waist") + "\n" +
+						"Hips: " + tmsr.getDouble("TM.hips") + "\n" + 
+						"Neck Deep: " + tmsr.getDouble("TM.neckDeep");
+			}
+			
+			//women top measurement
+			statement = "SELECT * FROM women_top_measure WM WHERE WM.measurementID = ?";
+			PreparedStatement wmsp = con.getConnection().prepareStatement(statement);
+			wmsp.setInt(1, measurementID);
+			ResultSet wmsr = tmsp.executeQuery();
+			
+			while(tmsr.next()) {
+				str += "\n" + 
+						"Front Figure: " + wmsr.getDouble("TM.frontFigure") + "\n" +
+						"Bust Point: " + wmsr.getDouble("TM.bustPoint") + "\n" +
+						"Bust Distance: " + wmsr.getDouble("TM.bustDistance") + "\n" +
+						"BackFigure: " + wmsr.getDouble("TM.backFigure");
+			}
+			
+			//bottom measurement
+			statement = "SELECT * FROM bottom_measure BM WHERE BM.measurementID = ?";
+			PreparedStatement bmsp = con.getConnection().prepareStatement(statement);
+			bmsp.setInt(1, measurementID);
+			ResultSet bmsr = tmsp.executeQuery();
+			
+			while(tmsr.next()) {
+				str += "\n" + 
+						"Bottom Length: " + bmsr.getDouble("BM.bottomLength") + "\n" +
+						"Waist: " + bmsr.getDouble("BM.waist") + "\n" +
+						"Hips: " + bmsr.getDouble("BM.hips") + "\n" +
+						"Thigh: " + bmsr.getDouble("BM.thigh") + "\n" +
+						"Knee: " + bmsr.getDouble("BM.knee") + "\n" +
+						"Buttom: " + bmsr.getDouble("BM.buttom") + "\n" +
+						"Crotch: " + bmsr.getDouble("BM.crotch");
+			}
+		}
+		
+		int quantity = 0;
+		double price = 0;
+		while(orderItemDetails.next()) {
+			quantity = orderItemDetails.getInt("OI.quantity");
+			price = orderItemDetails.getDouble("OI.itemPrice");
+		}
+		
+		return "Quantity: " + quantity + "\n" +
+				"Price: " + price + "\n" +
+				str;
+	}
 }
 
