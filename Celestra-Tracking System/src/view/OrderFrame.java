@@ -240,7 +240,13 @@ public class OrderFrame extends JFrame{
 				new AddNewOrder();
 			}
 			else if(e.getSource() == btnCancelOrder){
-				Iterator<OrderList> orderList  = (Iterator<OrderList>)orderController.retrieveOrderList();
+				Iterator<OrderList> orderList = null;
+				try {
+					orderList = (Iterator<OrderList>)orderController.retrieveOrderList();
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				OrderList order = null;
 				while(orderList.hasNext()){
 					order = orderList.next();
