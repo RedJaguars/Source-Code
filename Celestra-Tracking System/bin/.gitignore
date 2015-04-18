@@ -1,6 +1,9 @@
+/.classpath
 /controller/
-/model/
-/view/
 /database/
-/objects/
+/exception/
+/exceptions/
 /images/
+/model/
+/objects/
+/view/
