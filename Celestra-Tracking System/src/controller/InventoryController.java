@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.List;
 
 import objects.Material;
 import model.InventoryModel;
@@ -34,5 +35,13 @@ public class InventoryController extends Controller {
 	
 	public void increaseStock(int[] stocksToIncrease, double quantity) throws SQLException{
 		((InventoryModel)model).increaseStock(stocksToIncrease, quantity);
+	}
+	
+	public Material getSelectedMaterial(List<Material> list, int selectedRow) throws SQLException {
+		return ((InventoryModel)model).getSelectedMaterial(list, selectedRow);
+	}
+	
+	public void modifyMaterial(Material material, Material newMaterial) throws SQLException {
+		((InventoryModel)model).modifyMaterial(material, newMaterial);
 	}
 }

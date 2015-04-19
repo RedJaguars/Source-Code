@@ -36,6 +36,8 @@ import javax.swing.table.TableModel;
 
 import controller.InventoryController;
 import objects.Material;
+import objects.OrderItem;
+import objects.OrderList;
 import view.OrderFrame.doActionListener;
 
 public class ItemFrame extends JFrame{
@@ -68,6 +70,11 @@ public class ItemFrame extends JFrame{
 	private TableModel model;
 	
 	private JButton btnIncreaseStock;
+	private JButton btnModifyItem;
+	
+	private Material selectedMaterial;
+	
+	private List<Material> list;
 	
 	public ItemFrame() {
 		inventoryController = new InventoryController();
@@ -152,7 +159,7 @@ public class ItemFrame extends JFrame{
 		btnAddNewItem.setBounds(900, 7, 75, 68);
 		panel_1.add(btnAddNewItem);
 		
-		JButton btnModifyItem = new JButton("Modify");
+		btnModifyItem = new JButton("Modify");
 		icon = new ImageIcon("src/images/modify.png");
 		btnModifyItem.setIcon(icon);
 		btnModifyItem.setVerticalTextPosition(SwingConstants.BOTTOM); 
@@ -163,6 +170,7 @@ public class ItemFrame extends JFrame{
 		btnModifyItem.setContentAreaFilled(false);
 		btnModifyItem.setBounds(970, 7, 80, 68);
 		//btnModifyItem.setEnabled(false);
+		btnModifyItem.addActionListener(new doActionListener());
 		panel_1.add(btnModifyItem);
 		
 		JLabel lblNewLabel = new JLabel("List of Items");
@@ -271,7 +279,9 @@ public class ItemFrame extends JFrame{
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
-			}else if(e.getSource() == btnReduceQuantity){
+			} else if(e.getSource() == btnModifyItem) {
+				new ModifyItemFrame(selectedMaterial);
+			} else if(e.getSource() == btnReduceQuantity) {
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
@@ -293,9 +303,6 @@ public class ItemFrame extends JFrame{
 				
 				panel_2.revalidate();
 				panel_2.repaint();
-				//tableInventory.repaint();
-				//tableInventory.revalidate();
-				
 			}
 			else if(e.getSource() == btnIncreaseStock){
 				int[] selectedRows = tableInventory.getSelectedRows();
@@ -319,15 +326,12 @@ public class ItemFrame extends JFrame{
 				
 				panel_2.revalidate();
 				panel_2.repaint();
-				//tableInventory.repaint();
-				//tableInventory.revalidate();
-				
 			}
 		}
 	}
 	
 	public JTable createTable(Iterator<?> inventoryItemList) {
-		List<Material> list = new ArrayList<Material>();
+		list = new ArrayList<Material>();
 		int size = 0;
 		while(inventoryItemList.hasNext()) {
 			list.add((Material) inventoryItemList.next());
@@ -342,6 +346,7 @@ public class ItemFrame extends JFrame{
                     int row = target.getSelectedRow();
                     try {
 						txtAreaItemDetails.setText(inventoryController.getData(row));
+						setSelectedMaterial(inventoryController.getSelectedMaterial(list, row));
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -370,4 +375,8 @@ public class ItemFrame extends JFrame{
         }
         return inventoryListTable;
     }
+	
+	public void setSelectedMaterial(Material material) {
+		selectedMaterial = material;
+	}
 }

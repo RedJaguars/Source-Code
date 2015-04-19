@@ -12,11 +12,14 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SpinnerNumberModel;
 
+import objects.Material;
+import objects.Unit;
 import view.AddOrderFrame.doActionListener;
 import controller.InventoryController;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 
 public class ModifyItemFrame extends JFrame{
 	private JTextArea txtAreaItemName;
@@ -37,9 +40,13 @@ public class ModifyItemFrame extends JFrame{
 
 	private SpinnerNumberModel snmQuantity;
 	
-	public ModifyItemFrame() {
+	private Material material;
+	
+	public ModifyItemFrame(Material selectedMaterial) {
 		inventoryController = new InventoryController();
-		snmQuantity = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
+		material = selectedMaterial;
+		
+		snmQuantity = new SpinnerNumberModel(material.getQuantityInStock(), 1, Double.MAX_VALUE, 1 );
 		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
@@ -87,6 +94,7 @@ public class ModifyItemFrame extends JFrame{
 		txtItemName = new JTextField();
 		txtItemName.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txtItemName.setBounds(180, 72, 230, 20);
+		txtItemName.setText(material.getInventoryName());
 		panel_1.add(txtItemName);
 		
 		lblMeasurement = new JLabel("Unit Of Measurement:");
@@ -94,7 +102,7 @@ public class ModifyItemFrame extends JFrame{
 		lblMeasurement.setBounds(40, 110, 150, 20);
 		panel_1.add(lblMeasurement);
 		
-		String[] measurements = {"----------","inch", "centimeters", "meters","none"};
+		String[] measurements = {"----------","INCH", "ROLL", "CENTIMETER", "YARD", "FOOT"};
 		cbMeasurement = new JComboBox(measurements);
 		cbMeasurement.setFont(new Font("Tahoma,", Font.PLAIN, 13));
 		cbMeasurement.setBackground(Color.decode("#E5EDB8"));
@@ -110,6 +118,7 @@ public class ModifyItemFrame extends JFrame{
 		tarDescription = new JTextArea();
 		tarDescription.setFont(new Font("Tahoma", Font.PLAIN,13));
 		tarDescription.setBounds(40, 180, 400, 250);
+		tarDescription.setText(material.getDescription());
 		panel_1.add(tarDescription);
 		
 		btnSubmit = new JButton("Submit");
@@ -145,9 +154,17 @@ public class ModifyItemFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnSubmit) {
+				Material newMaterial = new Material(material.getInventoryID(), txtItemName.getText(), 
+						Double.parseDouble(snmQuantity.getValue().toString()), tarDescription.getText(), 
+						Unit.getUnit(cbMeasurement.getSelectedItem().toString()));
+				try {
+					inventoryController.modifyMaterial(material, newMaterial);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				dispose();
 			} else if(action.getSource() == btnCancel) {
-				new ItemFrame();
 				dispose();
 			} else if(action.getSource() == btnBack) {
 				dispose();

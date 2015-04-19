@@ -91,5 +91,33 @@ public class InventoryModel extends Model {
 		getModelList();
 		notifyObservers();
 	}
+	
+	public Material getSelectedMaterial(List<Material> list, int selectedRow) throws SQLException {
+		Material selectedMaterial = list.get(selectedRow);
+		int materialID = selectedMaterial.getInventoryID();
+		
+		String query = "SELECT * FROM inventory IV WHERE inventoryID = ?";
+		PreparedStatement statement = con.getConnection().prepareStatement(query);
+		statement.setInt(1, materialID);
+		ResultSet matSet = statement.executeQuery();
+		
+		while(matSet.next()) {
+			selectedMaterial = new Material(matSet.getInt("IV.inventoryID"), matSet.getString("IV.inventoryName"), matSet.getInt("IV.quantityInStock"), matSet.getString("IV.description"), Unit.getUnit(matSet.getString("IV.unit")));
+		}
+		
+		return selectedMaterial;
+	}
+	
+	public void modifyMaterial(Material material, Material newMaterial) throws SQLException {
+		String query = "UPDATE inventory SET inventoryName = ?, quantityInStock = ?, decription = ?, unit = ? WHERE inventoryID = ?";
+		PreparedStatement statement = con.getConnection().prepareStatement(query);
+		statement.setString(1, newMaterial.getInventoryName());
+		statement.setDouble(2, newMaterial.getQuantityInStock());
+		statement.setString(3, newMaterial.getDescription());
+		statement.setString(4, newMaterial.getUnit().name());
+		statement.setInt(5, material.getInventoryID());
+		statement.executeUpdate();
+		statement.close();
+	}
 
 }
