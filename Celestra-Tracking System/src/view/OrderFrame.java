@@ -68,7 +68,7 @@ public class OrderFrame extends JFrame{
 	
 	private OrderController orderController;
 	
-	private JPanel panelList, panel_1;
+	private JPanel panelList, panel_1, panel_2;
 	
 	public OrderFrame() {
 		orderController = new OrderController();
@@ -170,7 +170,7 @@ public class OrderFrame extends JFrame{
 		//btnChangeStatus.setEnabled(false);
 		panel_1.add(btnChangeStatus);
 		
-		JButton btnCancelOrder = new JButton("Cancel");
+		btnCancelOrder = new JButton("Cancel");
 		icon = new ImageIcon("src/images/cancel.png");
 		btnCancelOrder.setIcon(icon);
 		btnCancelOrder.setVerticalTextPosition(SwingConstants.BOTTOM); 
@@ -213,7 +213,7 @@ public class OrderFrame extends JFrame{
 		panelList.setBounds(565, 500, 470, 183);
 		panel_1.add(panelList);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
 		panel_2.setBounds(37, 75, 1000, 380);
 		panel_1.add(panel_2);
@@ -290,6 +290,17 @@ public class OrderFrame extends JFrame{
 					e1.printStackTrace();
 				}
 				
+				try {
+					panel_2.removeAll();
+					tableOrder = createTable(orderController.retrieveOrderList());
+					panel_2.add(new JScrollPane(tableOrder));
+					tableOrder.setModel(createTable(orderController.retrieveOrderList()).getModel());
+					tableOrder.setColumnModel(createTable(orderController.retrieveOrderList()).getColumnModel());
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				panel_2.revalidate();
+				panel_2.repaint();
 			}
 			
 		}
