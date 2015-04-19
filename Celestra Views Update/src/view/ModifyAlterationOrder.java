@@ -28,12 +28,9 @@ public class ModifyAlterationOrder extends JPanel {
 		alterationOrder = orderItem;
 		
 		setLayout(null);
-		UIManager.put("Button.select", Color.decode("#C1BF7D"));
-		this.setBackground(Color.decode("#E5EDB8"));
 		
-		JLabel lblSpecialInstruction = new JLabel("Special Instructions:");
-		lblSpecialInstruction.setBounds(40, -30, 200, 100);
-		lblSpecialInstruction.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		JLabel lblSpecialInstruction = new JLabel("Special Instruction:");
+		lblSpecialInstruction.setBounds(20, 20, 200, 100);
 		add(lblSpecialInstruction);
 		
 		txtAreaSpecialInstruction = new JTextArea();
@@ -41,25 +38,18 @@ public class ModifyAlterationOrder extends JPanel {
 		txtAreaSpecialInstruction.setText(orderItem.getInstruction());
 		
 		JScrollPane pane = new JScrollPane(txtAreaSpecialInstruction);
-		pane.setBounds(40, 35, 500, 200);
-		pane.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		pane.setBounds(150, 20, 500, 300);
 		add(pane);
 		
-		btnModifyOrder = new JButton("Confirm");
-		btnModifyOrder.setBounds(40, 300, 150, 40);
-		btnModifyOrder.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnModifyOrder.setBackground(Color.decode("#A8A76D"));
-		btnModifyOrder.setFocusPainted(false);
-		btnModifyOrder.setBorderPainted(false);
+		btnModifyOrder = new JButton("Modify");
+		btnModifyOrder.setBounds(20, 400, 100, 30);
+		btnModifyOrder.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnModifyOrder.addActionListener(new doActionListener());
 		add(btnModifyOrder);
 		
 		btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(255, 300, 150, 40);
+		btnCancel.setBounds(125, 400, 100, 30);
 		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCancel.setBackground(Color.decode("#A8A76D"));
-		btnCancel.setFocusPainted(false);
-		btnCancel.setBorderPainted(false);
 		btnCancel.addActionListener(new doActionListener());
 		add(btnCancel);
 		
