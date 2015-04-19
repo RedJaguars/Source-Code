@@ -10,37 +10,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import objects.Alteration;
-import objects.BottomMeasurement;
-import objects.Client;
-import objects.Embroidery;
-import objects.Garment;
-import objects.GarmentOrder;
-import objects.GarmentOrder.GarmentOrderBuilder;
-import objects.EmbroideryType;
-import objects.GarmentType;
-import objects.Gender;
-import objects.Material;
-import objects.Measurement;
-import objects.OrderItem;
-import objects.OrderStatus;
-import objects.TopMeasurement;
-import objects.Unit;
-import objects.WomensTopMeasure;
 import view.OrderFrame.doActionListener;
 
 public class AddOrderFrame extends JFrame{
@@ -51,15 +24,11 @@ public class AddOrderFrame extends JFrame{
 	private JTextField txtArmhole, txtBackfigure, txtNeckdeep, txtWristcircum, txtWaist, txtHips, txtFrontfigure, txtBustpoint, txtBustdistance;
 	private JTextField txtBottom, txtCrotch, txtThigh, txtKnee, txtAdress, txtPrice, txtDownPayment;
 	private JTextArea txtMaterials, txtSpecialInstructions;
-	private ButtonGroup bgType, bgGender, bgEmbroidery;
+	private ButtonGroup bgType, bgGender;
 	private JRadioButton rbAlteration, rbMadeToOrder, rbEmbroidery, rbMale, rbFemale;
 	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth;
 	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel, topPanel;
 	private JList addOrderList;
-	private String selectedType, selectedMadeToOrder, buttonSelected;
-	private byte[] fileChosenByte;
-	private DefaultListModel listModel;
-	private Double totalPrice = 0.0;
 	
 	public AddOrderFrame() {
 		
@@ -124,13 +93,11 @@ public class AddOrderFrame extends JFrame{
 		rbMale.setFocusPainted(false);
 		rbMale.setContentAreaFilled(false);
 		rbMale.setBounds(150, 90, 100, 20);
-		rbMale.addActionListener(new doActionListener());
 		rbFemale = new JRadioButton("Female");
 		rbFemale.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rbFemale.setFocusPainted(false);
 		rbFemale.setContentAreaFilled(false);
 		rbFemale.setBounds(250,90, 100, 20);
-		rbFemale.addActionListener(new doActionListener());
 		
 		bgGender = new ButtonGroup();
 		bgGender.add(rbMale);
@@ -169,8 +136,8 @@ public class AddOrderFrame extends JFrame{
 		lblDate = new JLabel("Due Date:");
 		lblDate.setBounds(40,650,100,40);
 		lblDate.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] months = {"01","02", "03","04","05","06","07","08","09","10","11","12"};
-		String[] days = {"01","02", "03","04","05","06","07","08","09","10","11","12","13","14", "15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
+		String[] months = {"January","February", "March","April","May","June","July","August","September","October","November","December"};
+		String[] days = {"1","2", "3","4","5","6","7","8","8","10","11","12","13","14", "15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
 		String[] years = {"2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"};
 		cbDueYear = new JComboBox(years);
 		cbDueDay = new JComboBox(days);
@@ -217,11 +184,9 @@ public class AddOrderFrame extends JFrame{
 		btnAdd.setBackground(Color.decode("#A8A76D"));
 		btnAdd.setFocusPainted(false);
 		btnAdd.setBorderPainted(false);
-		btnAdd.addActionListener(new executeActionListener());
 		panel_1.add(btnAdd);
 		
-		listModel = new DefaultListModel();
-		addOrderList = new JList(listModel);
+		addOrderList = new JList();
 		addOrderList.setBackground(Color.WHITE);
 		addOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
 		addOrderList.setBounds(785, 20, 325, 550);
@@ -233,7 +198,6 @@ public class AddOrderFrame extends JFrame{
 		btnCheckOut.setBackground(Color.decode("#A8A76D"));
 		btnCheckOut.setFocusPainted(false);
 		btnCheckOut.setBorderPainted(false);
-		btnCheckOut.addActionListener(new executeActionListener());
 		panel_1.add(btnCheckOut);
 		
 		lblTotal = new JLabel("Total:");
@@ -319,6 +283,7 @@ public class AddOrderFrame extends JFrame{
 		JRadioButton rbLogo, rbPatch;
 		JLabel lblDesign;
 		JTextField txtDesign;
+		ButtonGroup bgEmbroidery;
 		
 		rbLogo = new JRadioButton("Logo");
 		rbPatch = new JRadioButton("Patch");
@@ -372,9 +337,7 @@ public class AddOrderFrame extends JFrame{
 		txtMaterials = new JTextArea();
 		txtSpecialInstructions = new JTextArea();
 		txtMaterials.setBounds(40,40, 320, 350);
-		txtMaterials.setLineWrap(true);
 		txtSpecialInstructions.setBounds(430, 40, 320, 350);
-		txtSpecialInstructions.setLineWrap(true);
 		alterationPanel.add(txtMaterials);
 		alterationPanel.add(txtSpecialInstructions);
 		
@@ -506,14 +469,12 @@ public class AddOrderFrame extends JFrame{
 		lblMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtMaterials = new JTextArea();
 		txtMaterials.setBounds(100, 285, 200, 100);
-		txtMaterials.setLineWrap(true);
 		
 		lblSpecialInstructions = new JLabel("Special Instructions:");
 		lblSpecialInstructions.setBounds(450,260,150,30);
 		lblSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtSpecialInstructions = new JTextArea();
 		txtSpecialInstructions.setBounds(450, 285, 200, 100);
-		txtSpecialInstructions.setLineWrap(true);
 		
 		mtotopPanel.add(lblHeader);
 		mtotopPanel.add(lblLength);
@@ -607,14 +568,12 @@ public class AddOrderFrame extends JFrame{
 		lblMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtMaterials = new JTextArea();
 		txtMaterials.setBounds(100, 285, 200, 100);
-		txtMaterials.setLineWrap(true);
 		
 		lblSpecialInstructions = new JLabel("Special Instructions:");
 		lblSpecialInstructions.setBounds(450,260,150,30);
 		lblSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtSpecialInstructions = new JTextArea();
 		txtSpecialInstructions.setBounds(450, 285, 200, 100);
-		txtSpecialInstructions.setLineWrap(true);
 		
 		mtobottomPanel.add(lblHeader);
 		mtobottomPanel.add(lblLength);
@@ -643,20 +602,17 @@ public class AddOrderFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnBack) {
-				totalPrice = 0.0;
 				dispose();
 			} else if(action.getSource() instanceof JRadioButton){
 				JRadioButton rb = (JRadioButton) action.getSource();
 				if(rb.isSelected()){
 					if(rb.getText().equalsIgnoreCase("Alteration")){
-						selectedType = "Alteration";
 						alterationPanel.setVisible(true);
 						embroideryPanel.setVisible(false);
 						madetoorderPanel.setVisible(false);
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(false);
 					}else if(rb.getText().equalsIgnoreCase("Made To Order")){
-						selectedType = "Made To Order";
 						alterationPanel.setVisible(false);
 						embroideryPanel.setVisible(false);
 						madetoorderPanel.setVisible(true);
@@ -664,16 +620,11 @@ public class AddOrderFrame extends JFrame{
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(false);
 					}else if(rb.getText().equalsIgnoreCase("Embroidery")){
-						selectedType = "Embroidery";
 						embroideryPanel.setVisible(true);
 						alterationPanel.setVisible(false);
 						madetoorderPanel.setVisible(false);
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(false);
-					}else if(rb.getText().equals("Female")){
-						buttonSelected = "FEMALE";
-					}else if(rb.getText().equals("Male")){
-						buttonSelected = "MALE";
 					}
 				}
 			}else if(action.getSource() == btnOpenFile){
@@ -693,21 +644,6 @@ public class AddOrderFrame extends JFrame{
 				    Image resizedImage = image.getScaledInstance(300, 250, java.awt.Image.SCALE_SMOOTH);
 				    imageIcon = new ImageIcon(resizedImage);
 				    lblPreview.setIcon(imageIcon);
-				    
-				    FileInputStream fileStream;
-				    try {
-						fileStream = new FileInputStream(selectedFile);
-						fileChosenByte = new byte[(int)selectedFile.length()];
-			            fileStream.read(fileChosenByte, 0, fileChosenByte.length);
-			            for(int x : fileChosenByte)
-			            	System.out.println((char)x);
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 				}
 				fcDesignChooser.setBounds(340, 45, 300, 100);
 			}else if(action.getSource() instanceof JComboBox){
@@ -720,168 +656,20 @@ public class AddOrderFrame extends JFrame{
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(false);
 				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("Top")){
-						selectedMadeToOrder = "Top";
 						alterationPanel.setVisible(false);
 						embroideryPanel.setVisible(false);
 						madetoorderPanel.setVisible(true);
 						mtotopPanel.setVisible(true);
 						mtobottomPanel.setVisible(false);
 				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("Bottom")){
-						selectedMadeToOrder = "Bottom";
 						embroideryPanel.setVisible(false);
 						alterationPanel.setVisible(false);
 						madetoorderPanel.setVisible(true);
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(true);
-				}		
-			}
-		}
-	}
-	
-	public class executeActionListener implements ActionListener {
-
-		@SuppressWarnings("deprecation")
-		@Override
-		public void actionPerformed(ActionEvent x) {
-			if(x.getSource() == btnCheckOut) {
-				/*String dueDateString = cbDueYear.getSelectedItem().toString() +	
-										cbDueMonth.getSelectedItem().toString() +
-										cbDueDay.getSelectedItem().toString();
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");				
-				try {
-					java.util.Date date = format.parse(dueDateString);
-					java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-				
-				Double balance = Double.parseDouble(txtDownPayment.getText());
-				String pickupLocation = txtAdress.getText();
-				
-				String clientName = txtClientName.getText();
-				String[] splitStr = clientName.split("\\s"); 
-				String lastName = splitStr[0];
-				String firstName = splitStr[1];
-				Client client = new Client.ClientBuilder(lastName, firstName, bgGender.getSelection().getActionCommand(), txtContact.getText())
-				.email(txtEmail.getText())
-				.build();
-				
-				OrderStatus status = OrderStatus.PENDING;
-				
-				totalPrice = 0.0;
-				
-				dispose();
-			} else if (x.getSource() == btnAdd) {
-				if(selectedType.equals("Alteration")) {
-					System.out.println("Alteration");
-					int quantity = Integer.parseInt(txtQuantity.getText());
-					Double price = Double.parseDouble(txtPrice.getText());
-					totalPrice += price;
-					String garmentSelected = "COAT"; //change to option garmenttypes
-					Garment garment = Garment.getGarment(garmentSelected);
-					String instruction = txtSpecialInstructions.getText();
-					
-					OrderItem alterationOrder = new Alteration.AlterationBuilder(quantity, price, garment, instruction)
-					.build();
-					
-					listModel.addElement("ALTERATION: " + quantity + " " + garmentSelected + " (" + price + ")");
-					lblInputTotal.setText(totalPrice.toString());
-				} else if (selectedType.equals("Made To Order")) {
-					if(selectedMadeToOrder.equals("Top")) {
-						int quantity = Integer.parseInt(txtQuantity.getText());
-						Double price = Double.parseDouble(txtPrice.getText());
-						totalPrice += price;
-						String materials = txtMaterials.getText();
-						String instruction = txtSpecialInstructions.getText();
-						Gender garmentGender = Gender.getGender(buttonSelected);
-						String garmentSelected = "COAT"; //option for garmenttypes
-						Garment garment = Garment.getGarment(garmentSelected);
-						
-						Double upperLength = Double.parseDouble(txtLength.getText());
-						Double shoulder = Double.parseDouble(txtShoulder.getText());
-						Double armLength = Double.parseDouble(txtArmlength.getText());
-						Double wrist = Double.parseDouble(txtWristcircum.getText());
-						Double armHole = Double.parseDouble(txtArmhole.getText());
-						Double frontChest = Double.parseDouble(txtChest.getText());
-						Double backChest = Double.parseDouble(txtChest.getText()); //missing?
-						Double waist = Double.parseDouble(txtWaist.getText());
-						Double hips = Double.parseDouble(txtHips.getText());
-						Double neckDeep = Double.parseDouble(txtNeckdeep.getText());
-						Double frontFigure = Double.parseDouble(txtFrontfigure.getText());
-						Double bustPoint = Double.parseDouble(txtBustpoint.getText());
-						Double bustDistance = Double.parseDouble(txtBustdistance.getText());
-						Double backFigure = Double.parseDouble(txtBackfigure.getText());
-						
-						TopMeasurement measurement = new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
-						.build();
-						
-						ArrayList<Measurement> measurementSet = new ArrayList<>();
-						measurementSet.add(measurement);
-						
-						OrderItem garmentOrder = new GarmentOrder.GarmentOrderBuilder(quantity, price, garment, garmentGender, measurementSet.iterator())
-						.material(materials)
-						.instruction(instruction)
-						.build();
-						//removed itemid
-						
-						listModel.addElement("MADE TO ORDER: " + quantity + " " + garmentSelected + " - " + garmentGender.toString() + " Top (" + price + ")");
-						lblInputTotal.setText(totalPrice.toString());
-					} else if (selectedMadeToOrder.equals("Bottom")) {
-						int quantity = Integer.parseInt(txtQuantity.getText());
-						Double price = Double.parseDouble(txtPrice.getText());
-						totalPrice += price;
-						String materials = txtMaterials.getText();
-						String instruction = txtSpecialInstructions.getText();
-						Gender garmentGender = Gender.getGender(buttonSelected);
-						String garmentSelected = "COAT"; //option for garmenttypes
-						Garment garment = Garment.getGarment(garmentSelected);
-						
-						Double bottomLength = Double.parseDouble(txtLength.getText());
-						Double bottom = Double.parseDouble(txtBottom.getText());
-						Double crotch = Double.parseDouble(txtCrotch.getText());
-						Double thigh = Double.parseDouble(txtThigh.getText());
-						Double waist = Double.parseDouble(txtWaist.getText());
-						Double hips = Double.parseDouble(txtHips.getText());
-						Double knee = Double.parseDouble(txtKnee.getText());
-						
-						BottomMeasurement measurement = new BottomMeasurement.BottomMeasurementBuilder(bottomLength, waist, hips, thigh, knee, bottom, crotch)
-						.build();
-						
-						ArrayList<Measurement> measurementSet = new ArrayList<>();
-						measurementSet.add(measurement);
-						
-						OrderItem garmentOrder = new GarmentOrder.GarmentOrderBuilder(quantity, price, garment, garmentGender, measurementSet.iterator())
-						.material(materials)
-						.instruction(instruction)
-						.build();
-						//removed itemid
-						
-						listModel.addElement("MADE TO ORDER: " + quantity + " " + garmentSelected + " - " + garmentGender.toString() + " Bottom (" + price + ")");
-						lblInputTotal.setText(totalPrice.toString());
-					}
-					
-				} else if (selectedType.equals("Embroidery")) {
-					System.out.println("EMBROIDERY");
-					int quantity = Integer.parseInt(txtQuantity.getText());
-					Double price = Double.parseDouble(txtPrice.getText());
-					totalPrice += price;
-					byte[] logo = fileChosenByte;
-					double size = 4.0; //size textfield
-					int numOfColors = 4; //number of colors textfield
-					String typeEmbroidery = bgEmbroidery.getSelection().getActionCommand();
-					EmbroideryType type = EmbroideryType.getEmbroideryType(typeEmbroidery);
-					
-					OrderItem embroideryOrder = new Embroidery.EmbroideryBuilder(quantity, price, logo, size, numOfColors, type)
-					.build();
-					
-					listModel.addElement("EMBROIDERY: " + quantity + " " + size + " " + typeEmbroidery + " (" + price + ")");
-					lblInputTotal.setText(totalPrice.toString());
 				}
 				
 			}
-			
 		}
-		
 	}
 }
