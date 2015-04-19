@@ -56,8 +56,10 @@ public class AddOrderFrame extends JFrame{
 	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth;
 	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel, topPanel;
 	private JList addOrderList;
-	private String selectedType, selectedMadeToOrder;
+	private String selectedType, selectedMadeToOrder, buttonSelected;
 	private byte[] fileChosenByte;
+	private DefaultListModel listModel;
+	private Double totalPrice = 0.0;
 	
 	public AddOrderFrame() {
 		
@@ -122,11 +124,13 @@ public class AddOrderFrame extends JFrame{
 		rbMale.setFocusPainted(false);
 		rbMale.setContentAreaFilled(false);
 		rbMale.setBounds(150, 90, 100, 20);
+		rbMale.addActionListener(new doActionListener());
 		rbFemale = new JRadioButton("Female");
 		rbFemale.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rbFemale.setFocusPainted(false);
 		rbFemale.setContentAreaFilled(false);
 		rbFemale.setBounds(250,90, 100, 20);
+		rbFemale.addActionListener(new doActionListener());
 		
 		bgGender = new ButtonGroup();
 		bgGender.add(rbMale);
@@ -213,9 +217,11 @@ public class AddOrderFrame extends JFrame{
 		btnAdd.setBackground(Color.decode("#A8A76D"));
 		btnAdd.setFocusPainted(false);
 		btnAdd.setBorderPainted(false);
+		btnAdd.addActionListener(new executeActionListener());
 		panel_1.add(btnAdd);
 		
-		addOrderList = new JList();
+		listModel = new DefaultListModel();
+		addOrderList = new JList(listModel);
 		addOrderList.setBackground(Color.WHITE);
 		addOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
 		addOrderList.setBounds(785, 20, 325, 550);
@@ -366,7 +372,9 @@ public class AddOrderFrame extends JFrame{
 		txtMaterials = new JTextArea();
 		txtSpecialInstructions = new JTextArea();
 		txtMaterials.setBounds(40,40, 320, 350);
+		txtMaterials.setLineWrap(true);
 		txtSpecialInstructions.setBounds(430, 40, 320, 350);
+		txtSpecialInstructions.setLineWrap(true);
 		alterationPanel.add(txtMaterials);
 		alterationPanel.add(txtSpecialInstructions);
 		
@@ -498,12 +506,14 @@ public class AddOrderFrame extends JFrame{
 		lblMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtMaterials = new JTextArea();
 		txtMaterials.setBounds(100, 285, 200, 100);
+		txtMaterials.setLineWrap(true);
 		
 		lblSpecialInstructions = new JLabel("Special Instructions:");
 		lblSpecialInstructions.setBounds(450,260,150,30);
 		lblSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtSpecialInstructions = new JTextArea();
 		txtSpecialInstructions.setBounds(450, 285, 200, 100);
+		txtSpecialInstructions.setLineWrap(true);
 		
 		mtotopPanel.add(lblHeader);
 		mtotopPanel.add(lblLength);
@@ -597,12 +607,14 @@ public class AddOrderFrame extends JFrame{
 		lblMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtMaterials = new JTextArea();
 		txtMaterials.setBounds(100, 285, 200, 100);
+		txtMaterials.setLineWrap(true);
 		
 		lblSpecialInstructions = new JLabel("Special Instructions:");
 		lblSpecialInstructions.setBounds(450,260,150,30);
 		lblSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtSpecialInstructions = new JTextArea();
 		txtSpecialInstructions.setBounds(450, 285, 200, 100);
+		txtSpecialInstructions.setLineWrap(true);
 		
 		mtobottomPanel.add(lblHeader);
 		mtobottomPanel.add(lblLength);
@@ -631,6 +643,7 @@ public class AddOrderFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnBack) {
+				totalPrice = 0.0;
 				dispose();
 			} else if(action.getSource() instanceof JRadioButton){
 				JRadioButton rb = (JRadioButton) action.getSource();
@@ -643,7 +656,7 @@ public class AddOrderFrame extends JFrame{
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(false);
 					}else if(rb.getText().equalsIgnoreCase("Made To Order")){
-						selectedType = "Made to Order";
+						selectedType = "Made To Order";
 						alterationPanel.setVisible(false);
 						embroideryPanel.setVisible(false);
 						madetoorderPanel.setVisible(true);
@@ -657,6 +670,10 @@ public class AddOrderFrame extends JFrame{
 						madetoorderPanel.setVisible(false);
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(false);
+					}else if(rb.getText().equals("Female")){
+						buttonSelected = "FEMALE";
+					}else if(rb.getText().equals("Male")){
+						buttonSelected = "MALE";
 					}
 				}
 			}else if(action.getSource() == btnOpenFile){
@@ -752,24 +769,32 @@ public class AddOrderFrame extends JFrame{
 				
 				OrderStatus status = OrderStatus.PENDING;
 				
+				totalPrice = 0.0;
+				
 				dispose();
 			} else if (x.getSource() == btnAdd) {
 				if(selectedType.equals("Alteration")) {
+					System.out.println("Alteration");
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
+					totalPrice += price;
 					String garmentSelected = "COAT"; //change to option garmenttypes
 					Garment garment = Garment.getGarment(garmentSelected);
 					String instruction = txtSpecialInstructions.getText();
 					
 					OrderItem alterationOrder = new Alteration.AlterationBuilder(quantity, price, garment, instruction)
 					.build();
+					
+					listModel.addElement("ALTERATION: " + quantity + " " + garmentSelected + " (" + price + ")");
+					lblInputTotal.setText(totalPrice.toString());
 				} else if (selectedType.equals("Made To Order")) {
 					if(selectedMadeToOrder.equals("Top")) {
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
+						totalPrice += price;
 						String materials = txtMaterials.getText();
 						String instruction = txtSpecialInstructions.getText();
-						Gender garmentGender = Gender.getGender(bgGender.getSelection().getActionCommand());
+						Gender garmentGender = Gender.getGender(buttonSelected);
 						String garmentSelected = "COAT"; //option for garmenttypes
 						Garment garment = Garment.getGarment(garmentSelected);
 						
@@ -799,12 +824,16 @@ public class AddOrderFrame extends JFrame{
 						.instruction(instruction)
 						.build();
 						//removed itemid
+						
+						listModel.addElement("MADE TO ORDER: " + quantity + " " + garmentSelected + " - " + garmentGender.toString() + " Top (" + price + ")");
+						lblInputTotal.setText(totalPrice.toString());
 					} else if (selectedMadeToOrder.equals("Bottom")) {
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
+						totalPrice += price;
 						String materials = txtMaterials.getText();
 						String instruction = txtSpecialInstructions.getText();
-						Gender garmentGender = Gender.getGender(bgGender.getSelection().getActionCommand());
+						Gender garmentGender = Gender.getGender(buttonSelected);
 						String garmentSelected = "COAT"; //option for garmenttypes
 						Garment garment = Garment.getGarment(garmentSelected);
 						
@@ -827,11 +856,16 @@ public class AddOrderFrame extends JFrame{
 						.instruction(instruction)
 						.build();
 						//removed itemid
+						
+						listModel.addElement("MADE TO ORDER: " + quantity + " " + garmentSelected + " - " + garmentGender.toString() + " Bottom (" + price + ")");
+						lblInputTotal.setText(totalPrice.toString());
 					}
 					
 				} else if (selectedType.equals("Embroidery")) {
+					System.out.println("EMBROIDERY");
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
+					totalPrice += price;
 					byte[] logo = fileChosenByte;
 					double size = 4.0; //size textfield
 					int numOfColors = 4; //number of colors textfield
@@ -840,6 +874,9 @@ public class AddOrderFrame extends JFrame{
 					
 					OrderItem embroideryOrder = new Embroidery.EmbroideryBuilder(quantity, price, logo, size, numOfColors, type)
 					.build();
+					
+					listModel.addElement("EMBROIDERY: " + quantity + " " + size + " " + typeEmbroidery + " (" + price + ")");
+					lblInputTotal.setText(totalPrice.toString());
 				}
 				
 			}
