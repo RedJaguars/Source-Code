@@ -18,12 +18,16 @@ import controller.OrderController;
 import objects.Alteration;
 import objects.Embroidery;
 import objects.OrderList;
+import view.ChangeOrderStatus.doActionListener;
 
 public class ModifyOrder extends JFrame {
 	private JList<Integer> orderItemList;
 	private JPanel panel_2;
 	private OrderList selectedOrderList;
 	private OrderController orderController;
+	private JButton btnBack;
+	private JPanel panel_1;
+	private JLabel lblHeader;
 	
 	public ModifyOrder(OrderList orderList) {
 		selectedOrderList = orderList;
@@ -36,11 +40,40 @@ public class ModifyOrder extends JFrame {
 		}
 		
 		getContentPane().setLayout(null);
+		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 0, 1300, 280);
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.decode("#677B42"));
+		panel.setBounds(0, 0, 200, 721);
+		getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
+		ImageIcon icon;
+		
+		btnBack = new JButton("Go Back");
+		btnBack.setBounds(70, 10, 150, 50);
+		icon = new ImageIcon("src/images/back.png");
+		btnBack.setIcon(icon);
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnBack.setBackground(Color.decode("#A8A76D"));
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setFocusPainted(false);
+		btnBack.setBorderPainted(false);
+		btnBack.setContentAreaFilled(false);
+		btnBack.addActionListener(new doActionListener());
+		panel.add(btnBack);
+		
+		panel_1 = new JPanel();
+		panel_1.setBounds(200, 0, 1200, 721);
+		panel_1.setBackground(Color.decode("#E5EDB8"));
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
+		
+		lblHeader = new JLabel("Modify Order");
+		lblHeader.setBounds(40,10,250,40);
+		lblHeader.setFont(new Font("Tahoma", Font.BOLD, 18));
+		panel_1.add(lblHeader);
 		
 		//String[] data = {"one", "two", "three", "four"};
 		//orderItemList = new JList<String>(data);
@@ -58,18 +91,19 @@ public class ModifyOrder extends JFrame {
 		orderItemList.addMouseListener(new clickActionListener());
 		
 		JLabel lblOrderItem = new JLabel("Select order item:");
-		lblOrderItem.setBounds(20, 0, 150, 50);
-		lblOrderItem.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblOrderItem.setBounds(40, 50, 150, 50);
+		lblOrderItem.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblOrderItem);
 		
 		JScrollPane orderScrollPane = new JScrollPane(orderItemList);
-		orderScrollPane.setBounds(20, 50, 500, 200);
+		orderScrollPane.setBounds(40, 90, 500, 180);
 		panel_1.add(orderScrollPane);
 		
 		panel_2 = new JPanel();
-		panel_2.setBounds(0, 280, 1300, 460);
+		panel_2.setBounds(200, 280, 1300, 460);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(null);
+		panel_2.setBackground(Color.decode("#E5EDB8"));
 		//panel_2.add(new ModifyEmbroideryOrder());
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -81,6 +115,39 @@ public class ModifyOrder extends JFrame {
 		this.setSize(screenWidth, screenHeight - taskBarSize);
 		this.setResizable(false);
 		this.setVisible(true);
+	}
+
+	public void determinePanel(int selectedIndex) {
+		panel_2.removeAll();
+		String orderType = "";
+		try {
+			orderType = orderController.determinePanel(selectedOrderList, selectedIndex);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(orderType.equals("EMBROIDERY")) {
+			try {
+				panel_2.add(new ModifyEmbroideryOrder((Embroidery) orderController.getOrderItem(selectedOrderList, selectedIndex)));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			panel_2.revalidate();
+			panel_2.repaint();
+		} else if(orderType.equals("ALTERATION")) {
+			try {
+				panel_2.add(new ModifyAlterationOrder((Alteration) orderController.getOrderItem(selectedOrderList, selectedIndex)));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			panel_2.revalidate();
+			panel_2.repaint();
+		} else if(orderType.equals("MADETOORDER")) {
+			//something
+		}
 	}
 	
 	public class clickActionListener implements MouseListener {
@@ -116,36 +183,13 @@ public class ModifyOrder extends JFrame {
 		}
 	}
 	
-	public void determinePanel(int selectedIndex) {
-		panel_2.removeAll();
-		String orderType = "";
-		try {
-			orderType = orderController.determinePanel(selectedOrderList, selectedIndex);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public class doActionListener implements ActionListener {
 		
-		if(orderType.equals("EMBROIDERY")) {
-			try {
-				panel_2.add(new ModifyEmbroideryOrder((Embroidery) orderController.getOrderItem(selectedOrderList, selectedIndex)));
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		@Override
+		public void actionPerformed(ActionEvent action) {
+			if(action.getSource() == btnBack) {
+				dispose();
 			}
-			panel_2.revalidate();
-			panel_2.repaint();
-		} else if(orderType.equals("ALTERATION")) {
-			try {
-				panel_2.add(new ModifyAlterationOrder((Alteration) orderController.getOrderItem(selectedOrderList, selectedIndex)));
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			panel_2.revalidate();
-			panel_2.repaint();
-		} else if(orderType.equals("MADETOORDER")) {
-			//something
 		}
 	}
 }
