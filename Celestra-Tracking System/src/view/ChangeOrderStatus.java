@@ -10,8 +10,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import objects.OrderList;
-import view.AddOrderFrame.doActionListener;
-import controller.OrderController;
+ import controller.OrderController;
 
 public class ChangeOrderStatus extends JFrame{
 	private JButton btnBack, btnConfirm, btnCancel;
@@ -75,6 +74,8 @@ public class ChangeOrderStatus extends JFrame{
 		
 		rbPending = new JRadioButton("Pending");
 		rbFulfilled = new JRadioButton("Fulfilled");
+		rbPending.setActionCommand("PENDING");
+		rbFulfilled.setActionCommand("FULFILLED");
 		rbPending.setBounds(100,85,100,30);
 		rbFulfilled.setBounds(300,85,100,30);
 		rbPending.setContentAreaFilled(false);
@@ -96,7 +97,13 @@ public class ChangeOrderStatus extends JFrame{
 		lblTotalAmountDue.setBounds(40,460,150,40);
 		lblTotalAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblTotalAmountDue);
-		lblTotalAmountDue2 = new JLabel("/***AMOUNT HERE***/");
+		
+		try {
+			lblTotalAmountDue2 = new JLabel(String.valueOf(orderController.getSelectedOrderList(row).getTotalPrice()));
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
 		lblTotalAmountDue2.setBounds(180,460,150,40);
 		lblTotalAmountDue2.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblTotalAmountDue2);
@@ -105,7 +112,13 @@ public class ChangeOrderStatus extends JFrame{
 		lblInitialDeposit.setBounds(40,483,150,40);
 		lblInitialDeposit.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblInitialDeposit);
-		lblInitialDeposit2 = new JLabel("/***AMOUNT HERE***/");
+		
+		try {
+			lblInitialDeposit2 = new JLabel("" + orderController.getSelectedOrderList(row).getBalance());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		lblInitialDeposit2.setBounds(180,483,150,40);
 		lblInitialDeposit2.setForeground(Color.decode("#188A0F")); //green
 		lblInitialDeposit2.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -115,7 +128,12 @@ public class ChangeOrderStatus extends JFrame{
 		lblRemainingBalance.setBounds(40,506,150,40);
 		lblRemainingBalance.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblRemainingBalance);
-		lblRemainingBalance2 = new JLabel("/***AMOUNT HERE***/");
+		try {
+			lblRemainingBalance2 = new JLabel(String.valueOf(orderController.getSelectedOrderList(row).getTotalPrice()-orderController.getSelectedOrderList(row).getBalance()));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		lblRemainingBalance2.setBounds(180,506,150,40);
 		lblRemainingBalance2.setForeground(Color.decode("#B90A0A")); //red
 		lblRemainingBalance2.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -136,6 +154,7 @@ public class ChangeOrderStatus extends JFrame{
 		btnConfirm.setBorderPainted(false);
 		btnConfirm.setFocusPainted(false);
 		btnConfirm.setBackground(Color.decode("#A8A76D"));
+		btnConfirm.addActionListener(new doActionListener());
 		panel_1.add(btnConfirm);
 		
 		btnCancel = new JButton("Cancel");
@@ -144,6 +163,7 @@ public class ChangeOrderStatus extends JFrame{
 		btnCancel.setBorderPainted(false);
 		btnCancel.setFocusPainted(false);
 		btnCancel.setBackground(Color.decode("#A8A76D"));
+		btnCancel.addActionListener(new doActionListener());
 		panel_1.add(btnCancel);
 		
 		orderList = new JList();
@@ -172,7 +192,7 @@ public class ChangeOrderStatus extends JFrame{
 				dispose();
 			} else if(action.getSource() == btnConfirm) {
 				//checks if successfully altered
-				/*OrderList originalOrderList = null;
+				OrderList originalOrderList = null;
 				String selectedStatus;
 				selectedStatus = bgStatus.getSelection().getActionCommand();
 				
@@ -183,12 +203,13 @@ public class ChangeOrderStatus extends JFrame{
 					e2.printStackTrace();
 				}
 				try {
-					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, selectedStatus, Double.parseDouble(textField.getText())));
+					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, selectedStatus, Double.parseDouble(txtAmountDue.getText())));
 				} catch (NumberFormatException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				dispose();*/
+				System.out.println("YES");
+				dispose();
 			} else if(action.getSource() == btnCancel) {
 				dispose();
 			} 

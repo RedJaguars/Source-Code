@@ -267,7 +267,7 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnModifyOrder) {
 				new ModifyOrder(selectedOrderList);
 			} else if(e.getSource() == btnAddOrder) {
-				new AddOrderFrame();
+				//new AddOrderFrame();
 			} else if(e.getSource() == btnCancelOrder){
 				Iterator<OrderList> orderList = null;
 				try {
