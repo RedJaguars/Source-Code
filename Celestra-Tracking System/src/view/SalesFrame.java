@@ -8,8 +8,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,13 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import controller.SalesController;
-import objects.OrderList;
 import objects.Sales;
 import view.ItemFrame.doActionListener;
 
@@ -44,10 +42,13 @@ public class SalesFrame extends JFrame{
 	
 	private JTable salesTable;
 	private JScrollPane salesPane;
+	private JPanel panel_2;
 	
 	private SalesController salesController;
+	
 	public SalesFrame() {
 		salesController = new SalesController();
+		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -59,8 +60,9 @@ public class SalesFrame extends JFrame{
 		
 		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		btnOrder = new JButton("Order");
+		btnOrder = new JButton("Orders");
 		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnOrder.setBackground(Color.decode("#A8A76D"));
 		btnOrder.setFocusPainted(false);
 		btnOrder.setBorderPainted(false);
@@ -69,6 +71,7 @@ public class SalesFrame extends JFrame{
 		
 		btnItems = new JButton("Items");
 		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnItems.setBackground(Color.decode("#A8A76D"));
 		btnItems.setFocusPainted(false);
 		btnItems.setBorderPainted(false);
@@ -77,6 +80,7 @@ public class SalesFrame extends JFrame{
 		
 		btnSales = new JButton("Sales");
 		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSales.setBackground(Color.decode("#F4F2AB"));
 		btnSales.setFocusPainted(false);
 		btnSales.setBorderPainted(false);
@@ -85,6 +89,7 @@ public class SalesFrame extends JFrame{
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
+		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnChangePassword.setBackground(Color.decode("#A8A76D"));
 		btnChangePassword.setFocusPainted(false);
 		btnChangePassword.setBorderPainted(false);
@@ -93,6 +98,7 @@ public class SalesFrame extends JFrame{
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new doActionListener());
+		btnExit.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnExit.setBounds(28, 612, 200, 50);
 		btnExit.setBackground(Color.decode("#A8A76D"));
 		btnExit.setFocusPainted(false);
@@ -108,13 +114,16 @@ public class SalesFrame extends JFrame{
 		ImageIcon icon;
 		
 		JButton btnViewDailyReport = new JButton("View Daily Report");
-		btnViewDailyReport.setBounds(324, 42, 200, 50);
+		btnViewDailyReport.setBounds(690, 7, 140, 68);
 		btnViewDailyReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
 		icon = new ImageIcon("src/images/sales.png");
 		btnViewDailyReport.setIcon(icon);
+		btnViewDailyReport.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnViewDailyReport.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnViewDailyReport.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnViewDailyReport.setContentAreaFilled(false);
 		btnViewDailyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewDailyReport.setFocusPainted(false);
@@ -123,44 +132,47 @@ public class SalesFrame extends JFrame{
 		panel_1.add(btnViewDailyReport);
 		
 		JLabel lblNewLabel = new JLabel("Sales Report");
-		lblNewLabel.setBounds(53, 57, 115, 16);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNewLabel.setBounds(40, 33, 155, 30);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel_1.add(lblNewLabel);
 		
 		textField = new JTextField();
-		textField.setBounds(53, 500, 886, 183);
+		textField.setBounds(37, 500, 886, 183);
 		panel_1.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblOrderDetails = new JLabel("Transaction Details");
-		lblOrderDetails.setBounds(53, 458, 100, 16);
-		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		JLabel lblOrderDetails = new JLabel("Transaction Details:");
+		lblOrderDetails.setBounds(40, 472, 210, 16);
+		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel_1.add(lblOrderDetails);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(53, 114, 886, 314);
-		panel_2.setBackground(Color.WHITE);
+		panel_2 = new JPanel();
+		panel_2.setBounds(37, 75, 1000, 380);
 		panel_1.add(panel_2);
-		panel_2.setLayout(null);
+		panel_2.setLayout(new BorderLayout(0, 0));
 		
 		salesTable = new JTable();
+		salesTable.setBounds(57, 126, 847, 302);
+		if(salesPane != null) {
+            panel_2.remove(salesPane);
+        }
 		try {
 			salesTable = createTable(salesController.retrieveSalesList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		salesPane =new JScrollPane(salesTable);
-		salesPane.setBounds(0, 0, 886, 314);
-		
+		salesTable.setBounds(15, 50, 555, 240);
+		salesPane = new JScrollPane(salesTable);
 		panel_2.add(salesPane);
-		
-		
 		
 		JButton btnViewMonthlyReport = new JButton("View Monthly Report");
 		icon = new ImageIcon("src/images/sales.png");
 		btnViewMonthlyReport.setIcon(icon);
-		btnViewMonthlyReport.setBounds(733, 42, 200, 50);
+		btnViewMonthlyReport.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnViewMonthlyReport.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnViewMonthlyReport.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnViewMonthlyReport.setBounds(910, 7, 140, 68);
 		btnViewMonthlyReport.setContentAreaFilled(false);
 		btnViewMonthlyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewMonthlyReport.setFocusPainted(false);
@@ -170,7 +182,10 @@ public class SalesFrame extends JFrame{
 		JButton btnViewWeeklyReport = new JButton("View Weekly Report");
 		icon = new ImageIcon("src/images/sales.png");
 		btnViewWeeklyReport.setIcon(icon);
-		btnViewWeeklyReport.setBounds(529, 42, 200, 50);
+		btnViewWeeklyReport.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnViewWeeklyReport.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnViewWeeklyReport.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnViewWeeklyReport.setBounds(800, 7, 140, 68);
 		btnViewWeeklyReport.setContentAreaFilled(false);
 		btnViewWeeklyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewWeeklyReport.setFocusPainted(false);
@@ -190,7 +205,6 @@ public class SalesFrame extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
-		
 	public JTable createTable(Iterator<?> sales) {
 		int size = 0;
 		List<Sales> list = new ArrayList<Sales>();
@@ -225,7 +239,6 @@ public class SalesFrame extends JFrame{
 		return salesListTable;
 	}
 	
-	
 	public class doActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -246,5 +259,4 @@ public class SalesFrame extends JFrame{
 			
 		}
 	}
-	
 }

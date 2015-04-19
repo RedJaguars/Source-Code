@@ -3,10 +3,12 @@ package view;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import java.awt.Color;
@@ -21,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 
@@ -40,6 +43,7 @@ import objects.Material;
 import objects.OrderItem;
 import objects.OrderList;
 import objects.OrderList.OrderListBuilder;
+import view.SalesFrame.doActionListener;
 import controller.OrderController;
 
 public class OrderFrame extends JFrame{
@@ -59,9 +63,12 @@ public class OrderFrame extends JFrame{
 	private JButton btnAddOrder;
 	private JButton btnCancelOrder;
 	
+	private JList  clientOrderList;
 	private OrderList selectedOrderList;
 	
 	private OrderController orderController;
+	
+	private JPanel panelList, panel_1;
 	
 	public OrderFrame() {
 		orderController = new OrderController();
@@ -77,8 +84,9 @@ public class OrderFrame extends JFrame{
 		
 		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		btnOrder = new JButton("Order");
-		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder = new JButton("Orders");
+		btnOrder.setBounds(30, 209, 200, 50);
+		btnOrder.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnOrder.setBackground(Color.decode("#F4F2AB"));
 		btnOrder.setFocusPainted(false);
 		btnOrder.setBorderPainted(false);
@@ -86,7 +94,8 @@ public class OrderFrame extends JFrame{
 		panel.add(btnOrder);
 		
 		btnItems = new JButton("Items");
-		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.setBounds(30, 280, 200, 50);
+		btnItems.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnItems.setBackground(Color.decode("#A8A76D"));
 		btnItems.setFocusPainted(false);
 		btnItems.setBorderPainted(false);
@@ -94,7 +103,8 @@ public class OrderFrame extends JFrame{
 		panel.add(btnItems);
 		
 		btnSales = new JButton("Sales");
-		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.setBounds(30, 352, 200, 50);
+		btnSales.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSales.setBackground(Color.decode("#A8A76D"));
 		btnSales.setFocusPainted(false);
 		btnSales.setBorderPainted(false);
@@ -102,7 +112,8 @@ public class OrderFrame extends JFrame{
 		panel.add(btnSales);
 		
 		btnChangePassword = new JButton("Change Password");
-		btnChangePassword.setBounds(28, 424, 200, 50);
+		btnChangePassword.setBounds(30, 424, 200, 50);
+		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnChangePassword.setBackground(Color.decode("#A8A76D"));
 		btnChangePassword.setFocusPainted(false);
 		btnChangePassword.setBorderPainted(false);
@@ -111,13 +122,14 @@ public class OrderFrame extends JFrame{
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new doActionListener());
-		btnExit.setBounds(28, 612, 200, 50);
+		btnExit.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnExit.setBounds(30, 612, 200, 50);
 		btnExit.setBackground(Color.decode("#A8A76D"));
 		btnExit.setFocusPainted(false);
 		btnExit.setBorderPainted(false);
 		panel.add(btnExit);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBounds(292, 0, 1070, 721);
 		panel_1.setBackground(Color.decode("#E5EDB8"));
 		getContentPane().add(panel_1);
@@ -125,67 +137,85 @@ public class OrderFrame extends JFrame{
 		
 		ImageIcon icon;
 		
-		btnAddOrder = new JButton("Add An Order");
+		btnAddOrder = new JButton("Add");
 		btnAddOrder.addActionListener(new doActionListener());
 		icon = new ImageIcon("src/images/add.png");
 		btnAddOrder.setIcon(icon);
+		btnAddOrder.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnAddOrder.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAddOrder.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		//btnAddOrder.setFocusPainted(false);
 		btnAddOrder.setBorderPainted(false);
 		btnAddOrder.setContentAreaFilled(false);
-		btnAddOrder.setBounds(895, 135, 165, 68);
-		btnAddOrder.addActionListener(new doActionListener());
+		btnAddOrder.setBounds(720, 7, 70, 68);
 		panel_1.add(btnAddOrder);
 		
 		JLabel lblNewLabel = new JLabel("Orders");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(53, 57, 150, 16);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblNewLabel.setBounds(40, 33, 150, 21);
 		panel_1.add(lblNewLabel);
-		
-		txtAreaOrderDetails = new JTextArea();
-		txtAreaOrderDetails.setBounds(53, 500, 557, 183);
-		panel_1.add(txtAreaOrderDetails);
-		txtAreaOrderDetails.setColumns(10);
-		txtAreaOrderDetails.setEditable(false);
-		
-		JLabel lblOrderDetails = new JLabel("Order Details");
-		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblOrderDetails.setBounds(53, 458, 150, 16);
-		panel_1.add(lblOrderDetails);
 		
 		btnChangeStatus = new JButton("Change Status");
 		btnChangeStatus.addActionListener(new doActionListener());
 		icon = new ImageIcon("src/images/change.png");
 		btnChangeStatus.setIcon(icon);
+		btnChangeStatus.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnChangeStatus.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnChangeStatus.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnChangeStatus.setIcon(icon);
 		//btnChangeStatus.setFocusPainted(false);
 		btnChangeStatus.setBorderPainted(false);
-		btnChangeStatus.setContentAreaFilled(false);
-		btnChangeStatus.setBounds(895, 345, 170, 68);
+		btnChangeStatus.setContentAreaFilled(false);;
+		btnChangeStatus.setBounds(930, 7, 120, 68);
 		//btnChangeStatus.setEnabled(false);
 		panel_1.add(btnChangeStatus);
 		
-		JButton btnCancelOrder = new JButton("Cancel Order");
+		JButton btnCancelOrder = new JButton("Cancel");
 		icon = new ImageIcon("src/images/cancel.png");
 		btnCancelOrder.setIcon(icon);
+		btnCancelOrder.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnCancelOrder.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnCancelOrder.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		//btnCancelOrder.setFocusPainted(false);
 		btnCancelOrder.setBorderPainted(false);
 		btnCancelOrder.setContentAreaFilled(false);
-		btnCancelOrder.setBounds(895, 205, 165, 68);
+		btnCancelOrder.setBounds(798, 7, 70, 68);
+		btnCancelOrder.addActionListener(new doActionListener());
 		panel_1.add(btnCancelOrder);
 		
-		btnModifyOrder = new JButton("Modify Order");
+		btnModifyOrder = new JButton("Modify");
 		btnModifyOrder.addActionListener(new doActionListener());
 		icon = new ImageIcon("src/images/modify.png");
+		btnModifyOrder.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnModifyOrder.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnModifyOrder.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnModifyOrder.setIcon(icon);
 		//btnModifyOrder.setFocusPainted(false);
 		btnModifyOrder.setBorderPainted(false);
 		btnModifyOrder.setContentAreaFilled(false);
-		btnModifyOrder.setBounds(895, 275, 165, 68);
+		btnModifyOrder.setBounds(870, 7, 80, 68);
 		//btnModifyOrder.setEnabled(false);
 		panel_1.add(btnModifyOrder);
 		
+		txtAreaOrderDetails = new JTextArea();
+		txtAreaOrderDetails.setBounds(37, 500, 500, 183);
+		panel_1.add(txtAreaOrderDetails);
+		txtAreaOrderDetails.setColumns(10);
+		txtAreaOrderDetails.setEditable(false);
+		
+		JLabel lblOrderDetails = new JLabel("Order Details:");
+		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblOrderDetails.setBounds(40, 472, 150, 16);
+		panel_1.add(lblOrderDetails);
+		
+		panelList = new JPanel();
+		panelList.setBackground(Color.decode("#C8CF9B"));
+		panelList.setBounds(565, 500, 470, 183);
+		panel_1.add(panelList);
+		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
-		panel_2.setBounds(57, 126, 847, 302);
+		panel_2.setBounds(37, 75, 1000, 380);
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
@@ -237,9 +267,8 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnModifyOrder) {
 				new ModifyOrder(selectedOrderList);
 			} else if(e.getSource() == btnAddOrder) {
-				new AddNewOrder();
-			}
-			else if(e.getSource() == btnCancelOrder){
+				new AddOrderFrame();
+			} else if(e.getSource() == btnCancelOrder){
 				Iterator<OrderList> orderList = null;
 				try {
 					orderList = (Iterator<OrderList>)orderController.retrieveOrderList();
@@ -281,7 +310,8 @@ public class OrderFrame extends JFrame{
 					JTable target = (JTable)e.getSource();
 					selectedRow = target.getSelectedRow();
 					try {
-						txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
+						//txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
+						createJList();
 						setSelectedOrderList(orderController.getSelectedOrderList(selectedRow));
 						btnChangeStatus.setEnabled(true);
 						btnModifyOrder.setEnabled(true);
@@ -318,5 +348,70 @@ public class OrderFrame extends JFrame{
 	
 	public void setSelectedOrderList(OrderList orderList) {
 		selectedOrderList = orderList;
+	}
+	
+	public void createJList() {
+		ArrayList<Integer> orderItemIdList;
+		Integer[] list = null;
+		try {
+			orderItemIdList = orderController.getOrderItemIDList(selectedOrderList);
+			list = new Integer[orderItemIdList.size()];
+			list = orderItemIdList.toArray(list);
+			clientOrderList = new JList(list);
+			clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
+			clientOrderList.addMouseListener(new ClickActionListener());
+			clientOrderList.setBounds(565, 500, 470, 183);
+			panel_1.remove(panelList);
+			panel_1.add(clientOrderList);
+			panel_1.revalidate();
+			panel_1.repaint();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public class ClickActionListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getClickCount() == 1) {
+				int index = clientOrderList.locationToIndex(e.getPoint());
+				try {
+					int itemID = (int) clientOrderList.getSelectedValue();
+					String orderDetails = orderController.getOrderItemDetails(selectedOrderList, index, itemID);
+					txtAreaOrderDetails.setText(orderDetails);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }

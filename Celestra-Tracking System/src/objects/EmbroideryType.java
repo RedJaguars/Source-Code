@@ -7,6 +7,6 @@ public enum EmbroideryType {
 		switch(type) {
 		case "PATCH": 	return EmbroideryType.PATCH;
 		default:		return EmbroideryType.BUILTIN;
-	}
+		}
 	}
 }

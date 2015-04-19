@@ -27,10 +27,12 @@ public class InventoryController extends Controller {
 	public String getData(int row) throws SQLException {
 		return ((InventoryModel)model).getData(row);
 	}
+	
 	public void decreaseStock(int[] stocksToReduce, double quantity) throws SQLException{
 		((InventoryModel)model).decreaseStock(stocksToReduce, quantity);
 	}
-	public void increaseStock(int[] stocksToReduce, double quantity) throws SQLException{
-		((InventoryModel)model).increaseStock(stocksToReduce, quantity);
+	
+	public void increaseStock(int[] stocksToIncrease, double quantity) throws SQLException{
+		((InventoryModel)model).increaseStock(stocksToIncrease, quantity);
 	}
 }

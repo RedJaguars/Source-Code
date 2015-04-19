@@ -2,110 +2,155 @@ package view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import objects.OrderList;
+import view.AddOrderFrame.doActionListener;
 import controller.OrderController;
 
 public class ChangeOrderStatus extends JFrame{
-	private JTextArea txtAreaOrderStatus;
-	private JFormattedTextField textField;
-	private NumberFormat numberFormat;
-	
-	private JRadioButton cancelled;
-	private JRadioButton pending;
-	private JRadioButton fulfilled;
-	private ButtonGroup status;
-	
-	private JButton btnSubmit;
-	private JButton btnCancel;
-	
+	private JButton btnBack, btnConfirm, btnCancel;
+	private JList orderList;
+	private JRadioButton rbPending, rbFulfilled;
+	private ButtonGroup bgStatus;
+	private JTextField txtAmountDue;
+	private JLabel lblTotalAmountDue, lblTotalAmountDue2, lblInitialDeposit, lblInitialDeposit2, lblRemainingBalance, lblRemainingBalance2, lblAmountDue;;
+	private JLabel lblOrderDetails, lblChangeStatus, lblHeader;
+	private JPanel panel_1;
+	private OrderController orderController;
 	private int selectedRow;
 	
-	private OrderController orderController;
-	
 	public ChangeOrderStatus(int row) {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		numberFormat = NumberFormat.getInstance();
-		numberFormat.setGroupingUsed(false);
-		
-		selectedRow = row;
-		
 		orderController = new OrderController();
 		
 		getContentPane().setLayout(null);
+		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
-		JLabel lblAddNewItem = new JLabel("Change Order Status");
-		lblAddNewItem.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAddNewItem.setBounds(25, 53, 290, 30);
-		getContentPane().add(lblAddNewItem);
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		status = new ButtonGroup();
-		pending = new JRadioButton("PENDING", true);
-		cancelled = new JRadioButton("CANCELLED");
-		fulfilled = new JRadioButton("FULFILLED");
-		pending.setBounds(30, 165, 100, 20);
-		cancelled.setBounds(130, 165, 130, 20);
-		fulfilled.setBounds(260, 165, 100, 20);
-		pending.setActionCommand("PENDING");
-		cancelled.setActionCommand("CANCELLED");
-		fulfilled.setActionCommand("FULFILLED");
-		status.add(pending);
-		status.add(cancelled);
-		status.add(fulfilled);
+		selectedRow = row;
 		
-		getContentPane().add(pending);
-		getContentPane().add(cancelled);
-		getContentPane().add(fulfilled);
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.decode("#677B42"));
+		panel.setBounds(0, 0, 200, 721);
+		getContentPane().add(panel);
+		panel.setLayout(null);
 		
-//		txtAreaOrderStatus = new JTextArea();
-//		txtAreaOrderStatus.setColumns(10);
-//		txtAreaOrderStatus.setBounds(29, 165, 367, 212);
-//		getContentPane().add(txtAreaOrderStatus);
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
+		ImageIcon icon;
 		
-//		textField_2 = new JFormattedTextField(numberFormat);
-//		textField_2.setColumns(10);
-//		textField_2.setBounds(155, 417, 241, 22);
-//		getContentPane().add(textField_2);
+		btnBack = new JButton("Go Back");
+		btnBack.setBounds(70, 10, 150, 50);
+		icon = new ImageIcon("src/images/back.png");
+		btnBack.setIcon(icon);
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnBack.setBackground(Color.decode("#A8A76D"));
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setFocusPainted(false);
+		btnBack.setBorderPainted(false);
+		btnBack.setContentAreaFilled(false);
+		btnBack.addActionListener(new doActionListener());
+		panel.add(btnBack);
 		
-		JLabel lblNewLabel = new JLabel("Order Details:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(25, 115, 103, 16);
-		getContentPane().add(lblNewLabel);
+		panel_1 = new JPanel();
+		panel_1.setBounds(200, 0, 1200, 721);
+		panel_1.setBackground(Color.decode("#E5EDB8"));
+		getContentPane().add(panel_1);
+		panel_1.setLayout(null);
 		
-		JLabel lblQuantity = null;
-		try {
-			lblQuantity = new JLabel("Current balance: " + orderController.getSelectedOrderList(selectedRow).getBalance());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblQuantity.setBounds(25, 420, 200, 16);
-		getContentPane().add(lblQuantity);
+		lblHeader = new JLabel("Change Order Status");
+		lblHeader.setBounds(40,10,250,40);
+		lblHeader.setFont(new Font("Tahoma", Font.BOLD, 18));
+		panel_1.add(lblHeader);
 		
-		btnSubmit = new JButton("Submit");
-		btnSubmit.addActionListener(new doActionListener());
-		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSubmit.setBounds(51, 535, 149, 36);
-		getContentPane().add(btnSubmit);
+		lblChangeStatus = new JLabel("Change Status:");
+		lblChangeStatus.setBounds(40,50,150,40);
+		lblChangeStatus.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblChangeStatus);
+		
+		rbPending = new JRadioButton("Pending");
+		rbFulfilled = new JRadioButton("Fulfilled");
+		rbPending.setBounds(100,85,100,30);
+		rbFulfilled.setBounds(300,85,100,30);
+		rbPending.setContentAreaFilled(false);
+		rbFulfilled.setContentAreaFilled(false);
+		rbPending.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		rbFulfilled.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		bgStatus = new ButtonGroup();
+		bgStatus.add(rbPending);
+		bgStatus.add(rbFulfilled);
+		panel_1.add(rbPending);
+		panel_1.add(rbFulfilled);
+		
+		lblOrderDetails = new JLabel("Order Details:");
+		lblOrderDetails.setBounds(40,110,150,40);
+		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblOrderDetails);
+		
+		lblTotalAmountDue = new JLabel("Total Amount Due:");
+		lblTotalAmountDue.setBounds(40,460,150,40);
+		lblTotalAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblTotalAmountDue);
+		lblTotalAmountDue2 = new JLabel("/***AMOUNT HERE***/");
+		lblTotalAmountDue2.setBounds(180,460,150,40);
+		lblTotalAmountDue2.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblTotalAmountDue2);
+		
+		lblInitialDeposit = new JLabel("Initial Deposit:");
+		lblInitialDeposit.setBounds(40,483,150,40);
+		lblInitialDeposit.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblInitialDeposit);
+		lblInitialDeposit2 = new JLabel("/***AMOUNT HERE***/");
+		lblInitialDeposit2.setBounds(180,483,150,40);
+		lblInitialDeposit2.setForeground(Color.decode("#188A0F")); //green
+		lblInitialDeposit2.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblInitialDeposit2);
+		
+		lblRemainingBalance = new JLabel("Amount Due:");
+		lblRemainingBalance.setBounds(40,506,150,40);
+		lblRemainingBalance.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblRemainingBalance);
+		lblRemainingBalance2 = new JLabel("/***AMOUNT HERE***/");
+		lblRemainingBalance2.setBounds(180,506,150,40);
+		lblRemainingBalance2.setForeground(Color.decode("#B90A0A")); //red
+		lblRemainingBalance2.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblRemainingBalance2);
+		
+		lblAmountDue = new JLabel("Initial Deposit:");
+		lblAmountDue.setBounds(40,529,150,40);
+		lblAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(lblAmountDue);
+		txtAmountDue = new JTextField();
+		txtAmountDue.setBounds(180,539,140,20);
+		txtAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(txtAmountDue);
+		
+		btnConfirm = new JButton("Confirm");
+		btnConfirm.setBounds(40, 600, 150, 40);
+		btnConfirm.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnConfirm.setBorderPainted(false);
+		btnConfirm.setFocusPainted(false);
+		btnConfirm.setBackground(Color.decode("#A8A76D"));
+		panel_1.add(btnConfirm);
 		
 		btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new doActionListener());
-		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCancel.setBounds(231, 535, 149, 36);
-		getContentPane().add(btnCancel);
+		btnCancel.setBounds(250, 600, 150, 40);
+		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnCancel.setBorderPainted(false);
+		btnCancel.setFocusPainted(false);
+		btnCancel.setBackground(Color.decode("#A8A76D"));
+		panel_1.add(btnCancel);
 		
-		JLabel lblNewBalance = new JLabel("New Balance: ");
-		lblNewBalance.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewBalance.setBounds(25, 460, 118, 16);
-		getContentPane().add(lblNewBalance);
-		
-		textField = new JFormattedTextField(numberFormat);
-		textField.setColumns(10);
-		textField.setBounds(155, 458, 241, 22);
-		getContentPane().add(textField);
+		orderList = new JList();
+		orderList.setBounds(40, 150, 360, 300);
+		orderList.setBackground(Color.WHITE);
+		orderList.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		panel_1.add(orderList);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenHeight = screenSize.height;
@@ -115,18 +160,21 @@ public class ChangeOrderStatus extends JFrame{
 		
 		this.setSize(screenWidth, screenHeight - taskBarSize);
 		this.setResizable(false);
+		this.setTitle("Celestra Tailoring and Embroidery");
 		this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-	}
+	} 
 	
 	public class doActionListener implements ActionListener {
+		
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnSubmit) {
+		public void actionPerformed(ActionEvent action) {
+			if(action.getSource() == btnBack) {
+				dispose();
+			} else if(action.getSource() == btnConfirm) {
 				//checks if successfully altered
-				OrderList originalOrderList = null;
+				/*OrderList originalOrderList = null;
 				String selectedStatus;
-				selectedStatus =  status.getSelection().getActionCommand();
+				selectedStatus = bgStatus.getSelection().getActionCommand();
 				
 				try {
 					originalOrderList = orderController.getSelectedOrderList(selectedRow);
@@ -140,11 +188,10 @@ public class ChangeOrderStatus extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				dispose();
-			} else if(e.getSource() == btnCancel) {
+				dispose();*/
+			} else if(action.getSource() == btnCancel) {
 				dispose();
 			} 
-			
 		}
 	}
 }

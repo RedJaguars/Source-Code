@@ -88,7 +88,6 @@ public class AddItemFrame extends JFrame{
 		this.setSize(screenWidth, screenHeight - taskBarSize);
 		this.setResizable(false);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public class doActionListener implements ActionListener {
@@ -105,11 +104,9 @@ public class AddItemFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				new ItemFrame();
 				dispose();
 				
 			} else if(e.getSource() == btnCancel) {
-				new ItemFrame();
 				dispose();
 			} 
 			

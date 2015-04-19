@@ -32,7 +32,7 @@ public class OrderController extends Controller{
 			orderToAdd.addOrderItem(itemToAdd);
 		} while(items.hasNext());
 		((OrderModel)model).addNewOrder(orderToAdd);
-	}	
+	}
 	
 	public OrderList createModifiedOrderList(OrderList originalOrderList, String newDescription, double newBalance){
 		return ((OrderModel) model).createModifiedOrderList(originalOrderList, newDescription, newBalance);
@@ -76,5 +76,9 @@ public class OrderController extends Controller{
 	
 	public String determinePanel(OrderList orderList, int selectedIndex) throws SQLException {
 		return ((OrderModel) model).determinePanel(orderList, selectedIndex);
+	}
+	
+	public String getOrderItemDetails(OrderList orderList, int index, int itemID) throws SQLException {
+		return ((OrderModel) model).getOrderItemDetails(orderList, index, itemID);
 	}
 }

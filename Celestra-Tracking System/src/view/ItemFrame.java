@@ -27,6 +27,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -50,7 +51,6 @@ public class ItemFrame extends JFrame{
 	private JSpinner increaseSpinner;
 	private JSpinner decreaseSpinner;
 	
-	private JButton btnIncreaseStock;
 	private JButton btnReduceQuantity;
 	private JButton btnOrder;
 	private JButton btnItems;
@@ -59,9 +59,7 @@ public class ItemFrame extends JFrame{
 	private JButton btnAddNewItem;
 	private JButton btnExit;
 	
-	private SpinnerNumberModel decreaseNumberSpinnerBounds;
-	private SpinnerNumberModel increaseNumberSpinnerBounds;
-
+	private SpinnerNumberModel numberSpinnerBounds;
 	
 	private JTable tableInventory;
 	private JScrollPane inventoryPane;
@@ -69,12 +67,12 @@ public class ItemFrame extends JFrame{
 	private InventoryController inventoryController;
 	private TableModel model;
 	
+	private JButton btnIncreaseStock;
+	
 	public ItemFrame() {
 		inventoryController = new InventoryController();
 		
-		decreaseNumberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
-		increaseNumberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
-
+		numberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
 		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
@@ -87,8 +85,9 @@ public class ItemFrame extends JFrame{
 		
 		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		btnOrder = new JButton("Order");
+		btnOrder = new JButton("Orders");
 		btnOrder.setBounds(28, 209, 200, 50);
+		btnOrder.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnOrder.setBackground(Color.decode("#A8A76D"));
 		btnOrder.setFocusPainted(false);
 		btnOrder.setBorderPainted(false);
@@ -97,6 +96,7 @@ public class ItemFrame extends JFrame{
 		
 		btnItems = new JButton("Items");
 		btnItems.setBounds(28, 280, 200, 50);
+		btnItems.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnItems.setBackground(Color.decode("#F4F2AB"));
 		btnItems.setFocusPainted(false);
 		btnItems.setBorderPainted(false);
@@ -105,6 +105,7 @@ public class ItemFrame extends JFrame{
 		
 		btnSales = new JButton("Sales");
 		btnSales.setBounds(28, 352, 200, 50);
+		btnSales.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnSales.setBackground(Color.decode("#A8A76D"));
 		btnSales.setFocusPainted(false);
 		btnSales.setBorderPainted(false);
@@ -113,6 +114,7 @@ public class ItemFrame extends JFrame{
 		
 		btnChangePassword = new JButton("Change Password");
 		btnChangePassword.setBounds(28, 424, 200, 50);
+		btnChangePassword.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnChangePassword.setBackground(Color.decode("#A8A76D"));
 		btnChangePassword.setFocusPainted(false);
 		btnChangePassword.setBorderPainted(false);
@@ -121,6 +123,7 @@ public class ItemFrame extends JFrame{
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new doActionListener());
+		btnExit.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnExit.setBounds(28, 612, 200, 50);
 		btnExit.setBackground(Color.decode("#A8A76D"));
 		btnExit.setFocusPainted(false);
@@ -135,43 +138,51 @@ public class ItemFrame extends JFrame{
 		
 		ImageIcon icon;
 		
-		btnAddNewItem = new JButton("Add New Item");
+		btnAddNewItem = new JButton("Add");
 		btnAddNewItem.addActionListener(new doActionListener());
 		btnAddNewItem.setBackground(Color.decode("#A8A76D"));
 		icon = new ImageIcon("src/images/add.png");
 		btnAddNewItem.setIcon(icon);
+		btnAddNewItem.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnAddNewItem.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAddNewItem.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		//btnAddNewItem.setFocusPainted(false);
 		btnAddNewItem.setBorderPainted(false);
 		btnAddNewItem.setContentAreaFilled(false);
-		btnAddNewItem.setBounds(895, 135, 165, 68);
+		btnAddNewItem.setBounds(900, 7, 75, 68);
 		panel_1.add(btnAddNewItem);
 		
+		JButton btnModifyItem = new JButton("Modify");
+		icon = new ImageIcon("src/images/modify.png");
+		btnModifyItem.setIcon(icon);
+		btnModifyItem.setVerticalTextPosition(SwingConstants.BOTTOM); 
+		btnModifyItem.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnModifyItem.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		//btnModifyItem.setFocusPainted(false);
+		btnModifyItem.setBorderPainted(false);
+		btnModifyItem.setContentAreaFilled(false);
+		btnModifyItem.setBounds(970, 7, 80, 68);
+		//btnModifyItem.setEnabled(false);
+		panel_1.add(btnModifyItem);
+		
 		JLabel lblNewLabel = new JLabel("List of Items");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(53, 57, 115, 16);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lblNewLabel.setBounds(40, 33, 155, 21);
 		panel_1.add(lblNewLabel);
 		
 		txtAreaItemDetails = new JTextArea();
-		txtAreaItemDetails.setBounds(53, 500, 460, 183);
+		txtAreaItemDetails.setBounds(37, 500, 500, 183);
 		panel_1.add(txtAreaItemDetails);
 		txtAreaItemDetails.setColumns(10);
 		txtAreaItemDetails.setEditable(false);
 		
-		JLabel lblOrderDetails = new JLabel("Item Details");
-		lblOrderDetails.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblOrderDetails.setBounds(53, 458, 115, 16);
+		JLabel lblOrderDetails = new JLabel("Item Details:");
+		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblOrderDetails.setBounds(40, 472, 140, 16);
 		panel_1.add(lblOrderDetails);
 		
-		btnReduceQuantity = new JButton("Decrease");
-		btnReduceQuantity.setBackground(Color.decode("#A8A76D"));
-		btnReduceQuantity.setFocusPainted(false);
-		btnReduceQuantity.setBorderPainted(false);
-		btnReduceQuantity.addActionListener(new doActionListener());	
-		btnReduceQuantity.setBounds(851, 546, 110, 34);
-		panel_1.add(btnReduceQuantity);
-		
 		panel_2 = new JPanel();
-		panel_2.setBounds(57, 126, 847, 302);
+		panel_2.setBounds(37, 75, 1000, 380);
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
@@ -190,45 +201,43 @@ public class ItemFrame extends JFrame{
         panel_2.add(inventoryPane);
 		
 		btnIncreaseStock = new JButton("Increase");
-		btnIncreaseStock.setBounds(851, 619, 110, 34);
+		btnIncreaseStock.setBounds(851, 546, 110, 34);
 		btnIncreaseStock.setBackground(Color.decode("#A8A76D"));
 		btnIncreaseStock.setFocusPainted(false);
 		btnIncreaseStock.setBorderPainted(false);
 		btnIncreaseStock.addActionListener(new doActionListener());
 		panel_1.add(btnIncreaseStock);
 		
+		btnReduceQuantity = new JButton("Decrease");
+		btnReduceQuantity.setBackground(Color.decode("#A8A76D"));
+		btnReduceQuantity.setFocusPainted(false);
+		btnReduceQuantity.setBorderPainted(false);
+		btnReduceQuantity.addActionListener(new doActionListener());	
+		btnReduceQuantity.setBounds(851, 619, 110, 34);
+		panel_1.add(btnReduceQuantity);
+		
 		//textField_1 = new JTextField();
-		increaseSpinner = new JSpinner(increaseNumberSpinnerBounds);
-		increaseSpinner.setBounds(721, 625, 106, 22);
+		increaseSpinner = new JSpinner(numberSpinnerBounds);
+		increaseSpinner.setBounds(721, 552, 106, 22);
 		panel_1.add(increaseSpinner);
 		//textField_1.setColumns(10);
 		
-		decreaseSpinner = new JSpinner(decreaseNumberSpinnerBounds);
+		decreaseSpinner = new JSpinner(numberSpinnerBounds);
 		//textField_3.setColumns(10);
 	
-		decreaseSpinner.setBounds(721, 552, 106, 22);
+		decreaseSpinner.setBounds(721, 625, 106, 22);
 		panel_1.add(decreaseSpinner);
 		
 		
 		JLabel lblAddQuantity = new JLabel("Add Quantity");
 		lblAddQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAddQuantity.setBounds(566, 628, 115, 16);
+		lblAddQuantity.setBounds(566, 555, 115, 16);
 		panel_1.add(lblAddQuantity);
 		
 		JLabel lblReduceQuantity = new JLabel("Reduce Quantity");
 		lblReduceQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblReduceQuantity.setBounds(566, 555, 130, 16);
+		lblReduceQuantity.setBounds(566, 628, 115, 16);
 		panel_1.add(lblReduceQuantity);
-		
-		JButton btnModifyItem = new JButton("Modify Item");
-		icon = new ImageIcon("src/images/modify.png");
-		btnModifyItem.setIcon(icon);
-		//btnModifyItem.setFocusPainted(false);
-		btnModifyItem.setBorderPainted(false);
-		btnModifyItem.setContentAreaFilled(false);
-		btnModifyItem.setBounds(895, 205, 165, 68);
-		//btnModifyItem.setEnabled(false);
-		panel_1.add(btnModifyItem);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenHeight = screenSize.height;
@@ -259,7 +268,6 @@ public class ItemFrame extends JFrame{
 				new ChangePassword();
 			} else if(e.getSource() == btnAddNewItem) {
 				new AddItemFrame();
-			
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
@@ -274,10 +282,9 @@ public class ItemFrame extends JFrame{
 					e1.printStackTrace();
 				}
 				try {
-					
-					panel_2.remove(tableInventory);
+					panel_2.removeAll();
 					tableInventory = createTable(inventoryController.retrieveInventoryList());
-					panel_2.add(tableInventory);
+					panel_2.add(new JScrollPane(tableInventory));
 					tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
 					tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
 				} catch (SQLException e1) {
@@ -286,8 +293,8 @@ public class ItemFrame extends JFrame{
 				
 				panel_2.revalidate();
 				panel_2.repaint();
-				tableInventory.repaint();
-				tableInventory.revalidate();
+				//tableInventory.repaint();
+				//tableInventory.revalidate();
 				
 			}
 			else if(e.getSource() == btnIncreaseStock){
@@ -301,10 +308,9 @@ public class ItemFrame extends JFrame{
 					e1.printStackTrace();
 				}
 				try {
-					
-					panel_2.remove(tableInventory);
+					panel_2.removeAll();
 					tableInventory = createTable(inventoryController.retrieveInventoryList());
-					panel_2.add(tableInventory);
+					panel_2.add(new JScrollPane(tableInventory));
 					tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
 					tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
 				} catch (SQLException e1) {
@@ -313,11 +319,10 @@ public class ItemFrame extends JFrame{
 				
 				panel_2.revalidate();
 				panel_2.repaint();
-				tableInventory.repaint();
-				tableInventory.revalidate();
+				//tableInventory.repaint();
+				//tableInventory.revalidate();
 				
 			}
-			
 		}
 	}
 	

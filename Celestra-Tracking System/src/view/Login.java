@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import controller.AccountController;
 import model.AccountModel;
@@ -28,8 +29,10 @@ public class Login extends JFrame {
 		getContentPane().setBackground(Color.decode("#E5EDB8"));
 		getContentPane().setLayout(null);
 		
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
+		
 		JLabel lblAddNewItem = new JLabel("Login");
-		lblAddNewItem.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblAddNewItem.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblAddNewItem.setBounds(25, 54, 66, 36);
 		getContentPane().add(lblAddNewItem);
 		
@@ -39,13 +42,13 @@ public class Login extends JFrame {
 		textField.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Enter Password:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel.setBounds(25, 130, 137, 16);
 		getContentPane().add(lblNewLabel);
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new doActionListener());
-		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSubmit.setBackground(Color.decode("#A8A76D"));
 		btnSubmit.setFocusPainted(false);
 		btnSubmit.setBorderPainted(false);

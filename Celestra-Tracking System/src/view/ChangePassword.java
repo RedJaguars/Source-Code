@@ -33,7 +33,7 @@ public class ChangePassword extends JFrame{
 		getContentPane().setBackground(Color.decode("#E5EDB8"));
 		
 		JLabel lblAddNewItem = new JLabel("Change Password");
-		lblAddNewItem.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblAddNewItem.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblAddNewItem.setBounds(25, 53, 189, 36);
 		getContentPane().add(lblAddNewItem);
 		
@@ -53,23 +53,23 @@ public class ChangePassword extends JFrame{
 		getContentPane().add(textField_2);
 		
 		JLabel lblNewLabel = new JLabel("Current Password: ");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel.setBounds(25, 115, 137, 16);
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblDescription = new JLabel("New Password:");
-		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblDescription.setBounds(25, 174, 103, 16);
 		getContentPane().add(lblDescription);
 		
 		JLabel lblQuantity = new JLabel("Re-type New Password:");
-		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblQuantity.setBounds(12, 247, 165, 16);
+		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblQuantity.setBounds(25, 247, 165, 16);
 		getContentPane().add(lblQuantity);
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new doActionListener());
-		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSubmit.setBounds(120, 304, 130, 36);
 		btnSubmit.setBackground(Color.decode("#A8A76D"));
 		btnSubmit.setFocusPainted(false);
@@ -78,7 +78,7 @@ public class ChangePassword extends JFrame{
 		
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new doActionListener());
-		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnCancel.setBackground(Color.decode("#A8A76D"));
 		btnCancel.setFocusPainted(false);
 		btnCancel.setBorderPainted(false);
@@ -95,7 +95,6 @@ public class ChangePassword extends JFrame{
 		this.setResizable(false);
 		this.setTitle("Celestra Tailoring and Embroidery");
 		this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public class doActionListener implements ActionListener {
