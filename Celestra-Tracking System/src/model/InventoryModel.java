@@ -109,7 +109,7 @@ public class InventoryModel extends Model {
 	}
 	
 	public void modifyMaterial(Material material, Material newMaterial) throws SQLException {
-		String query = "UPDATE inventory SET inventoryName = ?, quantityInStock = ?, decription = ?, unit = ? WHERE inventoryID = ?";
+		String query = "UPDATE inventory SET inventoryName = ?, quantityInStock = ?, description = ?, unit = ? WHERE inventoryID = ?";
 		PreparedStatement statement = con.getConnection().prepareStatement(query);
 		statement.setString(1, newMaterial.getInventoryName());
 		statement.setDouble(2, newMaterial.getQuantityInStock());

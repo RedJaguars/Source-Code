@@ -241,6 +241,7 @@ public class ChangeOrderStatus extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				mainFrame.updateTable();
 				dispose();
 			} else if(action.getSource() == btnCancel) {
 				dispose();

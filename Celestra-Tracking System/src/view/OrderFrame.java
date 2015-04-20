@@ -35,6 +35,7 @@ import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.JDesktopPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -42,6 +43,7 @@ import javax.swing.table.TableModel;
 import objects.Material;
 import objects.OrderItem;
 import objects.OrderList;
+import objects.Sales;
 import objects.OrderList.OrderListBuilder;
 import view.SalesFrame.doActionListener;
 import controller.OrderController;
@@ -51,6 +53,7 @@ public class OrderFrame extends JFrame{
 	
 	private JTextArea txtAreaOrderDetails;
 	private JTable tableOrder;
+	private DefaultTableModel tableOrderModel;
 	private JScrollPane orderPane;
 	
 	private JButton btnOrder;
@@ -74,18 +77,37 @@ public class OrderFrame extends JFrame{
 		
 		try {
 			panel_2.removeAll();
-			tableOrder = createTable(orderController.retrieveOrderItem(selectedOrderList));
+			tableOrder = createTable(orderController.retrieveOrderList());
 			panel_2.add(new JScrollPane(tableOrder));
-			tableOrder.setModel(createTable(orderController.retrieveOrderItem(selectedOrderList)).getModel());
-			tableOrder.setColumnModel(createTable(orderController.retrieveOrderItem(selectedOrderList)).getColumnModel());
+			tableOrder.setModel(createTable(orderController.retrieveOrderList()).getModel());
+			tableOrder.setColumnModel(createTable(orderController.retrieveOrderList()).getColumnModel());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		panel_2.repaint();
+		panel_2.revalidate();
 		
 	}
+	
+	public void updateTable(Iterator<?> orderLists) {
+		for(int i = tableOrder.getRowCount(); i != 0 ; i++) {
+			tableOrderModel.removeRow(i - 1);
+		}
+		
+		while(orderLists.hasNext()) {
+			OrderList saleToAdd = (OrderList)orderLists.next();
+			Object[] rowData = new Object[3];
+			
+			rowData[0] = saleToAdd;
+			rowData[1] = saleToAdd;
+			rowData[2] = saleToAdd;
+			
+			tableOrderModel.addRow(rowData);
+		}
+	}
+	
 	public OrderFrame() {
 		orderController = new OrderController();
 		
@@ -235,11 +257,15 @@ public class OrderFrame extends JFrame{
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
+		//String headers[] = new String[]{"Receipt No.", "Order Date", "Status"};
+		//tableOrderModel = new DefaultTableModel(headers, 0);
 		tableOrder = new JTable();
-		tableOrder.setBounds(57, 126, 847, 302);
 		if(orderPane != null) {
+		tableOrder.setBounds(57, 126, 847, 302);
             panel_2.remove(orderPane);
         }
+		//tableOrder.setDefaultRenderer(tableOrder.getColumnClass(0), new OrderTableCellRenderer());
+		
         try {
         	tableOrder = createTable(orderController.retrieveOrderList());
 		} catch (SQLException e) {
@@ -260,6 +286,13 @@ public class OrderFrame extends JFrame{
 		this.setTitle("Celestra Tailoring and Embroidery");
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		/*try {
+			updateTable(orderController.retrieveOrderList());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
 	
 	public class doActionListener implements ActionListener {
@@ -283,7 +316,8 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnModifyOrder) {
 				new ModifyOrder(selectedOrderList);
 			} else if(e.getSource() == btnAddOrder) {
-				//new AddOrderFrame();
+				
+				new AddOrderFrame();
 			} else if(e.getSource() == btnCancelOrder){
 				Iterator<OrderList> orderList = null;
 				try {
