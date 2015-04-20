@@ -34,7 +34,7 @@ public class ChangePassword extends JFrame{
 		
 		JLabel lblAddNewItem = new JLabel("Change Password");
 		lblAddNewItem.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblAddNewItem.setBounds(25, 53, 189, 36);
+		lblAddNewItem.setBounds(25, 53, 300, 36);
 		getContentPane().add(lblAddNewItem);
 		
 		textField = new JPasswordField();//current

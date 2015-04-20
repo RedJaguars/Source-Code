@@ -7,10 +7,12 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import objects.OrderList;
- import controller.OrderController;
+import controller.OrderController;
 
 public class ChangeOrderStatus extends JFrame{
 	private JButton btnBack, btnConfirm, btnCancel;
@@ -23,10 +25,19 @@ public class ChangeOrderStatus extends JFrame{
 	private JPanel panel_1;
 	private OrderController orderController;
 	private int selectedRow;
+	private double totalAmount;
+	private double balance;
 	
 	public ChangeOrderStatus(int row) {
-		orderController = new OrderController();
 		
+		orderController = new OrderController();
+		try {
+			totalAmount =  orderController.getSelectedOrderList(row).getTotalPrice();
+			balance = orderController.getSelectedOrderList(row).getBalance();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -74,6 +85,8 @@ public class ChangeOrderStatus extends JFrame{
 		
 		rbPending = new JRadioButton("Pending");
 		rbFulfilled = new JRadioButton("Fulfilled");
+		rbFulfilled.setEnabled(false);
+		rbPending.setSelected(true);	
 		rbPending.setActionCommand("PENDING");
 		rbFulfilled.setActionCommand("FULFILLED");
 		rbPending.setBounds(100,85,100,30);
@@ -98,12 +111,7 @@ public class ChangeOrderStatus extends JFrame{
 		lblTotalAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblTotalAmountDue);
 		
-		try {
-			lblTotalAmountDue2 = new JLabel(String.valueOf(orderController.getSelectedOrderList(row).getTotalPrice()));
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
+		lblTotalAmountDue2 = new JLabel(String.valueOf(totalAmount));
 		lblTotalAmountDue2.setBounds(180,460,150,40);
 		lblTotalAmountDue2.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblTotalAmountDue2);
@@ -113,12 +121,7 @@ public class ChangeOrderStatus extends JFrame{
 		lblInitialDeposit.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblInitialDeposit);
 		
-		try {
-			lblInitialDeposit2 = new JLabel("" + orderController.getSelectedOrderList(row).getBalance());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		lblInitialDeposit2 = new JLabel(String.valueOf(balance));
 		lblInitialDeposit2.setBounds(180,483,150,40);
 		lblInitialDeposit2.setForeground(Color.decode("#188A0F")); //green
 		lblInitialDeposit2.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -128,12 +131,8 @@ public class ChangeOrderStatus extends JFrame{
 		lblRemainingBalance.setBounds(40,506,150,40);
 		lblRemainingBalance.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblRemainingBalance);
-		try {
-			lblRemainingBalance2 = new JLabel(String.valueOf(orderController.getSelectedOrderList(row).getTotalPrice()-orderController.getSelectedOrderList(row).getBalance()));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		lblRemainingBalance2 = new JLabel(String.valueOf(totalAmount-balance));
 		lblRemainingBalance2.setBounds(180,506,150,40);
 		lblRemainingBalance2.setForeground(Color.decode("#B90A0A")); //red
 		lblRemainingBalance2.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -145,6 +144,38 @@ public class ChangeOrderStatus extends JFrame{
 		panel_1.add(lblAmountDue);
 		txtAmountDue = new JTextField();
 		txtAmountDue.setBounds(180,539,140,20);
+		txtAmountDue.getDocument().addDocumentListener(new DocumentListener(){
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				if(totalAmount-balance == Double.parseDouble(txtAmountDue.getText()))
+					rbFulfilled.setEnabled(true);
+				else rbFulfilled.setEnabled(false);
+		        System.out.println("Text=" + txtAmountDue.getText());
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				if(balance == Double.parseDouble(txtAmountDue.getText()))
+					rbFulfilled.setEnabled(true);
+				else rbFulfilled.setEnabled(false);
+		        System.out.println("Text=" + txtAmountDue.getText());
+		        
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+				if(balance == Double.parseDouble(txtAmountDue.getText()))
+					rbFulfilled.setEnabled(true);
+				else rbFulfilled.setEnabled(false);
+		        System.out.println("Text=" + txtAmountDue.getText());
+			}
+			
+		});
 		txtAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(txtAmountDue);
 		
@@ -203,6 +234,7 @@ public class ChangeOrderStatus extends JFrame{
 					e2.printStackTrace();
 				}
 				try {
+					
 					orderController.modifyOrder(originalOrderList, orderController.createModifiedOrderList(originalOrderList, selectedStatus, Double.parseDouble(txtAmountDue.getText())));
 				} catch (NumberFormatException | SQLException e1) {
 					// TODO Auto-generated catch block

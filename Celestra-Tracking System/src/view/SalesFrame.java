@@ -132,7 +132,7 @@ public class SalesFrame extends JFrame{
 		panel_1.add(btnViewDailyReport);
 		
 		JLabel lblNewLabel = new JLabel("Sales Report");
-		lblNewLabel.setBounds(40, 33, 155, 30);
+		lblNewLabel.setBounds(40, 33, 300, 30);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		panel_1.add(lblNewLabel);
 		
@@ -142,7 +142,7 @@ public class SalesFrame extends JFrame{
 		textField.setColumns(10);
 		
 		JLabel lblOrderDetails = new JLabel("Transaction Details:");
-		lblOrderDetails.setBounds(40, 472, 210, 16);
+		lblOrderDetails.setBounds(40, 472, 300, 16);
 		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
 		panel_1.add(lblOrderDetails);
 		

@@ -205,7 +205,7 @@ public class OrderFrame extends JFrame{
 		
 		JLabel lblOrderDetails = new JLabel("Order Details:");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblOrderDetails.setBounds(40, 472, 150, 16);
+		lblOrderDetails.setBounds(40, 472, 300, 16);
 		panel_1.add(lblOrderDetails);
 		
 		panelList = new JPanel();

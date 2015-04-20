@@ -35,6 +35,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import controller.InventoryController;
+import controller.OrderController;
 import objects.Material;
 import objects.OrderItem;
 import objects.OrderList;
@@ -77,6 +78,8 @@ public class ItemFrame extends JFrame{
 	private List<Material> list;
 	
 	public ItemFrame() {
+		
+		
 		inventoryController = new InventoryController();
 		
 		numberSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
@@ -175,7 +178,7 @@ public class ItemFrame extends JFrame{
 		
 		JLabel lblNewLabel = new JLabel("List of Items");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblNewLabel.setBounds(40, 33, 155, 21);
+		lblNewLabel.setBounds(40, 33, 300, 21);
 		panel_1.add(lblNewLabel);
 		
 		txtAreaItemDetails = new JTextArea();
@@ -186,7 +189,7 @@ public class ItemFrame extends JFrame{
 		
 		JLabel lblOrderDetails = new JLabel("Item Details:");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblOrderDetails.setBounds(40, 472, 140, 16);
+		lblOrderDetails.setBounds(40, 472, 00, 16);
 		panel_1.add(lblOrderDetails);
 		
 		panel_2 = new JPanel();
@@ -280,7 +283,7 @@ public class ItemFrame extends JFrame{
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyItem) {
-				new ModifyItemFrame(selectedMaterial);
+				//new ModifyItemFrame(selectedMaterial);
 			} else if(e.getSource() == btnReduceQuantity) {
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
