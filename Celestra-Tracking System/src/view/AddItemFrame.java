@@ -1,9 +1,8 @@
 package view;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -11,7 +10,9 @@ import java.awt.Toolkit;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.SpinnerNumberModel;
 
+import view.AddOrderFrame.doActionListener;
 import controller.InventoryController;
 
 import java.awt.event.ActionListener;
@@ -22,62 +23,121 @@ public class AddItemFrame extends JFrame{
 	private JTextArea txtAreaDescription;
 	private JTextArea txtAreaQuantity;
 	
-	private JButton btnSubmit;
+	private JButton btnSubmit, btnBack;
 	private JButton btnCancel;
 	
+	private JPanel panel_1;
+	private JLabel lblHeader, lblItemName, lblQuantity, lblDescription, lblMeasurement;
+	private JTextField txtItemName;
+	private JTextArea tarDescription;
+	private JSpinner spnQuantity;
+	private JComboBox cbMeasurement;
+	
 	private InventoryController inventoryController;
+
+	private SpinnerNumberModel snmQuantity;
 	
 	public AddItemFrame() {
 		inventoryController = new InventoryController();
+		snmQuantity = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
 		
 		getContentPane().setLayout(null);
+		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
-		JLabel lblAddNewItem = new JLabel("Add New Item");
-		lblAddNewItem.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAddNewItem.setBounds(25, 53, 142, 16);
-		getContentPane().add(lblAddNewItem);
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
 		
-		txtAreaItemName = new JTextArea();
-		txtAreaItemName.setBounds(155, 112, 241, 22);
-		getContentPane().add(txtAreaItemName);
-		txtAreaItemName.setColumns(10);
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.decode("#677B42"));
+		panel.setBounds(0, 0, 200, 721);
+		getContentPane().add(panel);
+		panel.setLayout(null);
 		
-		txtAreaDescription = new JTextArea();
-		txtAreaDescription.setColumns(10);
-		txtAreaDescription.setBounds(155, 174, 241, 203);
-		getContentPane().add(txtAreaDescription);
+		UIManager.put("Button.select", Color.decode("#C1BF7D"));
+		ImageIcon icon;
 		
-		txtAreaQuantity = new JTextArea();
-		txtAreaQuantity.setColumns(10);
-		txtAreaQuantity.setBounds(155, 417, 241, 22);
-		getContentPane().add(txtAreaQuantity);
+		btnBack = new JButton("Go Back");
+		btnBack.setBounds(70, 10, 150, 50);
+		icon = new ImageIcon("src/images/back.png");
+		btnBack.setIcon(icon);
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnBack.setBackground(Color.decode("#A8A76D"));
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setFocusPainted(false);
+		btnBack.setBorderPainted(false);
+		btnBack.setContentAreaFilled(false);
+		btnBack.addActionListener(new doActionListener());
+		panel.add(btnBack);
 		
-		JLabel lblItemName = new JLabel("Item Name:");
-		lblItemName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblItemName.setBounds(25, 115, 103, 16);
-		getContentPane().add(lblItemName);
+		panel_1 = new JPanel();
+		panel_1.setBounds(200, 0, 1200, 721);
+		panel_1.setBackground(Color.decode("#E5EDB8"));
+		getContentPane().add(panel_1);
+		panel_1.setLayout(null);
 		
-		JLabel lblDescription = new JLabel("Description:");
-		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblDescription.setBounds(25, 174, 103, 16);
-		getContentPane().add(lblDescription);
+		lblHeader = new JLabel("Add Item");
+		lblHeader.setBounds(40,10,250,40);
+		lblHeader.setFont(new Font("Tahoma", Font.BOLD, 18));
+		panel_1.add(lblHeader);
 		
-		JLabel lblQuantity = new JLabel("Quantity:");
-		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblQuantity.setBounds(25, 420, 103, 16);
-		getContentPane().add(lblQuantity);
+		lblItemName = new JLabel("Item Name:");
+		lblItemName.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblItemName.setBounds(40, 70, 103, 20);
+		panel_1.add(lblItemName);
+		
+		txtItemName = new JTextField();
+		txtItemName.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtItemName.setBounds(180, 72, 230, 20);
+		panel_1.add(txtItemName);
+	
+		lblQuantity = new JLabel("Quantity:");
+		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblQuantity.setBounds(40, 110, 103, 20);
+		panel_1.add(lblQuantity);
+		
+		spnQuantity = new JSpinner(snmQuantity);
+		spnQuantity.setBounds(180, 112, 100, 20);
+		panel_1.add(spnQuantity);
+		
+		lblMeasurement = new JLabel("Unit Of Measurement:");
+		lblMeasurement.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblMeasurement.setBounds(40, 150, 150, 20);
+		panel_1.add(lblMeasurement);
+		
+		String[] measurements = {"----------","roll", "inch", "centumeter", "foot"};
+		cbMeasurement = new JComboBox(measurements);
+		cbMeasurement.setFont(new Font("Tahoma,", Font.PLAIN, 13));
+		cbMeasurement.setBackground(Color.decode("#E5EDB8"));
+		cbMeasurement.setBounds(180, 152, 120, 20);
+		cbMeasurement.setSelectedIndex(0);
+		panel_1.add(cbMeasurement);
+		
+		lblDescription = new JLabel("Description:");
+		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblDescription.setBounds(40, 190, 103, 20);
+		panel_1.add(lblDescription);
+		
+		tarDescription = new JTextArea();
+		tarDescription.setFont(new Font("Tahoma", Font.PLAIN,13));
+		tarDescription.setBounds(40, 220, 400, 250);
+		panel_1.add(tarDescription);
 		
 		btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new doActionListener());
 		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSubmit.setBounds(51, 535, 149, 36);
-		getContentPane().add(btnSubmit);
+		btnSubmit.setBackground(Color.decode("#A8A76D"));
+		btnSubmit.setFocusPainted(false);
+		btnSubmit.setBorderPainted(false);
+		btnSubmit.setBounds(40, 510, 150, 40);
+		panel_1.add(btnSubmit);
 		
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new doActionListener());
 		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCancel.setBounds(231, 535, 149, 36);
-		getContentPane().add(btnCancel);
+		btnCancel.setBackground(Color.decode("#A8A76D"));
+		btnCancel.setFocusPainted(false);
+		btnCancel.setBorderPainted(false);
+		btnCancel.setBounds(250, 510, 150, 40);
+		panel_1.add(btnCancel);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenHeight = screenSize.height;
@@ -92,11 +152,11 @@ public class AddItemFrame extends JFrame{
 	
 	public class doActionListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == btnSubmit) {
+		public void actionPerformed(ActionEvent action) {
+			if(action.getSource() == btnSubmit) {
 				//also checks if inventory was successfully added into the database
 				try {
-					inventoryController.addInventory(txtAreaItemName.getText(), Double.parseDouble(txtAreaQuantity.getText()), txtAreaDescription.getText(), "INCH");
+					//inventoryController.addInventory(txtAreaItemName.getText(), Double.parseDouble(txtAreaQuantity.getText()), txtAreaDescription.getText(), "INCH");
 				} catch (NumberFormatException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -104,11 +164,15 @@ public class AddItemFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				//new ItemFrame();
 				dispose();
 				
-			} else if(e.getSource() == btnCancel) {
+			} else if(action.getSource() == btnCancel) {
+				new ItemFrame();
 				dispose();
-			} 
+			} else if(action.getSource() == btnBack) {
+				dispose();
+			}
 			
 		}
 	}

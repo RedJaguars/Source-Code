@@ -6,7 +6,9 @@ import java.io.File;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 
+import javax.swing.event.ChangeListener;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -143,34 +145,71 @@ public class ChangeOrderStatus extends JFrame{
 		lblAmountDue.setBounds(40,529,150,40);
 		lblAmountDue.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		panel_1.add(lblAmountDue);
-		txtAmountDue = new JTextField();
+		txtAmountDue = new NumberTextField();
 		txtAmountDue.setBounds(180,539,140,20);
+		
+		
+		
+		
+		
+		
+//		if(totalAmount-balance == (double)(txtAmountDue.getValue()))
+//			rbFulfilled.setEnabled(true);
+//		txtAmountDue.addChangeListener(new ChangeListener(){
+//			@Override
+//			public void stateChanged(ChangeEvent e) {
+//				if(totalAmount-balance == (double)(txtAmountDue.getValue()))
+//					rbFulfilled.setEnabled(true);
+//				else rbFulfilled.setEnabled(false);
+//				System.out.println(balance +"  "+ (double)(txtAmountDue.getValue()));
+//			}
+//		});
+//		txtAmountDue.addKeyListener(new KeyListener() {
+//			
+//			@Override
+//			public void keyTyped(KeyEvent e) {
+//				// TODO Auto-generated method stub
+//				changed();
+//			}
+//			
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				// TODO Auto-generated method stub
+//				changed();
+//			}
+//			
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				// TODO Auto-generated method stub
+//				changed();
+//			}
+//			public void changed(){
+//				if(totalAmount-balance == (double)(txtAmountDue.getValue()))
+//					rbFulfilled.setEnabled(true);
+//				else rbFulfilled.setEnabled(false);
+//				System.out.println(balance +"  "+ (double)(txtAmountDue.getValue()));
+//			}
+//			
+//		});
+		
 		txtAmountDue.getDocument().addDocumentListener(new DocumentListener(){
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				if(totalAmount-balance == Double.parseDouble(txtAmountDue.getText()))
-					rbFulfilled.setEnabled(true);
-				else rbFulfilled.setEnabled(false);
-		        System.out.println("Text=" + txtAmountDue.getText());
+				change();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				if(balance == Double.parseDouble(txtAmountDue.getText()))
-					rbFulfilled.setEnabled(true);
-				else rbFulfilled.setEnabled(false);
-		        System.out.println("Text=" + txtAmountDue.getText());
-		        
+
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-				if(balance == Double.parseDouble(txtAmountDue.getText()))
+				change();
+			}
+			public void change(){
+				if(totalAmount-balance == Double.parseDouble(txtAmountDue.getText()))
 					rbFulfilled.setEnabled(true);
 				else rbFulfilled.setEnabled(false);
 		        System.out.println("Text=" + txtAmountDue.getText());

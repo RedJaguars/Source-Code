@@ -217,7 +217,7 @@ public class OrderFrame extends JFrame{
 		//btnCancelOrder.setFocusPainted(false);
 		btnCancelOrder.setBorderPainted(false);
 		btnCancelOrder.setContentAreaFilled(false);
-		btnCancelOrder.setBounds(798, 7, 70, 68);
+		btnCancelOrder.setBounds(798, 7, 90, 68);
 		btnCancelOrder.addActionListener(new doActionListener());
 		panel_1.add(btnCancelOrder);
 		

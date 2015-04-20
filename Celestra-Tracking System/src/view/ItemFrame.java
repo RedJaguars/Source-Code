@@ -368,7 +368,7 @@ public class ItemFrame extends JFrame{
             model.setValueAt(inventoryItem.getQuantityInStock(), i, 1);
             model.setValueAt(inventoryItem.getDescription(), i, 2);
             model.setValueAt(inventoryItem.getUnit(), i, 3);
-        }
+        } 
         return inventoryListTable;
     }
 	
