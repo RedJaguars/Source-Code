@@ -73,6 +73,8 @@ public class OrderFrame extends JFrame{
 	
 	private JPanel panelList, panel_1, panel_2;
 	
+	private Boolean hasList = false;
+	
 	public void updateTable(){
 		
 		try {
@@ -359,12 +361,23 @@ public class OrderFrame extends JFrame{
 	}
 	
 	public void refreshDetails() {
+<<<<<<< HEAD
 		createJList();
 		panel_1.remove(clientOrderList);
 		panel_1.add(panelList);
 		panel_1.revalidate();
 		panel_1.repaint();
 		txtAreaOrderDetails.setText("");
+=======
+		if(hasList) {
+			hasList = false;
+			panel_1.remove(clientOrderList);
+			panel_1.add(panelList);
+			panel_1.revalidate();
+			panel_1.repaint();
+			txtAreaOrderDetails.setText("");
+		}
+>>>>>>> f3c4363d301417eca772b6aa94b14bc0f729f66e
 	}
 	
 	public void refreshTable() {
@@ -440,6 +453,7 @@ public class OrderFrame extends JFrame{
 		ArrayList<Integer> orderItemIdList;
 		Integer[] list = null;
 		try {
+			hasList = true;
 			orderItemIdList = orderController.getOrderItemIDList(selectedOrderList);
 			list = new Integer[orderItemIdList.size()];
 			list = orderItemIdList.toArray(list);
