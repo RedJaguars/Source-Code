@@ -281,13 +281,11 @@ public class ItemFrame extends JFrame{
 				new ChangePassword();
 			} else if(e.getSource() == btnAddNewItem) {
 				new AddItemFrame(ItemFrame.this);
-				refreshTable();
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyItem) {
 				new ModifyItemFrame(selectedMaterial, ItemFrame.this);
-				refreshTable();
 			} else if(e.getSource() == btnReduceQuantity) {
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
@@ -370,7 +368,7 @@ public class ItemFrame extends JFrame{
             model.setValueAt(inventoryItem.getQuantityInStock(), i, 1);
             model.setValueAt(inventoryItem.getDescription(), i, 2);
             model.setValueAt(inventoryItem.getUnit(), i, 3);
-        } 
+        }
         return inventoryListTable;
     }
 	

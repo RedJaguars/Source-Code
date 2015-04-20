@@ -8,15 +8,10 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,7 +30,6 @@ import javax.swing.table.TableModel;
 
 import controller.SalesController;
 import objects.Sales;
-import objects.SalesInfo;
 import view.ItemFrame.doActionListener;
 
 public class SalesFrame extends JFrame{
@@ -54,7 +48,7 @@ public class SalesFrame extends JFrame{
 	private SalesController salesController;
 	private DefaultTableModel salesTableModel;
 	
-	String headers[] = new String[]{"", "Total", "Balance"};
+	String headers[] = new String[]{"Receipt No.", "OrderDate", "Total Price", "Down Payment", "Status"};
 	
 	public SalesFrame() {
 		salesController = new SalesController();
@@ -127,12 +121,6 @@ public class SalesFrame extends JFrame{
 		btnViewDailyReport.setBounds(690, 7, 140, 68);
 		btnViewDailyReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					updateTable(groupByDay(salesController.retrieveSalesList()));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		});
 		icon = new ImageIcon("src/images/sales.png");
@@ -168,18 +156,8 @@ public class SalesFrame extends JFrame{
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
 		salesTableModel = new DefaultTableModel(headers, 0);
-		salesTable = new JTable(salesTableModel) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 8936551049667332177L;
-
-			public boolean isCellEditable(int row, int col) {
-				return false;
-			}
-		};
+		salesTable = new JTable(salesTableModel);
 		salesTable.setDefaultRenderer(salesTable.getColumnClass(0), new SalesCellRenderer());
-		
 		salesTable.setBounds(57, 126, 847, 302);
 		if(salesPane != null) {
             panel_2.remove(salesPane);
@@ -205,16 +183,6 @@ public class SalesFrame extends JFrame{
 		btnViewMonthlyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewMonthlyReport.setFocusPainted(false);
 		btnViewMonthlyReport.setBorderPainted(false);
-		btnViewMonthlyReport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					updateTable(groupByMonth(salesController.retrieveSalesList()));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		panel_1.add(btnViewMonthlyReport);
 		
 		JButton btnViewWeeklyReport = new JButton("View Weekly Report");
@@ -228,16 +196,6 @@ public class SalesFrame extends JFrame{
 		btnViewWeeklyReport.setBackground(Color.decode("#A8A76D"));
 		//btnViewWeeklyReport.setFocusPainted(false);
 		btnViewWeeklyReport.setBorderPainted(false);
-		btnViewWeeklyReport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					updateTable(groupByWeek(salesController.retrieveSalesList()));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 		panel_1.add(btnViewWeeklyReport);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -253,7 +211,7 @@ public class SalesFrame extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		try {
-			updateTable(groupByDay(salesController.retrieveSalesList()));
+			updateTable(salesController.retrieveSalesList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -299,94 +257,21 @@ public class SalesFrame extends JFrame{
 		//salesTable is the JTable
 		//salesTableModel is the DefaultTableModel
 		for(int i = salesTable.getRowCount(); i != 0 ; i++) {
-			salesTableModel.removeRow(i-1);
+			salesTableModel.removeRow(i - 1);
 		}
 		
 		while(SalesList.hasNext()) {
-			SalesInfo saleToAdd = (SalesInfo)SalesList.next();
-			Object[] rowData = new Object[3];
+			Sales saleToAdd = (Sales)SalesList.next();
+			Object[] rowData = new Object[5];
 			
 			rowData[0] = saleToAdd;
 			rowData[1] = saleToAdd;
 			rowData[2] = saleToAdd;
+			rowData[3] = saleToAdd;
+			rowData[4] = saleToAdd;
 			
 			salesTableModel.addRow(rowData);
 		}
-		repaint();
-		revalidate();
-	}
-	
-	public Iterator<?> groupByDay(Iterator<?> SalesList) {
-		ArrayList<SalesInfo> infoList = new ArrayList<>();
-		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		
-		for(int i = 0; i < cal.getActualMaximum(cal.DAY_OF_MONTH); i++) {
-			String unitName = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+" " +(i+1);
-			infoList.add(new SalesInfo(unitName));
-		}
-		
-		while(SalesList.hasNext()) {
-			Sales sale = (Sales)SalesList.next();
-			Calendar tempCal = Calendar.getInstance();
-			tempCal.setTime(sale.getOrderList().getDueDate());	
-			int day = tempCal.get(Calendar.DAY_OF_MONTH);
-			
-			SalesInfo tempInfo = infoList.get(day);
-			tempInfo.addToTotal(sale.getOrderList().getTotalPrice());
-			tempInfo.addToBalance(sale.getOrderList().getBalance());
-		}
-		
-		return infoList.iterator();
-	}
-	
-	public Iterator<?> groupByMonth(Iterator<?> SalesList) {
-		ArrayList<SalesInfo> infoList = new ArrayList<>();
-		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		
-		for(int i = 0; i < cal.getActualMaximum(Calendar.MONTH); i++) {
-			cal.set(Calendar.MONTH, i);
-			String unitName = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-			infoList.add(new SalesInfo(unitName));
-		}
-		
-		while(SalesList.hasNext()) {
-			Sales sale = (Sales)SalesList.next();
-			Calendar tempCal = Calendar.getInstance();
-			tempCal.setTime(sale.getOrderList().getDueDate());	
-			int month = tempCal.get(Calendar.MONTH);
-			
-			SalesInfo tempInfo = infoList.get(month);
-			tempInfo.addToTotal(sale.getOrderList().getTotalPrice());
-			tempInfo.addToBalance(sale.getOrderList().getBalance());
-		}
-		
-		return infoList.iterator();
-	}
-	
-	public Iterator<?> groupByWeek(Iterator<?> SalesList) {
-		ArrayList<SalesInfo> infoList = new ArrayList<>();
-		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		
-		for(int i = 0; i < cal.getActualMaximum(Calendar.WEEK_OF_MONTH); i++) {
-			String unitName = "WEEK " +(i+1);
-			infoList.add(new SalesInfo(unitName));
-		}
-		
-		while(SalesList.hasNext()) {
-			Sales sale = (Sales)SalesList.next();
-			Calendar tempCal = Calendar.getInstance();
-			tempCal.setTime(sale.getOrderList().getDueDate());	
-			int week = tempCal.get(Calendar.WEEK_OF_MONTH);
-			
-			SalesInfo tempInfo = infoList.get(week);
-			tempInfo.addToTotal(sale.getOrderList().getTotalPrice());
-			tempInfo.addToBalance(sale.getOrderList().getBalance());
-		}
-		
-		return infoList.iterator();
 	}
 	
 	public class doActionListener implements ActionListener {
@@ -409,5 +294,4 @@ public class SalesFrame extends JFrame{
 			
 		}
 	}
-	
 }

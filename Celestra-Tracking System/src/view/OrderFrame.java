@@ -219,7 +219,7 @@ public class OrderFrame extends JFrame{
 		//btnCancelOrder.setFocusPainted(false);
 		btnCancelOrder.setBorderPainted(false);
 		btnCancelOrder.setContentAreaFilled(false);
-		btnCancelOrder.setBounds(798, 7, 90, 68);
+		btnCancelOrder.setBounds(798, 7, 70, 68);
 		btnCancelOrder.addActionListener(new doActionListener());
 		panel_1.add(btnCancelOrder);
 		
@@ -314,23 +314,17 @@ public class OrderFrame extends JFrame{
 				refreshDetails();
 				
 				new ChangeOrderStatus(selectedRow, OrderFrame.this);
-				
-				refreshTable();
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyOrder) {
 				refreshDetails();
 				
-				new ModifyOrder(selectedOrderList);
-				
-				refreshTable();
+				new ModifyOrder(selectedOrderList, OrderFrame.this);
 			} else if(e.getSource() == btnAddOrder) {
 				refreshDetails();
 				
-				new AddOrderFrame();
-				
-				refreshTable();
+				new AddOrderFrame(OrderFrame.this);
 			} else if(e.getSource() == btnCancelOrder){
 				Iterator<OrderList> orderList = null;
 				try {
@@ -361,14 +355,6 @@ public class OrderFrame extends JFrame{
 	}
 	
 	public void refreshDetails() {
-<<<<<<< HEAD
-		createJList();
-		panel_1.remove(clientOrderList);
-		panel_1.add(panelList);
-		panel_1.revalidate();
-		panel_1.repaint();
-		txtAreaOrderDetails.setText("");
-=======
 		if(hasList) {
 			hasList = false;
 			panel_1.remove(clientOrderList);
@@ -377,7 +363,6 @@ public class OrderFrame extends JFrame{
 			panel_1.repaint();
 			txtAreaOrderDetails.setText("");
 		}
->>>>>>> f3c4363d301417eca772b6aa94b14bc0f729f66e
 	}
 	
 	public void refreshTable() {
@@ -410,8 +395,10 @@ public class OrderFrame extends JFrame{
 					selectedRow = target.getSelectedRow();
 					try {
 						//txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
-						createJList();
+						System.out.println("CALLING");
 						setSelectedOrderList(orderController.getSelectedOrderList(selectedRow));
+						refreshDetails();
+						createJList();
 						btnChangeStatus.setEnabled(true);
 						btnModifyOrder.setEnabled(true);
 					} catch (SQLException e1) {
@@ -446,6 +433,7 @@ public class OrderFrame extends JFrame{
 	}
 	
 	public void setSelectedOrderList(OrderList orderList) {
+		System.out.println(orderList.getListID());
 		selectedOrderList = orderList;
 	}
 	
@@ -455,16 +443,18 @@ public class OrderFrame extends JFrame{
 		try {
 			hasList = true;
 			orderItemIdList = orderController.getOrderItemIDList(selectedOrderList);
-			list = new Integer[orderItemIdList.size()];
-			list = orderItemIdList.toArray(list);
-			clientOrderList = new JList(list);
-			clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
-			clientOrderList.addMouseListener(new ClickActionListener());
-			clientOrderList.setBounds(565, 500, 470, 183);
-			panel_1.remove(panelList);
-			panel_1.add(clientOrderList);
-			panel_1.revalidate();
-			panel_1.repaint();
+			if(orderItemIdList != null) {
+				list = new Integer[orderItemIdList.size()];
+				list = orderItemIdList.toArray(list);
+				clientOrderList = new JList(list);
+				clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
+				clientOrderList.addMouseListener(new ClickActionListener());
+				clientOrderList.setBounds(565, 500, 470, 183);
+				panel_1.remove(panelList);
+				panel_1.add(clientOrderList);
+				panel_1.revalidate();
+				panel_1.repaint();
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

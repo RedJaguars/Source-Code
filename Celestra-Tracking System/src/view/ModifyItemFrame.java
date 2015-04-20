@@ -159,17 +159,19 @@ public class ModifyItemFrame extends JFrame{
 				Material newMaterial = new Material(material.getInventoryID(), txtItemName.getText(), 
 						Double.parseDouble(snmQuantity.getValue().toString()), tarDescription.getText(), 
 						Unit.getUnit(cbMeasurement.getSelectedItem().toString()));
-				mainFrame.refreshTable();
 				try {
 					inventoryController.modifyMaterial(material, newMaterial);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				mainFrame.refreshTable();
 				dispose();
 			} else if(action.getSource() == btnCancel) {
+				mainFrame.refreshTable();
 				dispose();
 			} else if(action.getSource() == btnBack) {
+				mainFrame.refreshTable();
 				dispose();
 			}
 			

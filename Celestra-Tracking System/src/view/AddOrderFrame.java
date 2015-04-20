@@ -1,4 +1,3 @@
-
 package view;
 
 import java.awt.BorderLayout;
@@ -86,11 +85,14 @@ public class AddOrderFrame extends JFrame{
 	
 	private OrderController orderController;
 	
-	public AddOrderFrame() {
+	private OrderFrame mainFrame;
+	
+	public AddOrderFrame(OrderFrame frame) {
 		orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, client, status)
 		.build();
 		
 		orderController = new OrderController();
+		mainFrame = frame;
 		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
@@ -171,7 +173,7 @@ public class AddOrderFrame extends JFrame{
 		lblContact = new JLabel("Contact Number:");
 		lblContact.setBounds(40,110,100,40);
 		lblContact.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtContact = new NumberTextField();
+		txtContact = new JTextField("");
 		txtContact.setBounds(150,120,120,20);
 		txtContact.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		topPanel.add(lblContact);
@@ -225,7 +227,7 @@ public class AddOrderFrame extends JFrame{
 		lblQuantity = new JLabel("Quantity:");
 		lblQuantity.setBounds(370,650,100,40);
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtQuantity = new NumberTextField();
+		txtQuantity = new JTextField("");
 		txtQuantity.setBounds(430,662,60,20);
 		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(lblQuantity);
@@ -234,7 +236,7 @@ public class AddOrderFrame extends JFrame{
 		lblPrice = new JLabel("Price:");
 		lblPrice.setBounds(500,650,100,40);
 		lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtPrice = new NumberTextField();
+		txtPrice = new JTextField("");
 		txtPrice.setBounds(540,662,100,20);
 		txtPrice.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(lblPrice);
@@ -278,7 +280,7 @@ public class AddOrderFrame extends JFrame{
 		lblDownPayment = new JLabel("Down Payment:");
 		lblDownPayment.setBounds(785,580,100,40);
 		lblDownPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtDownPayment = new NumberTextField();
+		txtDownPayment = new JTextField();
 		txtDownPayment.setBackground(Color.WHITE);
 		txtDownPayment.setBounds(885,590,100,20);
 		txtDownPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -509,72 +511,72 @@ public class AddOrderFrame extends JFrame{
 		
 		lblTLength.setBounds(100,50,100,30);
 		lblTLength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTLength = new NumberTextField();
+		txtTLength = new JTextField();
 		txtTLength.setBounds(180, 55, 120, 20);
 		
 		lblTNeckdeep.setBounds(450,50,100,30);
 		lblTNeckdeep.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTNeckdeep = new NumberTextField();
+		txtTNeckdeep = new JTextField();
 		txtTNeckdeep.setBounds(530, 55, 120, 20);
 		
 		lblTShoulder.setBounds(100,80,100,30);
 		lblTShoulder.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTShoulder = new NumberTextField();
+		txtTShoulder = new JTextField();
 		txtTShoulder.setBounds(180, 85, 120, 20);
 		
 		lblTWristcircum.setBounds(398,80,150,30);
 		lblTWristcircum.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTWristcircum = new NumberTextField();
+		txtTWristcircum = new JTextField();
 		txtTWristcircum.setBounds(530, 85, 120, 20);
 		
 		lblTFrontChest.setBounds(100,110,100,30);
 		lblTFrontChest.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTFrontChest = new NumberTextField();
+		txtTFrontChest = new JTextField();
 		txtTFrontChest.setBounds(180, 115, 120, 20);
 		
 		lblTWaist.setBounds(450,110,100,30);
 		lblTWaist.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTWaist = new NumberTextField();
+		txtTWaist = new JTextField();
 		txtTWaist.setBounds(530, 115, 120, 20);
 		
 		lblTArmlength.setBounds(100,140,100,30);
 		lblTArmlength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTArmlength = new NumberTextField();
+		txtTArmlength = new JTextField();
 		txtTArmlength.setBounds(180, 145, 120, 20);
 		
 		lblTHips.setBounds(450,140,100,30);
 		lblTHips.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTHips = new NumberTextField();
+		txtTHips = new JTextField();
 		txtTHips.setBounds(530, 145, 120, 20);
 		
 		lblTArmhole.setBounds(100,170,100,30);
 		lblTArmhole.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTArmhole = new NumberTextField();
+		txtTArmhole = new JTextField();
 		txtTArmhole.setBounds(180, 175, 120, 20);
 		
 		lblTFrontfigure.setBounds(450,170,100,30);
 		lblTFrontfigure.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTFrontfigure = new NumberTextField();
+		txtTFrontfigure = new JTextField();
 		txtTFrontfigure.setBounds(530, 175, 120, 20);
 		
 		lblTBackfigure.setBounds(100,200,100,30);
 		lblTBackfigure.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBackfigure= new NumberTextField();
+		txtTBackfigure= new JTextField();
 		txtTBackfigure.setBounds(180, 205, 120, 20);
 		
 		lblTBustpoint.setBounds(450,200,100,30);
 		lblTBustpoint.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBustpoint = new NumberTextField();
+		txtTBustpoint = new JTextField();
 		txtTBustpoint.setBounds(530, 205, 120, 20);
 		
 		lblTBustdistance.setBounds(450,230,100,30);
 		lblTBustdistance.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBustdistance = new NumberTextField();
+		txtTBustdistance = new JTextField();
 		txtTBustdistance.setBounds(530, 235, 120, 20);
 		
 		lblTBackChest.setBounds(100, 235, 120, 20);
 		lblTBackChest.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBackChest = new NumberTextField();
+		txtTBackChest = new JTextField();
 		txtTBackChest.setBounds(180, 235, 120, 20);
 		
 		JLabel lblTGarmentType = new JLabel("Garment Type:");
@@ -660,37 +662,37 @@ public class AddOrderFrame extends JFrame{
 		
 		lblBLength.setBounds(100,50,100,30);
 		lblBLength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBLength = new NumberTextField();
+		txtBLength = new JTextField();
 		txtBLength.setBounds(180, 55, 120, 20);
 		
 		lblBWaist.setBounds(450,50,100,30);
 		lblBWaist.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBWaist = new NumberTextField();
+		txtBWaist = new JTextField();
 		txtBWaist.setBounds(530, 55, 120, 20);
 		
 		lblBBottom.setBounds(100,80,100,30);
 		lblBBottom.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBBottom = new NumberTextField();
+		txtBBottom = new JTextField();
 		txtBBottom.setBounds(180, 85, 120, 20);
 		
 		lblBHips.setBounds(450,80,150,30);
 		lblBHips.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBHips= new NumberTextField();
+		txtBHips= new JTextField();
 		txtBHips.setBounds(530, 85, 120, 20);
 		
 		lblBCrotch.setBounds(100,110,100,30);
 		lblBCrotch.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBCrotch = new NumberTextField();
+		txtBCrotch = new JTextField();
 		txtBCrotch.setBounds(180, 115, 120, 20);
 		
 		lblBKnee.setBounds(450,110,100,30);
 		lblBKnee.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBKnee = new NumberTextField();
+		txtBKnee = new JTextField();
 		txtBKnee.setBounds(530, 115, 120, 20);
 		
 		lblBThigh.setBounds(100,140,100,30);
 		lblBThigh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBThigh = new NumberTextField();
+		txtBThigh = new JTextField();
 		txtBThigh.setBounds(180, 145, 120, 20);
 		
 		JLabel lblBGarmentType = new JLabel("Garment Type:");
@@ -748,6 +750,7 @@ public class AddOrderFrame extends JFrame{
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnBack) {
 				totalPrice = 0.0;
+				mainFrame.refreshTable();
 				dispose();
 			} else if(action.getSource() instanceof JRadioButton){
 				JRadioButton rb = (JRadioButton) action.getSource();
@@ -920,7 +923,7 @@ public class AddOrderFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				mainFrame.refreshTable();
 				dispose();
 			} else if (x.getSource() == btnAdd) {
 				if(selectedType.equals("Alteration")) {
@@ -1016,7 +1019,7 @@ public class AddOrderFrame extends JFrame{
 						orderList.addOrderItem(garmentOrder);
 					}
 					
-				} /*else if (selectedType.equals("Embroidery")) {
+				} else if (selectedType.equals("Embroidery")) {
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
 					totalPrice += price;
@@ -1026,6 +1029,9 @@ public class AddOrderFrame extends JFrame{
 					String typeEmbroidery = embroideryTypeSelected;
 					EmbroideryType type = EmbroideryType.getEmbroideryType(typeEmbroidery);
 					
+					System.out.println(logo.length);
+					for(byte b : logo)
+						System.out.print(b);
 					OrderItem embroideryOrder = new Embroidery.EmbroideryBuilder(quantity, price, logo, size, numOfColors, type)
 					.build();
 					
@@ -1033,7 +1039,7 @@ public class AddOrderFrame extends JFrame{
 					lblInputTotal.setText(totalPrice.toString());
 					
 					orderList.addOrderItem(embroideryOrder);
-				}*/
+				}
 			}	
 		}
 	}
@@ -1044,4 +1050,3 @@ public class AddOrderFrame extends JFrame{
 		return new java.sql.Date(cal.getTimeInMillis());
 	}
 }
-

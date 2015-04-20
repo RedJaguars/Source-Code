@@ -22,10 +22,12 @@ public class ModifyAlterationOrder extends JPanel {
 	
 	private OrderController orderController;
 	private Alteration alterationOrder;
+	private OrderFrame mainFrame;
 	
-	public ModifyAlterationOrder(Alteration orderItem) {
+	public ModifyAlterationOrder(Alteration orderItem, OrderFrame frame) {
 		orderController = new OrderController();
 		alterationOrder = orderItem;
+		mainFrame = frame;
 		
 		setLayout(null);
 		UIManager.put("Button.select", Color.decode("#C1BF7D"));
@@ -72,6 +74,7 @@ public class ModifyAlterationOrder extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if(e.getSource() == btnCancel) {
+					mainFrame.updateTable();
 					javax.swing.SwingUtilities.getWindowAncestor(ModifyAlterationOrder.this).dispose();
 			} else if (e.getSource() == btnModifyOrder) {
 				try {
@@ -90,6 +93,7 @@ public class ModifyAlterationOrder extends JPanel {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				mainFrame.updateTable();
 			}
 		}
 		
