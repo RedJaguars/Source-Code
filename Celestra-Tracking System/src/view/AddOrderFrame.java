@@ -37,7 +37,6 @@ import objects.Gender;
 import objects.Material;
 import objects.Measurement;
 import objects.OrderItem;
-import objects.OrderList;
 import objects.OrderStatus;
 import objects.TopMeasurement;
 import objects.Unit;
@@ -48,29 +47,22 @@ public class AddOrderFrame extends JFrame{
 	private JButton btnBack, btnAdd, btnCheckOut, btnOpenFile;
 	private JLabel lblClientName, lblGender, lblContact, lblEmail, lblDate, lblQuantity, lblGarment, lblMaterials, lblSpecialInstructions, lblAdress;
 	private JLabel lblPrice, lblTotal, lblDownPayment, lblInputTotal, lblHeader, lblPreview;
-	private JTextField txtClientName, txtGender, txtContact, txtEmail, txtDate, txtQuantity, txtFilePath;
-	private JTextField txtAdress, txtPrice, txtDownPayment;
+	private JTextField txtClientName, txtGender, txtContact, txtEmail, txtDate, txtQuantity, txtFilePath, txtLength, txtShoulder,txtChest, txtArmlength;
+	private JTextField txtArmhole, txtBackfigure, txtNeckdeep, txtWristcircum, txtWaist, txtHips, txtFrontfigure, txtBustpoint, txtBustdistance;
+	private JTextField txtBottom, txtCrotch, txtThigh, txtKnee, txtAdress, txtPrice, txtDownPayment;
 	private JTextArea txtMaterials, txtSpecialInstructions;
 	private ButtonGroup bgType, bgGender, bgEmbroidery;
 	private JRadioButton rbAlteration, rbMadeToOrder, rbEmbroidery, rbMale, rbFemale;
-	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth, cbGarmentType, cbTGarmentType, cbBGarmentType;
+	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth;
 	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel, topPanel;
 	private JList addOrderList;
-	private String selectedType, selectedMadeToOrder, buttonSelected, embroideryTypeSelected;
+	private String selectedType, selectedMadeToOrder, buttonSelected;
 	private byte[] fileChosenByte;
 	private DefaultListModel listModel;
 	private Double totalPrice = 0.0;
 	
-	private JTextField txtBHeader, txtBLength, txtBBottom, txtBCrotch, txtBThigh, txtBWaist, txtBHips, txtBKnee;
-	private JTextArea txtBMaterials, txtBSpecialInstructions;
-	
-	private JTextField txtTHeader, txtTLength, txtTShoulder, txtTFrontChest, txtTArmlength, txtTArmhole, txtTBackfigure,
-	 		txtTNeckdeep, txtTWristcircum, txtTWaist, txtTHips, txtTFrontfigure, txtTBustpoint, txtTBustdistance, txtTBackChest;
-	private JTextArea txtTMaterials, txtTSpecialInstructions;
-	
-	private JTextField txtSize, txtColors;
-	
 	public AddOrderFrame() {
+		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -338,8 +330,6 @@ public class AddOrderFrame extends JFrame{
 		rbPatch.setContentAreaFilled(false);
 		rbLogo.setFocusPainted(false);
 		rbPatch.setFocusPainted(false);
-		rbLogo.addActionListener(new doActionListener());
-		rbPatch.addActionListener(new doActionListener());
 		
 		bgEmbroidery = new ButtonGroup();
 		bgEmbroidery.add(rbLogo);
@@ -363,24 +353,8 @@ public class AddOrderFrame extends JFrame{
 		lblPreviewHeader.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblPreview.setBounds(230, 100, 300, 250);
 		
-		JLabel lblSize = new JLabel("Size:");
-		lblSize.setBounds(170,320, 50, 30);
-		lblSize.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtSize = new JTextField();
-		txtSize.setBounds(250, 323, 100, 20);
-		
-		JLabel lblColors = new JLabel("No. of Colors:");
-		lblColors.setBounds(170,350, 150, 30);
-		lblColors.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtColors = new JTextField();
-		txtColors.setBounds(250, 353, 100, 20);
-		
 		embroideryPanel.add(lblPreview);
 		embroideryPanel.add(lblPreviewHeader);
-		embroideryPanel.add(lblSize);
-		embroideryPanel.add(txtSize);
-		embroideryPanel.add(lblColors);
-		embroideryPanel.add(txtColors);
 		embroideryPanel.add(rbLogo);
 		embroideryPanel.add(rbPatch);
 		embroideryPanel.add(lblDesign);
@@ -403,18 +377,6 @@ public class AddOrderFrame extends JFrame{
 		txtSpecialInstructions.setLineWrap(true);
 		alterationPanel.add(txtMaterials);
 		alterationPanel.add(txtSpecialInstructions);
-		
-		JLabel lblGarmentType = new JLabel("Garment Type:");
-		lblGarmentType.setBounds(40,370,100,30);
-		lblGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","VEST","SHIRT","JACKET", "PANTS","SHORTS","SKIRT","APRON","OTHERS"};
-		cbGarmentType= new JComboBox(GarmentType);
-		cbGarmentType.setSelectedIndex(0);
-		cbGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		cbGarmentType.setBackground(Color.decode("#E5EDB8"));
-		cbGarmentType.setBounds(150, 374, 120, 20);
-		alterationPanel.add(lblGarmentType);
-		alterationPanel.add(cbGarmentType);
 		
 		lblMaterials = new JLabel("Materials:");
 		lblSpecialInstructions = new JLabel("Special Instructions:");
@@ -456,7 +418,6 @@ public class AddOrderFrame extends JFrame{
 		mtotopPanel.setLayout(null);
 		panel_1.add(mtotopPanel);
 		
-<<<<<<< HEAD
 		JLabel lblHeader = new JLabel("Measurements (in inches):");
 		JLabel lblLength = new JLabel("Length:");
 		JLabel lblShoulder = new JLabel("Shoulder:");
@@ -585,156 +546,6 @@ public class AddOrderFrame extends JFrame{
 		mtotopPanel.add(txtMaterials);
 		mtotopPanel.add(lblSpecialInstructions);
 		mtotopPanel.add(txtSpecialInstructions);
-=======
-		JLabel lblTHeader = new JLabel("Measurements (in inches):");
-		JLabel lblTLength = new JLabel("Length:");
-		JLabel lblTShoulder = new JLabel("Shoulder:");
-		JLabel lblTFrontChest = new JLabel("Front Chest:");
-		JLabel lblTArmlength = new JLabel("Arm Length:");
-		JLabel lblTArmhole = new JLabel("Arm Hole:");
-		JLabel lblTBackfigure = new JLabel("Back Figure:");
-		JLabel lblTNeckdeep = new JLabel("Neck Deep:");
-		JLabel lblTWristcircum = new JLabel("Wrist Circumference:");
-		JLabel lblTWaist = new JLabel("Waist:");
-		JLabel lblTHips = new JLabel("Hips:");
-		JLabel lblTFrontfigure = new JLabel("Front Figure:");
-		JLabel lblTBustpoint = new JLabel("Bust Point:");
-		JLabel lblTBustdistance = new JLabel("Bust Distance:");
-		JLabel lblTBackChest = new JLabel("Back Chest");
-		
-		lblTHeader.setBounds(45,20,150,30);
-		lblTHeader.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
-		lblTLength.setBounds(100,50,100,30);
-		lblTLength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTLength = new JTextField();
-		txtTLength.setBounds(180, 55, 120, 20);
-		
-		lblTNeckdeep.setBounds(450,50,100,30);
-		lblTNeckdeep.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTNeckdeep = new JTextField();
-		txtTNeckdeep.setBounds(530, 55, 120, 20);
-		
-		lblTShoulder.setBounds(100,80,100,30);
-		lblTShoulder.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTShoulder = new JTextField();
-		txtTShoulder.setBounds(180, 85, 120, 20);
-		
-		lblTWristcircum.setBounds(398,80,150,30);
-		lblTWristcircum.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTWristcircum = new JTextField();
-		txtTWristcircum.setBounds(530, 85, 120, 20);
-		
-		lblTFrontChest.setBounds(100,110,100,30);
-		lblTFrontChest.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTFrontChest = new JTextField();
-		txtTFrontChest.setBounds(180, 115, 120, 20);
-		
-		lblTWaist.setBounds(450,110,100,30);
-		lblTWaist.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTWaist = new JTextField();
-		txtTWaist.setBounds(530, 115, 120, 20);
-		
-		lblTArmlength.setBounds(100,140,100,30);
-		lblTArmlength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTArmlength = new JTextField();
-		txtTArmlength.setBounds(180, 145, 120, 20);
-		
-		lblTHips.setBounds(450,140,100,30);
-		lblTHips.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTHips = new JTextField();
-		txtTHips.setBounds(530, 145, 120, 20);
-		
-		lblTArmhole.setBounds(100,170,100,30);
-		lblTArmhole.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTArmhole = new JTextField();
-		txtTArmhole.setBounds(180, 175, 120, 20);
-		
-		lblTFrontfigure.setBounds(450,170,100,30);
-		lblTFrontfigure.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTFrontfigure = new JTextField();
-		txtTFrontfigure.setBounds(530, 175, 120, 20);
-		
-		lblTBackfigure.setBounds(100,200,100,30);
-		lblTBackfigure.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBackfigure= new JTextField();
-		txtTBackfigure.setBounds(180, 205, 120, 20);
-		
-		JLabel lblTGarmentType = new JLabel("Garment Type:");
-		lblTGarmentType.setBounds(100,260,100,30);
-		lblTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"Coat","Polo","Barong","Longblazer","Shortblazer","Vest","Blouse","Shirt","Jacket","Others"};
-		cbTGarmentType= new JComboBox(GarmentType);
-		cbTGarmentType.setSelectedIndex(0);
-		cbTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		cbTGarmentType.setBackground(Color.decode("#E5EDB8"));
-		cbTGarmentType.setBounds(190, 265, 120, 20);
-		
-		lblTBustpoint.setBounds(450,200,100,30);
-		lblTBustpoint.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBustpoint = new JTextField();
-		txtTBustpoint.setBounds(530, 205, 120, 20);
-		
-		lblTBustdistance.setBounds(450,230,100,30);
-		lblTBustdistance.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBustdistance = new JTextField();
-		txtTBustdistance.setBounds(530, 235, 120, 20);
-		
-		lblTBackChest.setBounds(100, 235, 120, 20);
-		lblTBackChest.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTBackChest = new JTextField();
-		txtTBackChest.setBounds(180, 235, 120, 20);
-		
-		JLabel lblTMaterials = new JLabel("Materials:");
-		lblTMaterials.setBounds(100,260,100,30);
-		lblTMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTMaterials = new JTextArea();
-		txtTMaterials.setBounds(100, 285, 200, 100);
-		txtTMaterials.setLineWrap(true);
-		
-		JLabel lblTSpecialInstructions = new JLabel("Special Instructions:");
-		lblTSpecialInstructions.setBounds(450,260,150,30);
-		lblTSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtTSpecialInstructions = new JTextArea();
-		txtTSpecialInstructions.setBounds(450, 285, 200, 100);
-		txtTSpecialInstructions.setLineWrap(true);
-		
-		mtotopPanel.add(lblTHeader);
-		mtotopPanel.add(lblTLength);
-		mtotopPanel.add(txtTLength);
-		mtotopPanel.add(lblTShoulder);
-		mtotopPanel.add(txtTShoulder);
-		mtotopPanel.add(lblTFrontChest);
-		mtotopPanel.add(txtTFrontChest);
-		mtotopPanel.add(lblTArmlength);
-		mtotopPanel.add(txtTArmlength);
-		mtotopPanel.add(lblTArmhole);
-		mtotopPanel.add(txtTArmhole);
-		mtotopPanel.add(lblTBackfigure);
-		mtotopPanel.add(txtTBackfigure);
-		mtotopPanel.add(lblTNeckdeep);
-		mtotopPanel.add(txtTNeckdeep);
-		mtotopPanel.add(lblTWristcircum);
-		mtotopPanel.add(txtTWristcircum);
-		mtotopPanel.add(lblTWaist);
-		mtotopPanel.add(txtTWaist);
-		mtotopPanel.add(lblTHips);
-		mtotopPanel.add(txtTHips);
-		mtotopPanel.add(lblTFrontfigure);
-		mtotopPanel.add(txtTFrontfigure);
-		mtotopPanel.add(lblTBustpoint);
-		mtotopPanel.add(txtTBustpoint);
-		mtotopPanel.add(lblTBustdistance);
-		mtotopPanel.add(txtTBustdistance);
-		mtotopPanel.add(lblTBackChest);
-		mtotopPanel.add(txtTBackChest);
-		mtotopPanel.add(lblTMaterials);
-		mtotopPanel.add(txtTMaterials);
-		mtotopPanel.add(lblTGarmentType);
-		mtotopPanel.add(cbTGarmentType);
-		mtotopPanel.add(lblTSpecialInstructions);
-		mtotopPanel.add(txtTSpecialInstructions);
->>>>>>> 2b752150b178453f983a48e91d591e0a65a47557
 	}
 	
 	private void MTObottomPanel(){
@@ -744,7 +555,6 @@ public class AddOrderFrame extends JFrame{
 		mtobottomPanel.setLayout(null);
 		panel_1.add(mtobottomPanel);
 		
-<<<<<<< HEAD
 		JLabel lblHeader = new JLabel("Measurements (in inches):");
 		JLabel lblLength = new JLabel("Length:");
 		JLabel lblBottom = new JLabel("Bottom:");
@@ -825,100 +635,6 @@ public class AddOrderFrame extends JFrame{
 		mtobottomPanel.add(txtMaterials);
 		mtobottomPanel.add(lblSpecialInstructions);
 		mtobottomPanel.add(txtSpecialInstructions);
-=======
-		JLabel lblBHeader = new JLabel("Measurements (in inches):");
-		JLabel lblBLength = new JLabel("Length:");
-		JLabel lblBBottom = new JLabel("Bottom:");
-		JLabel lblBCrotch = new JLabel("Crotch:");
-		JLabel lblBThigh = new JLabel("Thigh:");
-		JLabel lblBWaist = new JLabel("Waist:");
-		JLabel lblBHips = new JLabel("Hips:");
-		JLabel lblBKnee = new JLabel("Knee:");
-		
-		lblBHeader.setBounds(45,20,150,30);
-		lblBHeader.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
-		lblBLength.setBounds(100,50,100,30);
-		lblBLength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBLength = new JTextField();
-		txtBLength.setBounds(180, 55, 120, 20);
-		
-		lblBWaist.setBounds(450,50,100,30);
-		lblBWaist.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBWaist = new JTextField();
-		txtBWaist.setBounds(530, 55, 120, 20);
-		
-		lblBBottom.setBounds(100,80,100,30);
-		lblBBottom.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBBottom = new JTextField();
-		txtBBottom.setBounds(180, 85, 120, 20);
-		
-		lblBHips.setBounds(450,80,150,30);
-		lblBHips.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBHips= new JTextField();
-		txtBHips.setBounds(530, 85, 120, 20);
-		
-		lblBCrotch.setBounds(100,110,100,30);
-		lblBCrotch.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBCrotch = new JTextField();
-		txtBCrotch.setBounds(180, 115, 120, 20);
-		
-		lblBKnee.setBounds(450,110,100,30);
-		lblBKnee.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBKnee = new JTextField();
-		txtBKnee.setBounds(530, 115, 120, 20);
-		
-		lblBThigh.setBounds(100,140,100,30);
-		lblBThigh.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBThigh = new JTextField();
-		txtBThigh.setBounds(180, 145, 120, 20);
-		
-		JLabel lblBGarmentType = new JLabel("Garment Type:");
-		lblBGarmentType.setBounds(100,170,100,30);
-		lblBGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"Pants","Shorts","Skirt","Apron","Others"};
-		cbBGarmentType= new JComboBox(GarmentType);
-		cbBGarmentType.setSelectedIndex(0);
-		cbBGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		cbBGarmentType.setBackground(Color.decode("#E5EDB8"));
-		cbBGarmentType.setBounds(190, 175, 120, 20);
-		
-		JLabel lblBMaterials = new JLabel("Materials:");
-		lblBMaterials.setBounds(100,260,100,30);
-		lblBMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBMaterials = new JTextArea();
-		txtBMaterials.setBounds(100, 285, 200, 100);
-		txtBMaterials.setLineWrap(true);
-		
-		JLabel lblBSpecialInstructions = new JLabel("Special Instructions:");
-		lblBSpecialInstructions.setBounds(450,260,150,30);
-		lblBSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtBSpecialInstructions = new JTextArea();
-		txtBSpecialInstructions.setBounds(450, 285, 200, 100);
-		txtBSpecialInstructions.setLineWrap(true);
-		
-		mtobottomPanel.add(lblBHeader);
-		mtobottomPanel.add(lblBLength);
-		mtobottomPanel.add(txtBLength);
-		mtobottomPanel.add(lblBWaist);
-		mtobottomPanel.add(txtBWaist);
-		mtobottomPanel.add(lblBBottom);
-		mtobottomPanel.add(txtBBottom);
-		mtobottomPanel.add(lblBHips);
-		mtobottomPanel.add(txtBHips);
-		mtobottomPanel.add(lblBCrotch);
-		mtobottomPanel.add(txtBCrotch);
-		mtobottomPanel.add(lblBKnee);
-		mtobottomPanel.add(txtBKnee);
-		mtobottomPanel.add(lblBThigh);
-		mtobottomPanel.add(txtBThigh);
-		mtobottomPanel.add(lblBGarmentType);
-		mtobottomPanel.add(cbBGarmentType);
-		mtobottomPanel.add(lblBMaterials);
-		mtobottomPanel.add(txtBMaterials);
-		mtobottomPanel.add(lblBSpecialInstructions);
-		mtobottomPanel.add(txtBSpecialInstructions);
->>>>>>> 2b752150b178453f983a48e91d591e0a65a47557
 	}
 	
 	public class doActionListener implements ActionListener {
@@ -958,10 +674,6 @@ public class AddOrderFrame extends JFrame{
 						buttonSelected = "FEMALE";
 					}else if(rb.getText().equals("Male")){
 						buttonSelected = "MALE";
-					}else if(rb.getText().equals("Logo")) {
-						embroideryTypeSelected = "LOGO";
-					}else if(rb.getText().equals("Patch")) {
-						embroideryTypeSelected = "PATCH";
 					}
 				}
 			}else if(action.getSource() == btnOpenFile){
@@ -1032,12 +744,17 @@ public class AddOrderFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent x) {
 			if(x.getSource() == btnCheckOut) {
-				//due date
-				int day = Integer.parseInt(cbDueDay.getSelectedItem().toString());
-				int month = Integer.parseInt(cbDueMonth.getSelectedItem().toString());
-				int year = Integer.parseInt(cbDueYear.getSelectedItem().toString());
-				
-				//order date
+				/*String dueDateString = cbDueYear.getSelectedItem().toString() +	
+										cbDueMonth.getSelectedItem().toString() +
+										cbDueDay.getSelectedItem().toString();
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");				
+				try {
+					java.util.Date date = format.parse(dueDateString);
+					java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 				
 				Double balance = Double.parseDouble(txtDownPayment.getText());
 				String pickupLocation = txtAdress.getText();
@@ -1080,21 +797,21 @@ public class AddOrderFrame extends JFrame{
 						Gender garmentGender = Gender.getGender(buttonSelected);
 						String garmentSelected = "COAT"; //option for garmenttypes
 						Garment garment = Garment.getGarment(garmentSelected);
-				
-						Double upperLength = Double.parseDouble(txtTLength.getText());
-						Double shoulder = Double.parseDouble(txtTShoulder.getText());
-						Double armLength = Double.parseDouble(txtTArmlength.getText());
-						Double wrist = Double.parseDouble(txtTWristcircum.getText());
-						Double armHole = Double.parseDouble(txtTArmhole.getText());
-						Double frontChest = Double.parseDouble(txtTFrontChest.getText());
-						Double backChest = Double.parseDouble(txtTBackChest.getText());
-						Double waist = Double.parseDouble(txtTWaist.getText());
-						Double hips = Double.parseDouble(txtTHips.getText());
-						Double neckDeep = Double.parseDouble(txtTNeckdeep.getText());
-						Double frontFigure = Double.parseDouble(txtTFrontfigure.getText());
-						Double bustPoint = Double.parseDouble(txtTBustpoint.getText());
-						Double bustDistance = Double.parseDouble(txtTBustdistance.getText());
-						Double backFigure = Double.parseDouble(txtTBackfigure.getText());
+						
+						Double upperLength = Double.parseDouble(txtLength.getText());
+						Double shoulder = Double.parseDouble(txtShoulder.getText());
+						Double armLength = Double.parseDouble(txtArmlength.getText());
+						Double wrist = Double.parseDouble(txtWristcircum.getText());
+						Double armHole = Double.parseDouble(txtArmhole.getText());
+						Double frontChest = Double.parseDouble(txtChest.getText());
+						Double backChest = Double.parseDouble(txtChest.getText()); //missing?
+						Double waist = Double.parseDouble(txtWaist.getText());
+						Double hips = Double.parseDouble(txtHips.getText());
+						Double neckDeep = Double.parseDouble(txtNeckdeep.getText());
+						Double frontFigure = Double.parseDouble(txtFrontfigure.getText());
+						Double bustPoint = Double.parseDouble(txtBustpoint.getText());
+						Double bustDistance = Double.parseDouble(txtBustdistance.getText());
+						Double backFigure = Double.parseDouble(txtBackfigure.getText());
 						
 						TopMeasurement measurement = new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
 						.build();
@@ -1120,13 +837,13 @@ public class AddOrderFrame extends JFrame{
 						String garmentSelected = "COAT"; //option for garmenttypes
 						Garment garment = Garment.getGarment(garmentSelected);
 						
-						Double bottomLength = Double.parseDouble(txtBLength.getText());
-						Double bottom = Double.parseDouble(txtBBottom.getText());
-						Double crotch = Double.parseDouble(txtBCrotch.getText());
-						Double thigh = Double.parseDouble(txtBThigh.getText());
-						Double waist = Double.parseDouble(txtBWaist.getText());
-						Double hips = Double.parseDouble(txtBHips.getText());
-						Double knee = Double.parseDouble(txtBKnee.getText());
+						Double bottomLength = Double.parseDouble(txtLength.getText());
+						Double bottom = Double.parseDouble(txtBottom.getText());
+						Double crotch = Double.parseDouble(txtCrotch.getText());
+						Double thigh = Double.parseDouble(txtThigh.getText());
+						Double waist = Double.parseDouble(txtWaist.getText());
+						Double hips = Double.parseDouble(txtHips.getText());
+						Double knee = Double.parseDouble(txtKnee.getText());
 						
 						BottomMeasurement measurement = new BottomMeasurement.BottomMeasurementBuilder(bottomLength, waist, hips, thigh, knee, bottom, crotch)
 						.build();
@@ -1145,13 +862,14 @@ public class AddOrderFrame extends JFrame{
 					}
 					
 				} else if (selectedType.equals("Embroidery")) {
+					System.out.println("EMBROIDERY");
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
 					totalPrice += price;
 					byte[] logo = fileChosenByte;
 					double size = 4.0; //size textfield
 					int numOfColors = 4; //number of colors textfield
-					String typeEmbroidery = embroideryTypeSelected;
+					String typeEmbroidery = bgEmbroidery.getSelection().getActionCommand();
 					EmbroideryType type = EmbroideryType.getEmbroideryType(typeEmbroidery);
 					
 					OrderItem embroideryOrder = new Embroidery.EmbroideryBuilder(quantity, price, logo, size, numOfColors, type)
@@ -1159,14 +877,11 @@ public class AddOrderFrame extends JFrame{
 					
 					listModel.addElement("EMBROIDERY: " + quantity + " " + size + " " + typeEmbroidery + " (" + price + ")");
 					lblInputTotal.setText(totalPrice.toString());
-				}	
-			}	
+				}
+				
+			}
+			
 		}
-	}
-	
-	private java.sql.Date getDate(int day, int month, int year) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month, day);
-		return new java.sql.Date(cal.getTimeInMillis());
+		
 	}
 }
