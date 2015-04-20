@@ -877,7 +877,7 @@ public class AddOrderFrame extends JFrame{
 				//order date
 				Calendar calendar = new GregorianCalendar();
 				int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-				int currentMonth = calendar.get(Calendar.MONTH) + 1;
+				int currentMonth = calendar.get(Calendar.MONTH);
 				int currentYear = calendar.get(Calendar.YEAR);
 				
 				Double bal = Double.parseDouble(txtDownPayment.getText());
