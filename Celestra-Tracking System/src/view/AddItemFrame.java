@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SpinnerNumberModel;
 
+import objects.Unit;
 import view.AddOrderFrame.doActionListener;
 import controller.InventoryController;
 
@@ -19,10 +20,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class AddItemFrame extends JFrame{
-	private JTextArea txtAreaItemName;
-	private JTextArea txtAreaDescription;
-	private JTextArea txtAreaQuantity;
-	
 	private JButton btnSubmit, btnBack;
 	private JButton btnCancel;
 	
@@ -37,8 +34,12 @@ public class AddItemFrame extends JFrame{
 
 	private SpinnerNumberModel snmQuantity;
 	
-	public AddItemFrame() {
+	private ItemFrame mainFrame;
+	
+	public AddItemFrame(ItemFrame frame) {
 		inventoryController = new InventoryController();
+		mainFrame = frame;
+		
 		snmQuantity = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
 		
 		getContentPane().setLayout(null);
@@ -103,12 +104,13 @@ public class AddItemFrame extends JFrame{
 		lblMeasurement.setBounds(40, 150, 150, 20);
 		panel_1.add(lblMeasurement);
 		
-		String[] measurements = {"----------","roll", "inch", "centumeter", "foot"};
+		String[] measurements = {"----------","ROLL", "INCH", "CENTIMETER", "YARD", "FOOT"};
 		cbMeasurement = new JComboBox(measurements);
 		cbMeasurement.setFont(new Font("Tahoma,", Font.PLAIN, 13));
 		cbMeasurement.setBackground(Color.decode("#E5EDB8"));
 		cbMeasurement.setBounds(180, 152, 120, 20);
 		cbMeasurement.setSelectedIndex(0);
+		cbMeasurement.addActionListener(new doActionListener());
 		panel_1.add(cbMeasurement);
 		
 		lblDescription = new JLabel("Description:");
@@ -154,9 +156,10 @@ public class AddItemFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnSubmit) {
-				//also checks if inventory was successfully added into the database
 				try {
-					//inventoryController.addInventory(txtAreaItemName.getText(), Double.parseDouble(txtAreaQuantity.getText()), txtAreaDescription.getText(), "INCH");
+					inventoryController.addInventory(txtItemName.getText(), Double.parseDouble(snmQuantity.getValue().toString()),
+							tarDescription.getText(), Unit.getUnit(cbMeasurement.getSelectedItem().toString()));
+					mainFrame.refreshTable();
 				} catch (NumberFormatException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -164,11 +167,8 @@ public class AddItemFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				//new ItemFrame();
 				dispose();
-				
 			} else if(action.getSource() == btnCancel) {
-				new ItemFrame();
 				dispose();
 			} else if(action.getSource() == btnBack) {
 				dispose();

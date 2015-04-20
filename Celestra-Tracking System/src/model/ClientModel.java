@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -11,6 +12,17 @@ public class ClientModel extends Model {
 
 	public ClientModel() {
 		super();
+	}
+	
+	public void addClient(Client client) throws SQLException {
+		String statement = "INSERT INTO clients(lastName, firstName, gender, contactNo, email) VALUES(?, ? , ?, ?, ?)";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ps.setString(1, client.getLastName());
+		ps.setString(2, client.getFirstName());
+		ps.setString(3, client.getGender());
+		ps.setString(4, client.getContactNo());
+		ps.setString(5, client.getEmail());
+		ps.executeUpdate();
 	}
 	
 	public static Client getClientByID(int id) throws SQLException {

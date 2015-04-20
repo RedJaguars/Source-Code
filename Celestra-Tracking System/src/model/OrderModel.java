@@ -38,6 +38,8 @@ public class OrderModel extends Model{
 	/* Adds a new order to the database*/
 	@SuppressWarnings("resource")
 	public void addNewOrder(OrderList order) throws SQLException {
+		ClientModel clientModel = new ClientModel();
+		clientModel.addClient(order.getClient());
 		String statement = "INSERT INTO order_list(orderDate, dueDate, totalPrice, balance, pickupLocation, clientID, status, receiptNo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = con.getConnection().prepareStatement(statement);
 		
@@ -46,7 +48,8 @@ public class OrderModel extends Model{
 		ps.setDouble(3, order.getTotalPrice());
 		ps.setDouble(4, order.getBalance());
 		ps.setString(5, order.getPickupLocation());
-		ps.setInt(6, order.getClient().getClientID());
+		//ps.setInt(6, order.getClient().getClientID());
+		ps.setInt(6, 6);
 		ps.setString(7, order.getStatus().toString());
 		ps.setInt(8, order.getReceiptNo());
 		ps.executeUpdate();

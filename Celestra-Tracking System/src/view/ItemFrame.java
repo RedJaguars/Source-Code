@@ -79,21 +79,7 @@ public class ItemFrame extends JFrame{
 	
 	private List<Material> list;
 	
-	public void updateTable(){
-		try {
-			panel_2.removeAll();
-			tableInventory = createTable(inventoryController.retrieveInventoryList());
-			panel_2.add(new JScrollPane(tableInventory));
-			tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
-			tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
-			panel_2.repaint();
-			panel_2.revalidate();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-	}
-	public ItemFrame() {
-		
+	public ItemFrame() {	
 		
 		inventoryController = new InventoryController();
 		numberDecSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
@@ -186,6 +172,7 @@ public class ItemFrame extends JFrame{
 		//btnModifyItem.setFocusPainted(false);
 		btnModifyItem.setBorderPainted(false);
 		btnModifyItem.setContentAreaFilled(false);
+		//970
 		btnModifyItem.setBounds(970, 7, 80, 68);
 		//btnModifyItem.setEnabled(false);
 		btnModifyItem.addActionListener(new doActionListener());
@@ -293,12 +280,14 @@ public class ItemFrame extends JFrame{
 			} else if(e.getSource() == btnChangePassword) {
 				new ChangePassword();
 			} else if(e.getSource() == btnAddNewItem) {
-				new AddItemFrame();
+				new AddItemFrame(ItemFrame.this);
+				refreshTable();
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyItem) {
 				new ModifyItemFrame(selectedMaterial, ItemFrame.this);
+				refreshTable();
 			} else if(e.getSource() == btnReduceQuantity) {
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
@@ -309,9 +298,8 @@ public class ItemFrame extends JFrame{
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-				updateTable();
-			}
-			else if(e.getSource() == btnIncreaseStock){
+				refreshTable();
+			} else if(e.getSource() == btnIncreaseStock){
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
@@ -321,8 +309,22 @@ public class ItemFrame extends JFrame{
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-				updateTable();
+				refreshTable();
 			}
+		}
+	}
+	
+	public void refreshTable() {
+		try {
+			panel_2.removeAll();
+			tableInventory = createTable(inventoryController.retrieveInventoryList());
+			panel_2.add(new JScrollPane(tableInventory));
+			tableInventory.setModel(createTable(inventoryController.retrieveInventoryList()).getModel());
+			tableInventory.setColumnModel(createTable(inventoryController.retrieveInventoryList()).getColumnModel());
+			panel_2.revalidate();
+			panel_2.repaint();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
 	}
 	

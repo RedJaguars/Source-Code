@@ -14,9 +14,6 @@ public enum Garment {
 	SKIRT(GarmentType.BOTTOM),
 	SHORTS(GarmentType.BOTTOM),
 	APRON(GarmentType.BOTTOM),
-	SCRUB(GarmentType.OUTFIT),
-	SMOCK(GarmentType.OUTFIT),
-	GOWN(GarmentType.OUTFIT),
 	OTHER(GarmentType.OTHER);
 	
 	private GarmentType garmentType;
@@ -43,9 +40,6 @@ public enum Garment {
 			case "SKIRT": return SKIRT;
 			case "SHORTS": return SHORTS;
 			case "APRON": return APRON;
-			case "SCRUB": return SCRUB;
-			case "SMOCK": return SMOCK;
-			case "GOWN" : return GOWN;
 			default : return OTHER;
 		}
 	}

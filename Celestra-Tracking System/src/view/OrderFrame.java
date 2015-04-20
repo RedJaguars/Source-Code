@@ -309,15 +309,26 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnChangePassword) {
 				new ChangePassword();
 			} else if(e.getSource() == btnChangeStatus) {
+				refreshDetails();
+				
 				new ChangeOrderStatus(selectedRow, OrderFrame.this);
+				
+				refreshTable();
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyOrder) {
+				refreshDetails();
+				
 				new ModifyOrder(selectedOrderList);
+				
+				refreshTable();
 			} else if(e.getSource() == btnAddOrder) {
+				refreshDetails();
 				
 				new AddOrderFrame();
+				
+				refreshTable();
 			} else if(e.getSource() == btnCancelOrder){
 				Iterator<OrderList> orderList = null;
 				try {
@@ -331,7 +342,6 @@ public class OrderFrame extends JFrame{
 					order = orderList.next();
 					if(order.getReceiptNo() == (int)tableOrder.getValueAt(tableOrder.getSelectedRow(), 0))
 						break;
-					
 				}
 				try {
 					orderController.cancelOrder(order);
@@ -340,20 +350,35 @@ public class OrderFrame extends JFrame{
 					e1.printStackTrace();
 				}
 				
-				try {
-					panel_2.removeAll();
-					tableOrder = createTable(orderController.retrieveOrderList());
-					panel_2.add(new JScrollPane(tableOrder));
-					tableOrder.setModel(createTable(orderController.retrieveOrderList()).getModel());
-					tableOrder.setColumnModel(createTable(orderController.retrieveOrderList()).getColumnModel());
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				panel_2.revalidate();
-				panel_2.repaint();
+				refreshTable();
+				
+				refreshDetails();
 			}
 			
 		}
+	}
+	
+	public void refreshDetails() {
+		createJList();
+		panel_1.remove(clientOrderList);
+		panel_1.add(panelList);
+		panel_1.revalidate();
+		panel_1.repaint();
+		txtAreaOrderDetails.setText("");
+	}
+	
+	public void refreshTable() {
+		try {
+			panel_2.removeAll();
+			tableOrder = createTable(orderController.retrieveOrderList());
+			panel_2.add(new JScrollPane(tableOrder));
+			tableOrder.setModel(createTable(orderController.retrieveOrderList()).getModel());
+			tableOrder.setColumnModel(createTable(orderController.retrieveOrderList()).getColumnModel());
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		panel_2.revalidate();
+		panel_2.repaint();
 	}
 	
 	public JTable createTable(Iterator<?> orderList) {

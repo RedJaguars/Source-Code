@@ -34,6 +34,10 @@ public class OrderController extends Controller{
 		((OrderModel)model).addNewOrder(orderToAdd);
 	}
 	
+	public void addNewOrder(OrderList orderList) throws SQLException {
+		((OrderModel)model).addNewOrder(orderList);
+	}
+	
 	public OrderList createModifiedOrderList(OrderList originalOrderList, String newDescription, double newBalance){
 		return ((OrderModel) model).createModifiedOrderList(originalOrderList, newDescription, newBalance);
 	}
