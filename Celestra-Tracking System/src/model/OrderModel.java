@@ -202,6 +202,23 @@ public class OrderModel extends Model{
 		//made to order
 	}
 	
+	public Iterator<?> retrieveOrderList() throws SQLException{
+		modelList.removeAll(modelList);
+	
+		String statement = "SELECT * FROM order_list OL WHERE status = ?";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ps.setString(1, "PENDING");
+		ResultSet orderListSet = ps.executeQuery();
+		
+		/*Traversing the whole list of orderList*/
+		while(orderListSet.next()) {
+			OrderList orderList = getOrderListByID(orderListSet.getInt("OL.orderListID"));
+			modelList.add(orderList);
+		}
+		
+		return modelList.iterator();
+	}
+	
 	public Iterator<?> getModelList() throws SQLException{
 		modelList.removeAll(modelList);
 	

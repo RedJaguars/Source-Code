@@ -51,9 +51,9 @@ import view.OrderFrame.doActionListener;
 public class AddOrderFrame extends JFrame{
 	private JButton btnBack, btnAdd, btnCheckOut, btnOpenFile;
 	private JLabel lblClientName, lblGender, lblContact, lblEmail, lblDate, lblQuantity, lblGarment, lblMaterials, lblSpecialInstructions, lblAdress;
-	private JLabel lblPrice, lblTotal, lblDownPayment, lblInputTotal, lblHeader, lblPreview;
+	private JLabel lblPrice, lblTotal, lblDownPayment, lblInputTotal, lblHeader, lblPreview, lblReceiptNo;
 	private JTextField txtClientName, txtGender, txtContact, txtEmail, txtDate, txtQuantity, txtFilePath;
-	private JTextField txtAdress, txtPrice, txtDownPayment;
+	private JTextField txtAdress, txtPrice, txtDownPayment, txtReceiptNo;
 	private JTextArea txtMaterials, txtSpecialInstructions;
 	private ButtonGroup bgType, bgGender, bgEmbroidery;
 	private JRadioButton rbAlteration, rbMadeToOrder, rbEmbroidery, rbMale, rbFemale;
@@ -76,7 +76,7 @@ public class AddOrderFrame extends JFrame{
 	
 	private OrderList orderList;
 	
-	private int receiptNo = 1;
+	private int receiptNo;
 	private Date dueDate;
 	private Date orderDate;
 	private Double balance = 0.0;
@@ -253,7 +253,7 @@ public class AddOrderFrame extends JFrame{
 		addOrderList = new JList(listModel);
 		addOrderList.setBackground(Color.WHITE);
 		addOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
-		addOrderList.setBounds(785, 20, 325, 550);
+		addOrderList.setBounds(785, 20, 325, 540);
 		panel_1.add(addOrderList);
 		
 		btnCheckOut = new JButton("Checkout");
@@ -266,24 +266,34 @@ public class AddOrderFrame extends JFrame{
 		panel_1.add(btnCheckOut);
 		
 		lblTotal = new JLabel("Total:");
-		lblTotal.setBounds(785,570,100,40);
+		lblTotal.setBounds(785,550,100,40);
 		lblTotal.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblInputTotal = new JLabel("/*TOTAL*/");
 		lblInputTotal.setBackground(Color.WHITE);
-		lblInputTotal.setBounds(885,570,100,40);
+		lblInputTotal.setBounds(885,550,100,40);
 		lblInputTotal.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(lblTotal);
 		panel_1.add(lblInputTotal);
 		
 		lblDownPayment = new JLabel("Down Payment:");
-		lblDownPayment.setBounds(785,600,100,40);
+		lblDownPayment.setBounds(785,580,100,40);
 		lblDownPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtDownPayment = new NumberTextField();
 		txtDownPayment.setBackground(Color.WHITE);
-		txtDownPayment.setBounds(885,610,100,20);
+		txtDownPayment.setBounds(885,590,100,20);
 		txtDownPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panel_1.add(lblDownPayment);
 		panel_1.add(txtDownPayment);
+		
+		lblReceiptNo = new JLabel("Receipt No:");
+		lblReceiptNo.setBounds(785,610,100,40);
+		lblReceiptNo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtReceiptNo = new JTextField();
+		txtReceiptNo.setBackground(Color.WHITE);
+		txtReceiptNo.setBounds(885,620,100,20);
+		txtReceiptNo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		panel_1.add(lblReceiptNo);
+		panel_1.add(txtReceiptNo);
 		
 		rbAlteration = new JRadioButton("Alteration");
 		rbAlteration.setBounds(175, 180, 100, 20);
@@ -306,7 +316,7 @@ public class AddOrderFrame extends JFrame{
 		rbEmbroidery.setActionCommand("embroidery");
 		rbEmbroidery.addActionListener(new doActionListener());
 		rbEmbroidery.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
+
 		bgType = new ButtonGroup();
 		bgType.add(rbAlteration);
 		bgType.add(rbMadeToOrder);
@@ -426,14 +436,14 @@ public class AddOrderFrame extends JFrame{
 		alterationPanel.add(txtSpecialInstructions);
 		
 		JLabel lblGarmentType = new JLabel("Garment Type:");
-		lblGarmentType.setBounds(40,370,100,30);
+		lblGarmentType.setBounds(40,355,100,30);
 		lblGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		String[] GarmentType = {"----------","COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","VEST","SHIRT","JACKET", "PANTS","SHORTS","SKIRT","APRON","OTHERS"};
 		cbGarmentType= new JComboBox(GarmentType);
 		cbGarmentType.setSelectedIndex(0);
 		cbGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cbGarmentType.setBackground(Color.decode("#E5EDB8"));
-		cbGarmentType.setBounds(150, 374, 120, 20);
+		cbGarmentType.setBounds(150, 360, 120, 20);
 		cbGarmentType.addActionListener(new doActionListener());
 		alterationPanel.add(lblGarmentType);
 		alterationPanel.add(cbGarmentType);
@@ -575,7 +585,7 @@ public class AddOrderFrame extends JFrame{
 		cbTGarmentType.setSelectedIndex(0);
 		cbTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cbTGarmentType.setBackground(Color.decode("#E5EDB8"));
-		cbTGarmentType.setBounds(190, 260, 120, 30);
+		cbTGarmentType.setBounds(190, 265, 120, 20);
 		cbTGarmentType.addActionListener(new doActionListener());
 		
 		JLabel lblTMaterials = new JLabel("Materials:");
@@ -893,6 +903,7 @@ public class AddOrderFrame extends JFrame{
 				.build();
 				
 				OrderStatus stat = OrderStatus.PENDING;
+				int receiptNo = Integer.parseInt(txtReceiptNo.getText());
 				totalPrice = 0.0;
 				
 				orderList.setClient(client1);
@@ -901,6 +912,7 @@ public class AddOrderFrame extends JFrame{
 				orderList.setBalance(bal);
 				orderList.setDueDate(getDate(day, month, year));
 				orderList.setOrderDate(getDate(currentDay, currentMonth, currentYear));
+				orderList.setReceiptNo(receiptNo);
 				
 				try {
 					orderController.addNewOrder(orderList);
