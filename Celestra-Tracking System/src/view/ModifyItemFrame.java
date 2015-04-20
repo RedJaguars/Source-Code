@@ -41,12 +41,12 @@ public class ModifyItemFrame extends JFrame{
 	private SpinnerNumberModel snmQuantity;
 	
 	private Material material;
-	private ItemFrame mainFrame;
+	private ItemFrame mainFrame; 
 	
-	public ModifyItemFrame(Material selectedMaterial, ItemFrame itemFrame) {
+	public ModifyItemFrame(Material selectedMaterial, ItemFrame frame) {
 		inventoryController = new InventoryController();
 		material = selectedMaterial;
-		mainFrame = itemFrame;
+		mainFrame = frame;
 		
 		snmQuantity = new SpinnerNumberModel(material.getQuantityInStock(), 1, Double.MAX_VALUE, 1 );
 		
@@ -159,13 +159,13 @@ public class ModifyItemFrame extends JFrame{
 				Material newMaterial = new Material(material.getInventoryID(), txtItemName.getText(), 
 						Double.parseDouble(snmQuantity.getValue().toString()), tarDescription.getText(), 
 						Unit.getUnit(cbMeasurement.getSelectedItem().toString()));
+				mainFrame.refreshTable();
 				try {
 					inventoryController.modifyMaterial(material, newMaterial);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				mainFrame.updateTable();
 				dispose();
 			} else if(action.getSource() == btnCancel) {
 				dispose();

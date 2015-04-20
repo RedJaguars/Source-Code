@@ -14,16 +14,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import controller.OrderController;
 import objects.Alteration;
 import objects.BottomMeasurement;
 import objects.Client;
@@ -56,7 +59,7 @@ public class AddOrderFrame extends JFrame{
 	private JComboBox cbGarment, cbDueYear, cbDueDay, cbDueMonth, cbGarmentType, cbTGarmentType, cbBGarmentType;
 	private JPanel panel_1, alterationPanel, madetoorderPanel, embroideryPanel, mtotopPanel, mtobottomPanel, topPanel;
 	private JList addOrderList;
-	private String selectedType, selectedMadeToOrder, buttonSelected, embroideryTypeSelected;
+	private String selectedType, selectedMadeToOrder, buttonSelected, embroideryTypeSelected, garmentTypeSelected;
 	private byte[] fileChosenByte;
 	private DefaultListModel listModel;
 	private Double totalPrice = 0.0;
@@ -70,7 +73,24 @@ public class AddOrderFrame extends JFrame{
 	
 	private JTextField txtSize, txtColors;
 	
+	private OrderList orderList;
+	
+	private int receiptNo = 1;
+	private Date dueDate;
+	private Date orderDate;
+	private Double balance = 0.0;
+	private String pickupLocation;
+	private Client client;
+	private OrderStatus status;
+	
+	private OrderController orderController;
+	
 	public AddOrderFrame() {
+		orderList = new OrderList.OrderListBuilder(receiptNo, dueDate, orderDate, balance, pickupLocation, client, status)
+		.build();
+		
+		orderController = new OrderController();
+		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -356,12 +376,12 @@ public class AddOrderFrame extends JFrame{
 		btnOpenFile.setBounds(550, 54, 80, 30);
 		btnOpenFile.addActionListener(new doActionListener());
 		
-		lblPreview = new JLabel(); //make this label
+		lblPreview = new JLabel();
 		JLabel lblPreviewHeader = new JLabel("Preview:");
 		lblPreviewHeader.setBounds(170,75,150,30);
 		lblPreview.setBackground(Color.white);
 		lblPreviewHeader.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblPreview.setBounds(230, 100, 300, 250);
+		lblPreview.setBounds(230, 100, 300, 200);
 		
 		JLabel lblSize = new JLabel("Size:");
 		lblSize.setBounds(170,320, 50, 30);
@@ -397,9 +417,9 @@ public class AddOrderFrame extends JFrame{
 		
 		txtMaterials = new JTextArea();
 		txtSpecialInstructions = new JTextArea();
-		txtMaterials.setBounds(40,40, 320, 350);
+		txtMaterials.setBounds(40,40, 320, 300);
 		txtMaterials.setLineWrap(true);
-		txtSpecialInstructions.setBounds(430, 40, 320, 350);
+		txtSpecialInstructions.setBounds(430, 40, 320, 300);
 		txtSpecialInstructions.setLineWrap(true);
 		alterationPanel.add(txtMaterials);
 		alterationPanel.add(txtSpecialInstructions);
@@ -407,12 +427,13 @@ public class AddOrderFrame extends JFrame{
 		JLabel lblGarmentType = new JLabel("Garment Type:");
 		lblGarmentType.setBounds(40,370,100,30);
 		lblGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","VEST","SHIRT","JACKET", "PANTS","SHORTS","SKIRT","APRON","OTHERS"};
+		String[] GarmentType = {"----------","COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","VEST","SHIRT","JACKET", "PANTS","SHORTS","SKIRT","APRON","OTHERS"};
 		cbGarmentType= new JComboBox(GarmentType);
 		cbGarmentType.setSelectedIndex(0);
 		cbGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cbGarmentType.setBackground(Color.decode("#E5EDB8"));
 		cbGarmentType.setBounds(150, 374, 120, 20);
+		cbGarmentType.addActionListener(new doActionListener());
 		alterationPanel.add(lblGarmentType);
 		alterationPanel.add(cbGarmentType);
 		
@@ -530,16 +551,6 @@ public class AddOrderFrame extends JFrame{
 		txtTBackfigure= new JTextField();
 		txtTBackfigure.setBounds(180, 205, 120, 20);
 		
-		JLabel lblTGarmentType = new JLabel("Garment Type:");
-		lblTGarmentType.setBounds(100,260,100,30);
-		lblTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"Coat","Polo","Barong","Longblazer","Shortblazer","Vest","Blouse","Shirt","Jacket","Others"};
-		cbTGarmentType= new JComboBox(GarmentType);
-		cbTGarmentType.setSelectedIndex(0);
-		cbTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		cbTGarmentType.setBackground(Color.decode("#E5EDB8"));
-		cbTGarmentType.setBounds(190, 265, 120, 20);
-		
 		lblTBustpoint.setBounds(450,200,100,30);
 		lblTBustpoint.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtTBustpoint = new JTextField();
@@ -555,18 +566,29 @@ public class AddOrderFrame extends JFrame{
 		txtTBackChest = new JTextField();
 		txtTBackChest.setBounds(180, 235, 120, 20);
 		
+		JLabel lblTGarmentType = new JLabel("Garment Type:");
+		lblTGarmentType.setBounds(100,260,100,30);
+		lblTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		String[] GarmentType = {"----------", "COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","BLOUSE","SHIRT","JACKET","OTHERS"};
+		cbTGarmentType= new JComboBox(GarmentType);
+		cbTGarmentType.setSelectedIndex(0);
+		cbTGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cbTGarmentType.setBackground(Color.decode("#E5EDB8"));
+		cbTGarmentType.setBounds(190, 260, 120, 30);
+		cbTGarmentType.addActionListener(new doActionListener());
+		
 		JLabel lblTMaterials = new JLabel("Materials:");
-		lblTMaterials.setBounds(100,260,100,30);
+		lblTMaterials.setBounds(100,280,100,30);
 		lblTMaterials.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtTMaterials = new JTextArea();
-		txtTMaterials.setBounds(100, 285, 200, 100);
+		txtTMaterials.setBounds(100, 310, 200, 70);
 		txtTMaterials.setLineWrap(true);
 		
 		JLabel lblTSpecialInstructions = new JLabel("Special Instructions:");
-		lblTSpecialInstructions.setBounds(450,260,150,30);
+		lblTSpecialInstructions.setBounds(450,280,150,30);
 		lblTSpecialInstructions.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtTSpecialInstructions = new JTextArea();
-		txtTSpecialInstructions.setBounds(450, 285, 200, 100);
+		txtTSpecialInstructions.setBounds(450, 310, 200, 70);
 		txtTSpecialInstructions.setLineWrap(true);
 		
 		mtotopPanel.add(lblTHeader);
@@ -663,12 +685,13 @@ public class AddOrderFrame extends JFrame{
 		JLabel lblBGarmentType = new JLabel("Garment Type:");
 		lblBGarmentType.setBounds(100,170,100,30);
 		lblBGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"Pants","Shorts","Skirt","Apron","Others"};
+		String[] GarmentType = {"----------","PANTS","SHORTS","SKIRT","APRON","OTHERS"};
 		cbBGarmentType= new JComboBox(GarmentType);
 		cbBGarmentType.setSelectedIndex(0);
 		cbBGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cbBGarmentType.setBackground(Color.decode("#E5EDB8"));
 		cbBGarmentType.setBounds(190, 175, 120, 20);
+		cbBGarmentType.addActionListener(new doActionListener());
 		
 		JLabel lblBMaterials = new JLabel("Materials:");
 		lblBMaterials.setBounds(100,260,100,30);
@@ -764,7 +787,7 @@ public class AddOrderFrame extends JFrame{
 				    String imagePath = selectedFile.getAbsolutePath();
 				    ImageIcon imageIcon = new ImageIcon(imagePath);
 				    Image image = imageIcon.getImage();
-				    Image resizedImage = image.getScaledInstance(300, 250, java.awt.Image.SCALE_SMOOTH);
+				    Image resizedImage = image.getScaledInstance(300, 200, java.awt.Image.SCALE_SMOOTH);
 				    imageIcon = new ImageIcon(resizedImage);
 				    lblPreview.setIcon(imageIcon);
 				    
@@ -807,7 +830,35 @@ public class AddOrderFrame extends JFrame{
 						madetoorderPanel.setVisible(true);
 						mtotopPanel.setVisible(false);
 						mtobottomPanel.setVisible(true);
-				}		
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("COAT")) {
+					garmentTypeSelected = "COAT";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("POLO")) {
+					garmentTypeSelected = "POLO";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("BARONG")) {
+					garmentTypeSelected = "BARONG";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("LONGBLAZER")) {
+					garmentTypeSelected = "LONGBLAZER";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("SHORTBLAZER")) {
+					garmentTypeSelected = "SHORTBLAZER";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("VEST")) {
+					garmentTypeSelected = "VEST";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("BLOUSE")) {
+					garmentTypeSelected = "BLOUSE";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("SHIRT")) {
+					garmentTypeSelected = "SHIRT";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("JACKET")) {
+					garmentTypeSelected = "JACKET";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("PANTS")) {
+					garmentTypeSelected = "PANTS";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("SKIRT")) {
+					garmentTypeSelected = "SKIRT";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("SHORTS")) {
+					garmentTypeSelected = "SHORTS";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("APRON")) {
+					garmentTypeSelected = "APRON";
+				}else if(cb.getSelectedItem().toString().equalsIgnoreCase("OTHER")) {
+					garmentTypeSelected = "OTHER";
+				}
 			}
 		}
 	}
@@ -824,30 +875,46 @@ public class AddOrderFrame extends JFrame{
 				int year = Integer.parseInt(cbDueYear.getSelectedItem().toString());
 				
 				//order date
+				Calendar calendar = new GregorianCalendar();
+				int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+				int currentMonth = calendar.get(Calendar.MONTH) + 1;
+				int currentYear = calendar.get(Calendar.YEAR);
 				
-				Double balance = Double.parseDouble(txtDownPayment.getText());
-				String pickupLocation = txtAdress.getText();
+				Double bal = Double.parseDouble(txtDownPayment.getText());
+				String location = txtAdress.getText();
 				
 				String clientName = txtClientName.getText();
 				String[] splitStr = clientName.split("\\s"); 
 				String lastName = splitStr[0];
 				String firstName = splitStr[1];
-				Client client = new Client.ClientBuilder(lastName, firstName, bgGender.getSelection().getActionCommand(), txtContact.getText())
+				Client client1 = new Client.ClientBuilder(lastName, firstName, buttonSelected, txtContact.getText())
 				.email(txtEmail.getText())
 				.build();
 				
-				OrderStatus status = OrderStatus.PENDING;
-				
+				OrderStatus stat = OrderStatus.PENDING;
 				totalPrice = 0.0;
+				
+				orderList.setClient(client1);
+				orderList.setStatus(stat);
+				orderList.setPickupLocation(location);
+				orderList.setBalance(bal);
+				orderList.setDueDate(getDate(day, month, year));
+				orderList.setOrderDate(getDate(currentDay, currentMonth, currentYear));
+				
+				try {
+					orderController.addNewOrder(orderList);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				dispose();
 			} else if (x.getSource() == btnAdd) {
 				if(selectedType.equals("Alteration")) {
-					System.out.println("Alteration");
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
 					totalPrice += price;
-					String garmentSelected = "COAT"; //change to option garmenttypes
+					String garmentSelected = garmentTypeSelected;
 					Garment garment = Garment.getGarment(garmentSelected);
 					String instruction = txtSpecialInstructions.getText();
 					
@@ -856,6 +923,8 @@ public class AddOrderFrame extends JFrame{
 					
 					listModel.addElement("ALTERATION: " + quantity + " " + garmentSelected + " (" + price + ")");
 					lblInputTotal.setText(totalPrice.toString());
+					
+					orderList.addOrderItem(alterationOrder);
 				} else if (selectedType.equals("Made To Order")) {
 					if(selectedMadeToOrder.equals("Top")) {
 						int quantity = Integer.parseInt(txtQuantity.getText());
@@ -864,7 +933,7 @@ public class AddOrderFrame extends JFrame{
 						String materials = txtMaterials.getText();
 						String instruction = txtSpecialInstructions.getText();
 						Gender garmentGender = Gender.getGender(buttonSelected);
-						String garmentSelected = "COAT"; //option for garmenttypes
+						String garmentSelected = garmentTypeSelected;
 						Garment garment = Garment.getGarment(garmentSelected);
 				
 						Double upperLength = Double.parseDouble(txtTLength.getText());
@@ -896,6 +965,8 @@ public class AddOrderFrame extends JFrame{
 						
 						listModel.addElement("MADE TO ORDER: " + quantity + " " + garmentSelected + " - " + garmentGender.toString() + " Top (" + price + ")");
 						lblInputTotal.setText(totalPrice.toString());
+						
+						orderList.addOrderItem(garmentOrder);
 					} else if (selectedMadeToOrder.equals("Bottom")) {
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
@@ -903,7 +974,7 @@ public class AddOrderFrame extends JFrame{
 						String materials = txtMaterials.getText();
 						String instruction = txtSpecialInstructions.getText();
 						Gender garmentGender = Gender.getGender(buttonSelected);
-						String garmentSelected = "COAT"; //option for garmenttypes
+						String garmentSelected = garmentTypeSelected;
 						Garment garment = Garment.getGarment(garmentSelected);
 						
 						Double bottomLength = Double.parseDouble(txtBLength.getText());
@@ -928,15 +999,17 @@ public class AddOrderFrame extends JFrame{
 						
 						listModel.addElement("MADE TO ORDER: " + quantity + " " + garmentSelected + " - " + garmentGender.toString() + " Bottom (" + price + ")");
 						lblInputTotal.setText(totalPrice.toString());
+						
+						orderList.addOrderItem(garmentOrder);
 					}
 					
-				} else if (selectedType.equals("Embroidery")) {
+				} /*else if (selectedType.equals("Embroidery")) {
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
 					totalPrice += price;
 					byte[] logo = fileChosenByte;
-					double size = 4.0; //size textfield
-					int numOfColors = 4; //number of colors textfield
+					double size = Double.parseDouble(txtSize.getText());
+					int numOfColors = Integer.parseInt(txtColors.getText());
 					String typeEmbroidery = embroideryTypeSelected;
 					EmbroideryType type = EmbroideryType.getEmbroideryType(typeEmbroidery);
 					
@@ -945,7 +1018,9 @@ public class AddOrderFrame extends JFrame{
 					
 					listModel.addElement("EMBROIDERY: " + quantity + " " + size + " " + typeEmbroidery + " (" + price + ")");
 					lblInputTotal.setText(totalPrice.toString());
-				}	
+					
+					orderList.addOrderItem(embroideryOrder);
+				}*/
 			}	
 		}
 	}

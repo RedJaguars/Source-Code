@@ -16,8 +16,8 @@ public class InventoryController extends Controller {
 		model.register(this);
 	}
 	
-	public void addInventory(String inventoryName, double quantityInStock, String description, String unit) throws Exception {
-		Material mat = new Material(0, inventoryName, quantityInStock, description, Unit.getUnit(unit));
+	public void addInventory(String inventoryName, double quantityInStock, String description, Unit unit) throws Exception {
+		Material mat = new Material(0, inventoryName, quantityInStock, description, unit);
 		((InventoryModel)model).addInventory(mat);
 	}
 	
