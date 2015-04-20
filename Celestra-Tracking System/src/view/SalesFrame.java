@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -45,6 +46,9 @@ public class SalesFrame extends JFrame{
 	private JPanel panel_2;
 	
 	private SalesController salesController;
+	private DefaultTableModel salesTableModel;
+	
+	String headers[] = new String[]{"Receipt No.", "OrderDate", "Total Price", "Down Payment", "Status"};
 	
 	public SalesFrame() {
 		salesController = new SalesController();
@@ -151,17 +155,19 @@ public class SalesFrame extends JFrame{
 		panel_1.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
-		salesTable = new JTable();
+		salesTableModel = new DefaultTableModel(headers, 0);
+		salesTable = new JTable(salesTableModel);
+		salesTable.setDefaultRenderer(salesTable.getColumnClass(0), new SalesCellRenderer());
 		salesTable.setBounds(57, 126, 847, 302);
 		if(salesPane != null) {
             panel_2.remove(salesPane);
         }
-		try {
+		/*try {
 			salesTable = createTable(salesController.retrieveSalesList());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		salesTable.setBounds(15, 50, 555, 240);
 		salesPane = new JScrollPane(salesTable);
 		panel_2.add(salesPane);
@@ -203,8 +209,16 @@ public class SalesFrame extends JFrame{
 		this.setTitle("Celestra Tailoring and Embroidery");
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		try {
+			updateTable(salesController.retrieveSalesList());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
+	/*
 	public JTable createTable(Iterator<?> sales) {
 		int size = 0;
 		List<Sales> list = new ArrayList<Sales>();
@@ -237,6 +251,27 @@ public class SalesFrame extends JFrame{
 		}
 		
 		return salesListTable;
+	}*/
+	
+	public void updateTable(Iterator<?> SalesList){
+		//salesTable is the JTable
+		//salesTableModel is the DefaultTableModel
+		for(int i = salesTable.getRowCount(); i != 0 ; i++) {
+			salesTableModel.removeRow(i - 1);
+		}
+		
+		while(SalesList.hasNext()) {
+			Sales saleToAdd = (Sales)SalesList.next();
+			Object[] rowData = new Object[5];
+			
+			rowData[0] = saleToAdd;
+			rowData[1] = saleToAdd;
+			rowData[2] = saleToAdd;
+			rowData[3] = saleToAdd;
+			rowData[4] = saleToAdd;
+			
+			salesTableModel.addRow(rowData);
+		}
 	}
 	
 	public class doActionListener implements ActionListener {

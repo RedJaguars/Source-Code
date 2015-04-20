@@ -70,6 +70,22 @@ public class OrderFrame extends JFrame{
 	
 	private JPanel panelList, panel_1, panel_2;
 	
+	public void updateTable(){
+		
+		try {
+			panel_2.removeAll();
+			tableOrder = createTable(orderController.retrieveOrderItem(selectedOrderList));
+			panel_2.add(new JScrollPane(tableOrder));
+			tableOrder.setModel(createTable(orderController.retrieveOrderItem(selectedOrderList)).getModel());
+			tableOrder.setColumnModel(createTable(orderController.retrieveOrderItem(selectedOrderList)).getColumnModel());
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 	public OrderFrame() {
 		orderController = new OrderController();
 		
@@ -260,7 +276,7 @@ public class OrderFrame extends JFrame{
 			} else if(e.getSource() == btnChangePassword) {
 				new ChangePassword();
 			} else if(e.getSource() == btnChangeStatus) {
-				new ChangeOrderStatus(selectedRow);
+				new ChangeOrderStatus(selectedRow, OrderFrame.this);
 			} else if(e.getSource() == btnExit) {
 				new Login();
 				dispose();

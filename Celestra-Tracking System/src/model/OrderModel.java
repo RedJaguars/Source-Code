@@ -503,7 +503,7 @@ public class OrderModel extends Model{
 	}
 	
 	public void modifyOrder(OrderList original, OrderList modified) throws SQLException {
-		String query = "UPDATE order_list SET balance = ?, status = ? WHERE orderListID = ?";
+		String query = "UPDATE order_list SET balance =  balance+?, status = ? WHERE orderListID = ?";
 		PreparedStatement statement = con.getConnection().prepareStatement(query);
 		statement.setDouble(1, modified.getBalance());
 		statement.setString(2, modified.getStatus().toString());

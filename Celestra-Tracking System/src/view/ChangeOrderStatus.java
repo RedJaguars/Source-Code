@@ -27,9 +27,10 @@ public class ChangeOrderStatus extends JFrame{
 	private int selectedRow;
 	private double totalAmount;
 	private double balance;
+	OrderFrame mainFrame;
 	
-	public ChangeOrderStatus(int row) {
-		
+	public ChangeOrderStatus(int row, OrderFrame orderFrame) {
+		mainFrame = orderFrame;
 		orderController = new OrderController();
 		try {
 			totalAmount =  orderController.getSelectedOrderList(row).getTotalPrice();
@@ -240,7 +241,6 @@ public class ChangeOrderStatus extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				System.out.println("YES");
 				dispose();
 			} else if(action.getSource() == btnCancel) {
 				dispose();
