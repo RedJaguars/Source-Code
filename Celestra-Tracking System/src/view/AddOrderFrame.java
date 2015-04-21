@@ -27,7 +27,17 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.OrderController;
+import exception.EmptyAddressException;
 import exception.EmptyClientNameException;
+import exception.EmptyContactNoException;
+import exception.EmptyDownPaymentException;
+import exception.EmptyEmailException;
+import exception.EmptyInstructionException;
+import exception.EmptyMaterialsException;
+import exception.EmptyPriceException;
+import exception.EmptyQuantityException;
+import exception.EmptyReceiptNoException;
+import exception.IncompleteMeasurementException;
 import objects.Alteration;
 import objects.BottomMeasurement;
 import objects.Client;
@@ -408,7 +418,7 @@ public class AddOrderFrame extends JFrame{
 		JLabel lblColors = new JLabel("No. of Colors:");
 		lblColors.setBounds(170,350, 150, 30);
 		lblColors.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtColors = new JTextField();
+		txtColors = new NumberTextField();
 		txtColors.setBounds(250, 353, 100, 20);
 		
 		embroideryPanel.add(lblPreview);
@@ -886,14 +896,20 @@ public class AddOrderFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent x) {
 			if(x.getSource() == btnCheckOut) {
-				if(txtClientName.getText().isEmpty()){
+				if(txtDownPayment.getText().isEmpty())
 					try {
-						throw new EmptyClientNameException();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						throw new EmptyDownPaymentException();
+					} catch (EmptyDownPaymentException e) {
 						JOptionPane.showMessageDialog(null, e.getMessage());
+						e.printStackTrace();
 					}
-				}
+				if(txtReceiptNo.getText().isEmpty())
+					try {
+						throw new EmptyReceiptNoException();
+					} catch (EmptyReceiptNoException e) {
+						JOptionPane.showMessageDialog(null, e.getMessage());
+						e.printStackTrace();
+					}
 				
 				//due date
 				int day = Integer.parseInt(cbDueDay.getSelectedItem().toString());
@@ -939,6 +955,7 @@ public class AddOrderFrame extends JFrame{
 				dispose();
 			} else if (x.getSource() == btnAdd) {
 				if(selectedType.equals("Alteration")) {
+					checkForExceptions();
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
 					totalPrice += price;
@@ -955,6 +972,22 @@ public class AddOrderFrame extends JFrame{
 					orderList.addOrderItem(alterationOrder);
 				} else if (selectedType.equals("Made To Order")) {
 					if(selectedMadeToOrder.equals("Top")) {
+						
+						if((txtTLength.getText().isEmpty()&&txtTShoulder.getText().isEmpty()&&txtTArmlength.getText().isEmpty()
+								&&txtTWristcircum.getText().isEmpty()&&txtTArmhole.getText().isEmpty()&&txtTFrontChest.getText().isEmpty()&&
+								txtTBackChest.getText().isEmpty()&&txtTWaist.getText().isEmpty()&&txtTHips.getText().isEmpty()&&
+								txtTNeckdeep.getText().isEmpty()&&txtTFrontfigure.getText().isEmpty()&&txtTBustpoint.getText().isEmpty()
+								&&txtTBustdistance.getText().isEmpty()&&txtTBackfigure.getText().isEmpty())){
+							System.out.println("asdjasdasflkhlfkjhdslfahsdjfhlsdhfjkdskfhsadjhfksajdfllllllllllllllllllllllllllhsjkdhfkjsdhfjkdhsfjkhdsjkfhdskfhkjdskjdhfkj");
+							try {
+								throw new IncompleteMeasurementException();
+							} catch (IncompleteMeasurementException e) {
+								JOptionPane.showMessageDialog(null, e.getMessage());
+								e.printStackTrace();
+							}
+						}
+						checkForExceptions();
+						
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
 						totalPrice += price;
@@ -979,6 +1012,11 @@ public class AddOrderFrame extends JFrame{
 						Double bustDistance = Double.parseDouble(txtTBustdistance.getText());
 						Double backFigure = Double.parseDouble(txtTBackfigure.getText());
 						
+						
+						
+						
+						
+						
 						TopMeasurement measurement = new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
 						.build();
 						
@@ -996,6 +1034,22 @@ public class AddOrderFrame extends JFrame{
 						
 						orderList.addOrderItem(garmentOrder);
 					} else if (selectedMadeToOrder.equals("Bottom")) {
+						checkForExceptions();
+						if(txtMaterials.getText().isEmpty()){
+							try {
+								throw new EmptyMaterialsException();
+							} catch (EmptyMaterialsException e) {
+								JOptionPane.showMessageDialog(null, e.getMessage());
+								e.printStackTrace();
+							}
+							if(txtSpecialInstructions.getText().isEmpty()){
+								try {
+									throw new EmptyInstructionException();
+								} catch (EmptyInstructionException e) {
+									JOptionPane.showMessageDialog(null, e.getMessage());
+									e.printStackTrace();
+								}
+
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
 						totalPrice += price;
@@ -1004,6 +1058,16 @@ public class AddOrderFrame extends JFrame{
 						Gender garmentGender = Gender.getGender(buttonSelected);
 						String garmentSelected = garmentTypeSelected;
 						Garment garment = Garment.getGarment(garmentSelected);
+						if(txtBLength.getText().isEmpty()&&txtBBottom.getText().isEmpty()&&
+								txtBCrotch.getText().isEmpty()&&txtBThigh.getText().isEmpty()
+								&&txtBWaist.getText().isEmpty()&&txtBHips.getText().isEmpty()&&txtBKnee.getText().isEmpty()){
+							try {
+								throw new IncompleteMeasurementException();
+							} catch (IncompleteMeasurementException e) {
+								JOptionPane.showMessageDialog(null, e.getMessage());
+								e.printStackTrace();
+							}
+						}
 						
 						Double bottomLength = Double.parseDouble(txtBLength.getText());
 						Double bottom = Double.parseDouble(txtBBottom.getText());
@@ -1032,6 +1096,16 @@ public class AddOrderFrame extends JFrame{
 					}
 					
 				} else if (selectedType.equals("Embroidery")) {
+					checkForExceptions();
+					if(txtSize.getText().isEmpty()&&txtColors.getText().isEmpty()){
+						try {
+							throw new IncompleteMeasurementException();
+						} catch (IncompleteMeasurementException e) {
+							JOptionPane.showMessageDialog(null, e.getMessage());
+							e.printStackTrace();
+						}
+						
+					}
 					int quantity = Integer.parseInt(txtQuantity.getText());
 					Double price = Double.parseDouble(txtPrice.getText());
 					totalPrice += price;
@@ -1056,6 +1130,54 @@ public class AddOrderFrame extends JFrame{
 		}
 	}
 	
+	private void checkForExceptions(){
+		if(txtQuantity.getText().isEmpty())
+			try {
+				throw new EmptyQuantityException();
+			} catch (EmptyQuantityException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				e.printStackTrace();
+			}
+		if(txtPrice.getText().isEmpty())
+			try {
+				throw new EmptyPriceException();
+			} catch (EmptyPriceException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				e.printStackTrace();
+			}
+		
+		if(txtContact.getText().isEmpty())
+			try {
+				throw new EmptyContactNoException();
+			} catch (EmptyContactNoException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				e.printStackTrace();
+			}
+		if(txtEmail.getText().isEmpty())
+			try {
+				throw new EmptyEmailException();
+			} catch (EmptyEmailException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				e.printStackTrace();
+			}	
+		if(txtAdress.getText().isEmpty()){
+			try {
+				throw new EmptyAddressException();
+			} catch (EmptyAddressException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		if(txtAdress.getText().isEmpty()){
+			try {
+				throw new EmptyAddressException();
+			} catch (EmptyAddressException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	private java.sql.Date getDate(int day, int month, int year) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, day);

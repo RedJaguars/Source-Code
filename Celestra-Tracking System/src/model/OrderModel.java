@@ -654,10 +654,10 @@ public class OrderModel extends Model{
 						measurementSet = ps.executeQuery();
 							
 						while(measurementSet.next()) {
-							double frontFigure = measurementSet.getDouble("TM.frontFigure");
-							double bustPoint = measurementSet.getDouble("TM.bustPoint");
-							double bustDistance = measurementSet.getDouble("TM.bustDistance");
-							double backFigure = measurementSet.getDouble("TM.backFigure");
+							double frontFigure = measurementSet.getDouble("frontFigure");
+							double bustPoint = measurementSet.getDouble("bustPoint");
+							double bustDistance = measurementSet.getDouble("bustDistance");
+							double backFigure = measurementSet.getDouble("backFigure");
 							
 							topMeasure = (WomensTopMeasure) new WomensTopMeasure.WomensTopMeasureBuilder(upperLength, shoulder, armLength, wrist, armHole, frontChest, 
 																											backChest, waist, hips, neckDeep, frontFigure, bustPoint, bustDistance, backFigure)
@@ -833,4 +833,3 @@ public class OrderModel extends Model{
 				str;
 	}
 }
-
