@@ -51,6 +51,7 @@ public class SalesFrame extends JFrame{
 	
 	private JTable salesTable;
 	private JScrollPane salesPane;
+	private JScrollPane detailsPane;
 	private JPanel panel_2;
 	
 	private SalesController salesController;
@@ -157,13 +158,15 @@ public class SalesFrame extends JFrame{
 		panel_1.add(lblNewLabel);
 		
 		textField = new JTextArea();
-		textField.setBounds(37, 500, 886, 183);
-		panel_1.add(textField);
+		textField.setBounds(0, 0, 886, 183);
 		textField.setColumns(10);
 		textField.setEditable(false);
 		textField.setLineWrap(true);
-	
 		
+		salesPane = new JScrollPane(textField);
+		salesPane.setBounds(37, 500, 886, 183);
+		panel_1.add(salesPane);
+	
 		JLabel lblOrderDetails = new JLabel("Transaction Details:");
 		lblOrderDetails.setBounds(40, 472, 300, 16);
 		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
