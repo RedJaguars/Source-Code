@@ -16,6 +16,8 @@ import objects.Material;
 import objects.Unit;
 import view.AddOrderFrame.doActionListener;
 import controller.InventoryController;
+import exception.EmptyItemDescription;
+import exception.EmptyItemNameException;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -47,8 +49,8 @@ public class ModifyItemFrame extends JFrame{
 		inventoryController = new InventoryController();
 		material = selectedMaterial;
 		mainFrame = frame;
-		
-		snmQuantity = new SpinnerNumberModel(material.getQuantityInStock(), 1, Double.MAX_VALUE, 1 );
+		System.out.println("HALALALALA: " + material.getQuantityInStock());
+		snmQuantity = new SpinnerNumberModel(material.getQuantityInStock(), 0, Double.MAX_VALUE, 1 );
 		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
@@ -156,6 +158,24 @@ public class ModifyItemFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnSubmit) {
+				if(txtItemName.getText().isEmpty()){
+					try {
+						throw new EmptyItemNameException();
+					} catch (EmptyItemNameException e) {
+						JOptionPane.showMessageDialog(null, e.getMessage());
+						e.printStackTrace();
+					}
+				}
+				
+				if(tarDescription.getText().isEmpty()){
+					System.out.println("sajdlkjaskldjaslkdjksaljdlkasj");
+					try {
+						throw new EmptyItemDescription();
+					} catch (EmptyItemDescription e) {
+						JOptionPane.showMessageDialog(null, e.getMessage());
+						e.printStackTrace();
+					}
+				}
 				Material newMaterial = new Material(material.getInventoryID(), txtItemName.getText(), 
 						Double.parseDouble(snmQuantity.getValue().toString()), tarDescription.getText(), 
 						Unit.getUnit(cbMeasurement.getSelectedItem().toString()));

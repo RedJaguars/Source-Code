@@ -4,6 +4,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -49,6 +50,7 @@ import objects.OrderList.OrderListBuilder;
 import view.SalesFrame.doActionListener;
 import controller.AccountController;
 import controller.OrderController;
+import exception.NoneSelectedException;
 
 public class OrderFrame extends JFrame{
 	private int selectedRow;
@@ -316,16 +318,29 @@ public class OrderFrame extends JFrame{
 				new ChangePassword();
 			} else if(e.getSource() == btnChangeStatus) {
 				refreshDetails();
-				
-				new ChangeOrderStatus(selectedRow, OrderFrame.this);
+				if(tableOrder.getSelectedRows().length == 0){
+					try {
+						throw new NoneSelectedException();
+					} catch (NoneSelectedException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+						e1.printStackTrace();
+					}
+				}
+				else new ChangeOrderStatus(selectedRow, OrderFrame.this);
 			} else if(e.getSource() == btnExit) {
 				accountController.logOut();
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyOrder) {
 				refreshDetails();
-				
-				new ModifyOrder(selectedOrderList, OrderFrame.this);
+				if(clientOrderList.getSelectedIndices().length == 0)
+					try {
+						throw new NoneSelectedException();
+					} catch (NoneSelectedException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+						e1.printStackTrace();
+					}
+				else new ModifyOrder(selectedOrderList, OrderFrame.this);
 			} else if(e.getSource() == btnAddOrder) {
 				refreshDetails();
 				
