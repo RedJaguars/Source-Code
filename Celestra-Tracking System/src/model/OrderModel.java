@@ -96,7 +96,7 @@ public class OrderModel extends Model{
 				/*Adding OrderItem to garment_order*/
 				statement = "INSERT INTO garment_order(orderID, garmentType, gender, material, special_instruction, measurementID) VALUES (?, ? ,?, ?, ?, ?)";
 				ps = con.getConnection().prepareStatement(statement);
-				ps.setInt(1, orderID);
+				ps.setInt(1, itemID);
 				ps.setString(2, ((GarmentOrder) item).getGarment().toString());
 				ps.setString(3, ((GarmentOrder) item).getGender().toString());
 				ps.setString(4, ((GarmentOrder) item).getMaterial());
