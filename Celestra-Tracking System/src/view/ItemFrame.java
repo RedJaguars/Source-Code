@@ -178,7 +178,7 @@ public class ItemFrame extends JFrame{
 		btnModifyItem.addActionListener(new doActionListener());
 		panel_1.add(btnModifyItem);
 		
-		JLabel lblNewLabel = new JLabel("List of Items");
+		JLabel lblNewLabel = new JLabel("Items");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblNewLabel.setBounds(40, 33, 300, 21);
 		panel_1.add(lblNewLabel);
@@ -189,9 +189,9 @@ public class ItemFrame extends JFrame{
 		txtAreaItemDetails.setColumns(10);
 		txtAreaItemDetails.setEditable(false);
 		
-		JLabel lblOrderDetails = new JLabel("Item Details:");
+		JLabel lblOrderDetails = new JLabel("Details:");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblOrderDetails.setBounds(40, 472, 00, 16);
+		lblOrderDetails.setBounds(40, 472, 300, 16);
 		panel_1.add(lblOrderDetails);
 		
 		panel_2 = new JPanel();

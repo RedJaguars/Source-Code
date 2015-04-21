@@ -243,7 +243,7 @@ public class OrderFrame extends JFrame{
 		txtAreaOrderDetails.setColumns(10);
 		txtAreaOrderDetails.setEditable(false);
 		
-		JLabel lblOrderDetails = new JLabel("Order Details:");
+		JLabel lblOrderDetails = new JLabel("Details:");
 		lblOrderDetails.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblOrderDetails.setBounds(40, 472, 300, 16);
 		panel_1.add(lblOrderDetails);
