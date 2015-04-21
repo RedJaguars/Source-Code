@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.mysql.jdbc.UpdatableResultSet;
 
+import exception.QunatityUnderflowException;
 import objects.Material;
 import objects.Unit;
 
@@ -62,10 +63,21 @@ public class InventoryModel extends Model {
                "Unit: " + material.getUnit();
     }
 
-	public void decreaseStock(int[] stocksToReduce, double quantity) throws SQLException {
-		String query = "UPDATE inventory SET quantityInStock = quantityInStock - ? WHERE inventoryID = ?";
-		
+	public void decreaseStock(int[] stocksToReduce, double quantity) throws Exception {
+		String query = "SELECT quantityInStock FROM inventory WHERE inventoryID = ?";
+		ResultSet rs;
 		PreparedStatement statement = con.getConnection().prepareStatement(query);
+		for(int i=0;i<stocksToReduce.length;i++){	
+			statement.setInt(1, stocksToReduce[i]);
+			System.out.println("Done added batch on: " + stocksToReduce[i]);
+			rs = statement.executeQuery();
+			while(rs.next())
+				if(rs.getInt(1)-quantity < 0)
+					throw new QunatityUnderflowException();
+		}
+		
+		query = "UPDATE inventory SET quantityInStock = quantityInStock - ? WHERE inventoryID = ?";
+		statement = con.getConnection().prepareStatement(query);
 		for(int i=0;i<stocksToReduce.length;i++){	
 			statement.setDouble(1, quantity);
 			statement.setInt(2, stocksToReduce[i]);
@@ -77,7 +89,7 @@ public class InventoryModel extends Model {
 		notifyObservers();
 	}
 	
-	public void increaseStock(int[] stocksToIncrease, double quantity) throws SQLException {
+	public void increaseStock(int[] stocksToIncrease, double quantity) throws Exception {
 		String query = "UPDATE inventory SET quantityInStock = quantityInStock + ? WHERE inventoryID = ?";
 		
 		PreparedStatement statement = con.getConnection().prepareStatement(query);

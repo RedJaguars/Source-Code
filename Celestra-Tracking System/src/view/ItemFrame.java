@@ -20,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -297,7 +298,8 @@ public class ItemFrame extends JFrame{
 				}
 				try {
 					inventoryController.decreaseStock(selectedRows, (double)decreaseSpinner.getValue());
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
 					e1.printStackTrace();
 				}
 				refreshTable();
@@ -308,7 +310,7 @@ public class ItemFrame extends JFrame{
 				}
 				try{
 					inventoryController.increaseStock(selectedRows, (double)increaseSpinner.getValue());
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 				refreshTable();
