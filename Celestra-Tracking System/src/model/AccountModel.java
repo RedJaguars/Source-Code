@@ -30,6 +30,24 @@ public class AccountModel extends Model{
 		}
 	
 	}
+	public int getUserCount(){
+		int userCount = 0;
+		String query = "SELECT COUNT(accountID) FROM account";
+		try {
+			theStatement = con.getConnection().prepareStatement(query);
+			theResultSet = theStatement.executeQuery();
+			while(theResultSet.next())
+				userCount = theResultSet.getInt("COUNT(accountID)");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return userCount;
+			
+		
+	}
 	
 	public boolean login(int user, String password) throws Exception{
 		String query;
@@ -38,19 +56,15 @@ public class AccountModel extends Model{
 			theStatement = con.getConnection().prepareStatement(query);
 			theResultSet = theStatement.executeQuery();
 			while(theResultSet.next()){
-				if(theResultSet.getInt("accountID") != user){
-					throw new InvalidUserNameException();
-				}
-				if(!theResultSet.getString("password").equals(password)){
-					throw new InvalidPassword();
-				}
+				if(theResultSet.getString("password").equals(password))
+					return true;
 			}
+			
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		return true;
-		
+		throw new InvalidPassword();
 	}
 	
 	public void addAccount(Account newAccount){

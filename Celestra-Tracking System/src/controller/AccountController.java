@@ -13,5 +13,7 @@ public class AccountController extends Controller {
 	 public boolean login(int user, String password) throws Exception{
 		return ((AccountModel) model).login(user, password);
 	 }
-	
+	 public int getUserCount(){
+		 return ((AccountModel) model).getUserCount();
+	 }
 }

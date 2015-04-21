@@ -88,10 +88,17 @@ public class Login extends JFrame {
 				//database checking
 				String password = textField.getText();
 				try {
-					//while(accountController.login(	1, password))
-					if(accountController.login(	1, password)){
-						new OrderFrame();
-						dispose();
+					//while()
+					int userCount = accountController.getUserCount();
+					
+					for(int i=userCount;i>=0;i--){
+						System.out.println(i);
+						if(accountController.login(i, password)){
+							new OrderFrame();
+							dispose();
+							break;
+						}
+						
 					}
 						
 				} catch (Exception e1) {
