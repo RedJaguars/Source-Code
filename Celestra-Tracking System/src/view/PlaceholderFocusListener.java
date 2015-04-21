@@ -19,14 +19,18 @@ public class PlaceholderFocusListener implements FocusListener {
 
 	@Override
 	public void focusGained(FocusEvent arg0) {
+		if(txtField.getText().equals(placeholder)) {
 		 txtField.setText("");
 		 txtField.setForeground(Color.black);
+		}
 	}
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		txtField.setText(placeholder);
-		txtField.setForeground(new Color(153, 153, 153));
+		if(txtField.getText() == null && txtField.getText().equals("")) {
+			txtField.setText(placeholder);
+			txtField.setForeground(new Color(153, 153, 153));
+		}
 	}
 
 }

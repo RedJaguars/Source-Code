@@ -92,7 +92,6 @@ public class Login extends JFrame {
 					int userCount = accountController.getUserCount();
 					
 					for(int i=userCount;i>0;i--){
-						System.out.println(i);
 						if(accountController.login(i, password)){
 							new OrderFrame();
 							dispose();
