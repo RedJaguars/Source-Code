@@ -82,7 +82,7 @@ public class OrderModel extends Model{
 			/*Adding OrderItem according to OrderType*/
 			if(item instanceof GarmentOrder) {
 				/*Adding FK to measurements*/
-				statement = "INSERT INTO measurements VALUES()";
+				statement = "INSERT INTO measurements(measurementsID) VALUES(?)";
 				ps = con.getConnection().prepareStatement(statement);
 				ps.setInt(1, itemID);
 				ps.executeUpdate();
@@ -94,7 +94,7 @@ public class OrderModel extends Model{
 				int measureID = measurements.getInt("measurementsID");
 				
 				/*Adding OrderItem to garment_order*/
-				statement = "INSERT INTO garment_order VALUES(orderID, garmentType, gender, material, special_instruction, measurementID) VALUES (?, ? ,?, ?, ?, ?)";
+				statement = "INSERT INTO garment_order(orderID, garmentType, gender, material, special_instruction, measurementID) VALUES (?, ? ,?, ?, ?, ?)";
 				ps = con.getConnection().prepareStatement(statement);
 				ps.setInt(1, orderID);
 				ps.setString(2, ((GarmentOrder) item).getGarment().toString());
@@ -107,7 +107,7 @@ public class OrderModel extends Model{
 				/*Adding to TopMeasurement if there is topMeasurement*/
 				if(((GarmentOrder) item).hasTopMeasurement()) {
 					TopMeasurement topMeasure = ((GarmentOrder) item).getTopMeasurement();
-					statement = "INSERT INTO top_measure(measurementID, upperLength, shoulder, armLength, wrist, armHole, frontChest, backChest, waist, hips, neckDeep) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					statement = "INSERT INTO top_measure(measurementID, upperLength, shoulder, armLength, wrist, armHole, frontChest, backChest, waist, hips, neckDeep) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					ps = con.getConnection().prepareStatement(statement);
 					ps.setInt(1, measureID);
 					ps.setDouble(2, topMeasure.getUpperLength());

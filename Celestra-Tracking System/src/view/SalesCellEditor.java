@@ -1,34 +1,37 @@
 package view;
 
 import java.awt.Component;
+import java.util.EventObject;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 
-import objects.Sales;
 import objects.SalesInfo;
 
-public class SalesCellRenderer extends DefaultTableCellRenderer {
-
-	/**
-	 * 
-	 */
+public class SalesCellEditor extends AbstractCellEditor implements
+		TableCellEditor {
+	
 	private static final long serialVersionUID = 1L;
 	private Object value;
-	public SalesCellRenderer() {
+	
+	public SalesCellEditor() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Object getValue() {
-		return this.value;
-	}
-	
+
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
+	public Object getCellEditorValue() {
+		// TODO Auto-generated method stub
+		return value;
+	}
+
+	@Override
+	public Component getTableCellEditorComponent(JTable arg0, Object arg1,
+			boolean arg2, int row, int column) {
 		JLabel content;
-		SalesInfo saleContent = (SalesInfo)value;
-		this.value = value;
+		value = arg1;
+		SalesInfo saleContent = (SalesInfo)arg1;
 		
 		switch(column) {
 			case 0: content = new JLabel(saleContent.getUnit()); break;
@@ -38,6 +41,11 @@ public class SalesCellRenderer extends DefaultTableCellRenderer {
 		}
 		
 		return content;
+	}
+	@Override
+	public boolean isCellEditable(EventObject e){
+		return false;
+		
 	}
 
 }
