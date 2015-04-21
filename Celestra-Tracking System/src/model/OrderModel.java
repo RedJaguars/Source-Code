@@ -39,7 +39,7 @@ public class OrderModel extends Model{
 	@SuppressWarnings("resource")
 	public void addNewOrder(OrderList order) throws SQLException {
 		ClientModel clientModel = new ClientModel();
-		clientModel.addClient(order.getClient());
+		Client client = clientModel.addClient(order.getClient());
 		String statement = "INSERT INTO order_list(orderDate, dueDate, totalPrice, balance, pickupLocation, clientID, status, receiptNo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = con.getConnection().prepareStatement(statement);
 		
@@ -48,8 +48,7 @@ public class OrderModel extends Model{
 		ps.setDouble(3, order.getTotalPrice());
 		ps.setDouble(4, order.getBalance());
 		ps.setString(5, order.getPickupLocation());
-		//ps.setInt(6, order.getClient().getClientID());
-		ps.setInt(6, 6);
+		ps.setInt(6, client.getClientID());
 		ps.setString(7, order.getStatus().toString());
 		ps.setInt(8, order.getReceiptNo());
 		ps.executeUpdate();
@@ -152,7 +151,7 @@ public class OrderModel extends Model{
 				}
 			} else if (item instanceof Embroidery) {
 				/*Adding EmbroideryOrder to embroidery_order*/
-				statement = "INSERT INTO embroidery_order(orderID, logo, size, numOfColors, embroidery)";
+				statement = "INSERT INTO embroidery_order(orderID, logo, size, numOfColors, embroideryType) VALUES (?, ?, ?, ?, ?)";
 				ps = con.getConnection().prepareStatement(statement);
 				ps.setInt(1, itemID);
 				ps.setBlob(2, new SerialBlob(((Embroidery) item).getLogoBytes()));
@@ -200,6 +199,23 @@ public class OrderModel extends Model{
 			ps.close();
 		}
 		//made to order
+	}
+	
+	public Iterator<?> retrieveOrderList() throws SQLException{
+		modelList.removeAll(modelList);
+	
+		String statement = "SELECT * FROM order_list OL WHERE status = ?";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ps.setString(1, "PENDING");
+		ResultSet orderListSet = ps.executeQuery();
+		
+		/*Traversing the whole list of orderList*/
+		while(orderListSet.next()) {
+			OrderList orderList = getOrderListByID(orderListSet.getInt("OL.orderListID"));
+			modelList.add(orderList);
+		}
+		
+		return modelList.iterator();
 	}
 	
 	public Iterator<?> getModelList() throws SQLException{
@@ -416,8 +432,11 @@ public class OrderModel extends Model{
 		
 		String statement = "SELECT * FROM order_list OL, order_item OI, alteration_order AO "
 				+ "WHERE OL.orderListID = OI.orderListID"
-				+ " and OI.orderID = AO.orderID";
+				+ " and OI.orderID = AO.orderID"
+				+ " and OL.orderListID = ?";
 		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		System.out.println(orderList);
+		ps.setInt(1, orderList.getListID());
 		ResultSet alterationOrderItemListSet = ps.executeQuery();
 		
 		while(alterationOrderItemListSet.next()) {
@@ -438,14 +457,16 @@ public class OrderModel extends Model{
 		
 		statement = "SELECT * FROM order_list OL, order_item OI, embroidery_order EO "
 				+ "WHERE OL.orderListID = OI.orderListID"
-				+ " and OI.orderID = EO.orderID";
+				+ " and OI.orderID = EO.orderID"
+				+ " and OL.orderListID = ?";
 		ps = con.getConnection().prepareStatement(statement);
+		ps.setInt(1, orderList.getListID());
 		ResultSet embroideryOrderItemListSet = ps.executeQuery();
 		
 		while(embroideryOrderItemListSet.next()) {
-			int quantity = alterationOrderItemListSet.getInt("OI.quantity");
-			double price = alterationOrderItemListSet.getDouble("OI.itemPrice");
-			int itemID = alterationOrderItemListSet.getInt("OI.orderID");
+			int quantity = embroideryOrderItemListSet.getInt("OI.quantity");
+			double price = embroideryOrderItemListSet.getDouble("OI.itemPrice");
+			int itemID = embroideryOrderItemListSet.getInt("OI.orderID");
 			
 			byte[] logo = embroideryOrderItemListSet.getBytes("EO.logo");
 			double size = embroideryOrderItemListSet.getDouble("EO.size");

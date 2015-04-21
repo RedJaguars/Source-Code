@@ -36,9 +36,12 @@ public class ModifyEmbroideryOrder extends JPanel {
 	private JTextField txtFieldSize;
 	private JTextField txtFieldNumOfColors;
 	
-	public ModifyEmbroideryOrder(Embroidery orderItem) {
+	private OrderFrame mainFrame;
+	
+	public ModifyEmbroideryOrder(Embroidery orderItem, OrderFrame frame) {
 		orderController = new OrderController();
 		embroideryOrder = orderItem;
+		mainFrame = frame;
 		
 		setLayout(null);
 		
@@ -116,6 +119,7 @@ public class ModifyEmbroideryOrder extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if(e.getSource() == btnCancel) {
+				mainFrame.updateTable();
 				javax.swing.SwingUtilities.getWindowAncestor(ModifyEmbroideryOrder.this).dispose();
 			} else if(e.getSource() == btnModifyOrder) {
 				try {
@@ -137,6 +141,7 @@ public class ModifyEmbroideryOrder extends JPanel {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				mainFrame.updateTable();
 			} else if(e.getSource() == btnAddFile) {
 				JFileChooser fileChooser = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg", "gif", "png");

@@ -29,7 +29,10 @@ public class ModifyOrder extends JFrame {
 	private JPanel panel_1;
 	private JLabel lblHeader;
 	
-	public ModifyOrder(OrderList orderList) {
+	private OrderFrame mainFrame;
+	
+	public ModifyOrder(OrderList orderList, OrderFrame frame) {
+		mainFrame = frame;
 		selectedOrderList = orderList;
 		orderController = new OrderController();
 		try {
@@ -129,7 +132,7 @@ public class ModifyOrder extends JFrame {
 		
 		if(orderType.equals("EMBROIDERY")) {
 			try {
-				panel_2.add(new ModifyEmbroideryOrder((Embroidery) orderController.getOrderItem(selectedOrderList, selectedIndex)));
+				panel_2.add(new ModifyEmbroideryOrder((Embroidery) orderController.getOrderItem(selectedOrderList, selectedIndex), mainFrame));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -138,7 +141,7 @@ public class ModifyOrder extends JFrame {
 			panel_2.repaint();
 		} else if(orderType.equals("ALTERATION")) {
 			try {
-				panel_2.add(new ModifyAlterationOrder((Alteration) orderController.getOrderItem(selectedOrderList, selectedIndex)));
+				panel_2.add(new ModifyAlterationOrder((Alteration) orderController.getOrderItem(selectedOrderList, selectedIndex), mainFrame));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -188,6 +191,7 @@ public class ModifyOrder extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnBack) {
+				mainFrame.refreshTable();
 				dispose();
 			}
 		}

@@ -159,7 +159,6 @@ public class AddItemFrame extends JFrame{
 				try {
 					inventoryController.addInventory(txtItemName.getText(), Double.parseDouble(snmQuantity.getValue().toString()),
 							tarDescription.getText(), Unit.getUnit(cbMeasurement.getSelectedItem().toString()));
-					mainFrame.refreshTable();
 				} catch (NumberFormatException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -167,10 +166,13 @@ public class AddItemFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				mainFrame.refreshTable();
 				dispose();
 			} else if(action.getSource() == btnCancel) {
+				mainFrame.refreshTable();
 				dispose();
 			} else if(action.getSource() == btnBack) {
+				mainFrame.refreshTable();
 				dispose();
 			}
 			

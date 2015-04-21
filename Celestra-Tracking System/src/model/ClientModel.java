@@ -14,7 +14,7 @@ public class ClientModel extends Model {
 		super();
 	}
 	
-	public void addClient(Client client) throws SQLException {
+	public Client addClient(Client client) throws SQLException {
 		String statement = "INSERT INTO clients(lastName, firstName, gender, contactNo, email) VALUES(?, ? , ?, ?, ?)";
 		PreparedStatement ps = con.getConnection().prepareStatement(statement);
 		ps.setString(1, client.getLastName());
@@ -23,6 +23,19 @@ public class ClientModel extends Model {
 		ps.setString(4, client.getContactNo());
 		ps.setString(5, client.getEmail());
 		ps.executeUpdate();
+		
+		String statement1 = "SELECT * FROM clients CL ORDER BY clientID DESC LIMIT 1";
+		PreparedStatement ps1 = con.getConnection().prepareStatement(statement1);
+		ResultSet rs1 = ps1.executeQuery();
+		
+		while(rs1.next()) {
+			Client client1 = new Client.ClientBuilder(rs1.getString("CL.lastName"), rs1.getString("CL.firstName"), 
+					rs1.getString("CL.gender"), rs1.getString("CL.contactNo")).email(rs1.getString("CL.email"))
+					.clientID(rs1.getInt("CL.clientID"))
+					.build();
+			return client1;
+		}
+		return null;
 	}
 	
 	public static Client getClientByID(int id) throws SQLException {

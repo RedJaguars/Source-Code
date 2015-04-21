@@ -55,7 +55,7 @@ public class OrderController extends Controller{
 	}
 	
 	public Iterator<?> retrieveOrderList() throws SQLException {
-		return ((OrderModel)model).getModelList();
+		return ((OrderModel)model).retrieveOrderList();
 	}
 	
 	public String getOrderListData(int row) throws SQLException {
