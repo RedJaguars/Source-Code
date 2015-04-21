@@ -7,6 +7,7 @@ import java.util.List;
 
 import objects.Alteration;
 import objects.Client;
+import objects.OrderDetail;
 import objects.OrderItem;
 import objects.OrderList;
 import objects.OrderStatus;
@@ -84,5 +85,9 @@ public class OrderController extends Controller{
 	
 	public String getOrderItemDetails(OrderList orderList, int index, int itemID) throws SQLException {
 		return ((OrderModel) model).getOrderItemDetails(orderList, index, itemID);
+	}
+	
+	public List<OrderDetail> retrieveOrderDetail(int orderListID) throws SQLException {
+		return ((OrderModel) model).retrieveOrderDetail(orderListID);
 	}
 }

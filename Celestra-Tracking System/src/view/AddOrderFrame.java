@@ -443,7 +443,7 @@ public class AddOrderFrame extends JFrame{
 		JLabel lblGarmentType = new JLabel("Garment Type:");
 		lblGarmentType.setBounds(40,355,100,30);
 		lblGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		String[] GarmentType = {"----------","COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","VEST","SHIRT","JACKET", "PANTS","SHORTS","SKIRT","APRON","OTHERS"};
+		String[] GarmentType = {"----------","COAT","POLO","BARONG","LONGBLAZER","SHORTBLAZER","VEST","SHIRT","JACKET", "PANTS","SHORTS","SKIRT","APRON","OTHERS"};
 		cbGarmentType= new JComboBox(GarmentType);
 		cbGarmentType.setSelectedIndex(0);
 		cbGarmentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -894,7 +894,7 @@ public class AddOrderFrame extends JFrame{
 						JOptionPane.showMessageDialog(null, e.getMessage());
 					}
 				}
-				
+			
 				//due date
 				int day = Integer.parseInt(cbDueDay.getSelectedItem().toString());
 				int month = Integer.parseInt(cbDueMonth.getSelectedItem().toString());
@@ -958,8 +958,8 @@ public class AddOrderFrame extends JFrame{
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
 						totalPrice += price;
-						String materials = txtMaterials.getText();
-						String instruction = txtSpecialInstructions.getText();
+						String materials = txtTMaterials.getText();
+						String instruction = txtTSpecialInstructions.getText();
 						Gender garmentGender = Gender.getGender(buttonSelected);
 						String garmentSelected = garmentTypeSelected;
 						Garment garment = Garment.getGarment(garmentSelected);
@@ -999,8 +999,8 @@ public class AddOrderFrame extends JFrame{
 						int quantity = Integer.parseInt(txtQuantity.getText());
 						Double price = Double.parseDouble(txtPrice.getText());
 						totalPrice += price;
-						String materials = txtMaterials.getText();
-						String instruction = txtSpecialInstructions.getText();
+						String materials = txtBMaterials.getText();
+						String instruction = txtBSpecialInstructions.getText();
 						Gender garmentGender = Gender.getGender(buttonSelected);
 						String garmentSelected = garmentTypeSelected;
 						Garment garment = Garment.getGarment(garmentSelected);

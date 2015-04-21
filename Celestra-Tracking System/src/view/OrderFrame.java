@@ -41,6 +41,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import objects.Material;
+import objects.OrderDetail;
 import objects.OrderItem;
 import objects.OrderList;
 import objects.Sales;
@@ -69,6 +70,7 @@ public class OrderFrame extends JFrame{
 	
 	private JList  clientOrderList;
 	private OrderList selectedOrderList;
+	private List<OrderDetail> selectedOrderListDetail;
 	
 	private OrderController orderController;
 	private AccountController accountController;
@@ -384,7 +386,7 @@ public class OrderFrame extends JFrame{
 	
 	public JTable createTable(Iterator<?> orderList) {
 		int size = 0;
-		List<OrderList> list = new ArrayList<OrderList>();
+		final List<OrderList> list = new ArrayList<OrderList>();
 		while(orderList.hasNext()) {
 			list.add((OrderList) orderList.next());
 			size++;
@@ -397,9 +399,8 @@ public class OrderFrame extends JFrame{
 					JTable target = (JTable)e.getSource();
 					selectedRow = target.getSelectedRow();
 					try {
-						//txtAreaOrderDetails.setText(orderController.getOrderListData(selectedRow));
-						System.out.println("CALLING");
 						setSelectedOrderList(orderController.getSelectedOrderList(selectedRow));
+						setOrderDetail(orderController.retrieveOrderDetail(list.get(selectedRow).getListID()));
 						refreshDetails();
 						createJList();
 						btnChangeStatus.setEnabled(true);
@@ -436,31 +437,27 @@ public class OrderFrame extends JFrame{
 	}
 	
 	public void setSelectedOrderList(OrderList orderList) {
-		System.out.println(orderList.getListID());
 		selectedOrderList = orderList;
+	}
+	
+	public void setOrderDetail(List<OrderDetail> orderListDetails) {
+		selectedOrderListDetail = orderListDetails;
 	}
 	
 	public void createJList() {
 		ArrayList<Integer> orderItemIdList;
-		Integer[] list = null;
-		try {
-			hasList = true;
-			orderItemIdList = orderController.getOrderItemIDList(selectedOrderList);
-			if(orderItemIdList != null) {
-				list = new Integer[orderItemIdList.size()];
-				list = orderItemIdList.toArray(list);
-				clientOrderList = new JList(list);
-				clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
-				clientOrderList.addMouseListener(new ClickActionListener());
-				clientOrderList.setBounds(565, 500, 470, 183);
-				panel_1.remove(panelList);
-				panel_1.add(clientOrderList);
-				panel_1.revalidate();
-				panel_1.repaint();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		OrderDetail[] list = null;
+		hasList = true;
+		if(selectedOrderListDetail != null) {
+			list = selectedOrderListDetail.toArray(new OrderDetail[]{});
+			clientOrderList = new JList(list);
+			clientOrderList.setFont(new Font("Tahoma",Font.PLAIN, 13));
+			clientOrderList.addMouseListener(new ClickActionListener());
+			clientOrderList.setBounds(565, 500, 470, 183);
+			panel_1.remove(panelList);
+			panel_1.add(clientOrderList);
+			panel_1.revalidate();
+			panel_1.repaint();
 		}
 	}
 	
@@ -471,14 +468,7 @@ public class OrderFrame extends JFrame{
 			// TODO Auto-generated method stub
 			if(e.getClickCount() == 1) {
 				int index = clientOrderList.locationToIndex(e.getPoint());
-				try {
-					int itemID = (int) clientOrderList.getSelectedValue();
-					String orderDetails = orderController.getOrderItemDetails(selectedOrderList, index, itemID);
-					txtAreaOrderDetails.setText(orderDetails);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				txtAreaOrderDetails.setText(selectedOrderListDetail.get(index).getDetail());
 			}
 		}
 

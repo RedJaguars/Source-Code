@@ -19,6 +19,7 @@ import objects.Garment;
 import objects.GarmentOrder;
 import objects.Gender;
 import objects.Measurement;
+import objects.OrderDetail;
 import objects.OrderItem;
 import objects.OrderList;
 import objects.OrderStatus;
@@ -427,8 +428,37 @@ public class OrderModel extends Model{
         return orderList1;
 	}
 	
+	
+	public List<OrderDetail> retrieveOrderDetail(int orderListID) throws SQLException {
+		List<OrderDetail> orderItemList = new ArrayList<OrderDetail>();
+		
+		String statement = "SELECT OI.quantity, AO.orderID, 'Alteration' type, CONCAT('Garment Type: ', garmentType, '\nSpecial Instruction: ', specialInstruction)"
+				+ " FROM order_item OI, alteration_order AO WHERE orderListID = ? and OI.orderID = AO.orderID"
+				+ " UNION SELECT OI.quantity, EO.orderID, 'Embroidery' type, CONCAT('Size: ', size, '\nNumber of Colors: ', numOfColors, '\nEmbroidery Type: ', embroideryType)"
+				+ " FROM order_item OI, embroidery_order EO WHERE orderListID = ? and OI.orderID = EO.orderID"
+				+ " UNION SELECT OI.quantity, GO.orderID, 'Garment' type, CONCAT('Garment Type: ', garmentType, '\nGender: ', gender, '\nMaterial: ', material, '\nSpecial Instruction: ', special_instruction)"
+				+ " FROM order_item OI, garment_order GO WHERE orderListID = ? and OI.orderID = GO.orderID";
+		PreparedStatement ps = con.getConnection().prepareStatement(statement);
+		ps.setInt(1, orderListID);
+		ps.setInt(2, orderListID);
+		ps.setInt(3, orderListID);
+		ResultSet rs = ps.executeQuery();
+		try {
+			while(rs.next()) {
+				int qty = rs.getInt(1);
+				orderItemList.add(new OrderDetail(qty, rs.getInt(2), rs.getString(3), rs.getString(4)));
+			}
+		} finally {
+			rs.close();
+		}
+		
+		return orderItemList;
+	}
+	
 	public Iterator<?> getOrderItemModelList(OrderList orderList) throws SQLException {
 		modelList.removeAll(modelList);
+		
+		
 		
 		String statement = "SELECT * FROM order_list OL, order_item OI, alteration_order AO "
 				+ "WHERE OL.orderListID = OI.orderListID"
@@ -438,6 +468,7 @@ public class OrderModel extends Model{
 		System.out.println(orderList);
 		ps.setInt(1, orderList.getListID());
 		ResultSet alterationOrderItemListSet = ps.executeQuery();
+		System.out.println("ID" + orderList.getListID());
 		
 		while(alterationOrderItemListSet.next()) {
 			int quantity = alterationOrderItemListSet.getInt("OI.quantity");
@@ -648,7 +679,7 @@ public class OrderModel extends Model{
 					
 					if(garmentGender.toString().equals("FEMALE")) {
 						measurementSet.close();
-						statement = "SELECT * FROM women_top_measure WHERE measurementID = ?";
+						statement = "SELECT * FROM women_top_measure TM WHERE measurementID = ?";
 						ps = DatabaseConnection.getInstance().getConnection().prepareStatement(statement);
 						ps.setInt(1, measurementID);
 						measurementSet = ps.executeQuery();
