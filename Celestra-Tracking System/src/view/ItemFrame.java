@@ -39,6 +39,8 @@ import model.AccountModel;
 import controller.AccountController;
 import controller.InventoryController;
 import controller.OrderController;
+import exception.EmptyItemListException;
+import exception.NoneSelectedException;
 import objects.Material;
 import objects.OrderItem;
 import objects.OrderList;
@@ -290,8 +292,34 @@ public class ItemFrame extends JFrame{
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyItem) {
+				try {
+					if(!inventoryController.retrieveInventoryList().hasNext()){
+						throw new EmptyItemListException();
+					}
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+					
+					
+					
+					
+				if(tableInventory.getSelectedRows().length == 0)
+					try {
+						throw new NoneSelectedException();
+					} catch (NoneSelectedException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
 				new ModifyItemFrame(selectedMaterial, ItemFrame.this);
 			} else if(e.getSource() == btnReduceQuantity) {
+				if(tableInventory.getSelectedRows().length == 0)
+					try {
+						throw new NoneSelectedException();
+					} catch (NoneSelectedException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
@@ -304,6 +332,12 @@ public class ItemFrame extends JFrame{
 				}
 				refreshTable();
 			} else if(e.getSource() == btnIncreaseStock){
+				if(tableInventory.getSelectedRows().length == 0)
+					try {
+						throw new NoneSelectedException();
+					} catch (NoneSelectedException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
 				int[] selectedRows = tableInventory.getSelectedRows();
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
