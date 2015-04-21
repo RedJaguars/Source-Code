@@ -46,6 +46,7 @@ import objects.OrderList;
 import objects.Sales;
 import objects.OrderList.OrderListBuilder;
 import view.SalesFrame.doActionListener;
+import controller.AccountController;
 import controller.OrderController;
 
 public class OrderFrame extends JFrame{
@@ -70,6 +71,7 @@ public class OrderFrame extends JFrame{
 	private OrderList selectedOrderList;
 	
 	private OrderController orderController;
+	private AccountController accountController;
 	
 	private JPanel panelList, panel_1, panel_2;
 	
@@ -111,8 +113,8 @@ public class OrderFrame extends JFrame{
 	}
 	
 	public OrderFrame() {
+		accountController = new AccountController();
 		orderController = new OrderController();
-		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -315,6 +317,7 @@ public class OrderFrame extends JFrame{
 				
 				new ChangeOrderStatus(selectedRow, OrderFrame.this);
 			} else if(e.getSource() == btnExit) {
+				accountController.logOut();
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyOrder) {

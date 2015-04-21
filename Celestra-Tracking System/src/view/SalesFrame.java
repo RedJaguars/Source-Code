@@ -34,6 +34,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import controller.AccountController;
 import controller.SalesController;
 import objects.Sales;
 import objects.SalesInfo;
@@ -53,13 +54,14 @@ public class SalesFrame extends JFrame{
 	private JPanel panel_2;
 	
 	private SalesController salesController;
+	private AccountController accountController;
 	private DefaultTableModel salesTableModel;
 	
 	String headers[] = new String[]{"", "Total", "Balance"};
 	
 	public SalesFrame() {
 		salesController = new SalesController();
-		
+		accountController = new AccountController();
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -405,6 +407,7 @@ public class SalesFrame extends JFrame{
 			} else if(e.getSource() == btnChangePassword) {
 				new ChangePassword();
 			} else if(e.getSource() == btnExit) {
+				accountController.logOut();
 				new Login();
 				dispose();
 			}

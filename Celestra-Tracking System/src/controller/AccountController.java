@@ -1,5 +1,6 @@
 package controller;
 
+import sun.rmi.log.LogOutputStream;
 import model.AccountModel;
 
 public class AccountController extends Controller {
@@ -15,5 +16,8 @@ public class AccountController extends Controller {
 	 }
 	 public int getUserCount(){
 		 return ((AccountModel) model).getUserCount();
+	 }
+	 public void logOut(){
+		 ((AccountModel) model).logOut();
 	 }
 }

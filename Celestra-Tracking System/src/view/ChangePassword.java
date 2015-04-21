@@ -59,7 +59,7 @@ public class ChangePassword extends JFrame{
 		
 		JLabel lblDescription = new JLabel("New Password:");
 		lblDescription.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblDescription.setBounds(25, 174, 103, 16);
+		lblDescription.setBounds(25, 174, 200, 16);
 		getContentPane().add(lblDescription);
 		
 		JLabel lblQuantity = new JLabel("Re-type New Password:");

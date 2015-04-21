@@ -19,7 +19,7 @@ import objects.Account;
 public class AccountModel extends Model{
 	private ResultSet theResultSet;
 	private PreparedStatement theStatement;
-	
+	private int loggedAccountID;
 	public AccountModel() {
 		super();
 		try {
@@ -56,8 +56,12 @@ public class AccountModel extends Model{
 			theStatement = con.getConnection().prepareStatement(query);
 			theResultSet = theStatement.executeQuery();
 			while(theResultSet.next()){
-				if(theResultSet.getString("password").equals(password))
+				if(theResultSet.getString("password").equals(password)){
+					loggedAccountID = theResultSet.getInt("accountID");
+					System.out.println("Logged in as: "+loggedAccountID);
+					storeLoggedUser(loggedAccountID);
 					return true;
+				}
 			}
 			
 		} catch (SQLException e1) {
@@ -67,6 +71,34 @@ public class AccountModel extends Model{
 		throw new InvalidPassword();
 	}
 	
+	private void storeLoggedUser(int id) {
+		String query = "CREATE TEMPORARY TABLE logged_user (userID int NOT NULL)";
+		try {
+			theStatement = con.getConnection().prepareStatement(query);
+			theStatement.execute();
+			query = "INSERT INTO logged_user(userID) VALUES(?)";
+			theStatement = con.getConnection().prepareStatement(query);
+			theStatement.setInt(1, id);
+			theStatement.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void logOut(){
+		String query = "DROP TABLE logged_user";
+		try {
+			theStatement = con.getConnection().prepareStatement(query);
+			theStatement.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 	public void addAccount(Account newAccount){
 		String query = "INSERT INTO account VALUES(?,?)";
 		try{
@@ -92,13 +124,28 @@ public class AccountModel extends Model{
 		
 		String oldPasswordFromDB = null;
 		String query;
-		query = "SELECT password FROM account WHERE accountID = 1";
+		
+		query = "SELECT userID FROM logged_user";
+		theStatement = con.getConnection().prepareStatement(query);
+		theResultSet = theStatement.executeQuery();
+		
+		while(theResultSet.next()){
+			loggedAccountID = theResultSet.getInt(1);
+			System.out.println("Logged from SQL: " + loggedAccountID);
+		}
+		
+		
+		
+		query = "SELECT password FROM account WHERE accountID = ?";
+		System.out.println("GETTING PASSFROM USER: " + loggedAccountID);
 		try {
 			theStatement = con.getConnection().prepareStatement(query);
+			theStatement.setInt(1, loggedAccountID);
 			theResultSet = theStatement.executeQuery();
 			while(theResultSet.next()){
 				oldPasswordFromDB = theResultSet.getString("password");
 			}
+			System.out.println(oldPasswordFromDB + " ?= " + oldPassword );
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -106,23 +153,18 @@ public class AccountModel extends Model{
 		
 		
 		if(!oldPassword.equals(oldPasswordFromDB)){
-			System.out.println("1");
 			throw new InvalidOldPasswordException();
 		}
 		if(!newPassword.equals(confirmNewPassword)){
-			System.out.println("2");
 			throw new ConfirmPasswordException();
 		}
 		if(newPassword.equals(oldPassword)){
-			System.out.println("3");
 			throw new SameOldNewPasswordException();
 		}
 		if(newPassword.contains(" ")){
-			System.out.println("4");
 			throw new SpacePasswordException();	
 		}
 		if(newPassword.length()<6){
-			System.out.println("5");
 			throw new ShortPasswordException();
 		}
 		
@@ -131,7 +173,7 @@ public class AccountModel extends Model{
 		try{
 			theStatement = con.getConnection().prepareStatement(query);
 			theStatement.setString(1, newPassword);
-			theStatement.setInt(2, 1);
+			theStatement.setInt(2, loggedAccountID);
 			theStatement.execute();
 		}catch(SQLException e){
 			System.out.println("Error in updating new password in the database!");
@@ -158,5 +200,6 @@ public class AccountModel extends Model{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	
 }

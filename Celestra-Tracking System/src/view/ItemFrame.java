@@ -34,6 +34,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import model.AccountModel;
+import controller.AccountController;
 import controller.InventoryController;
 import controller.OrderController;
 import objects.Material;
@@ -70,6 +72,7 @@ public class ItemFrame extends JFrame{
 	private JScrollPane inventoryPane;
 	
 	private InventoryController inventoryController;
+	private AccountController accountController;
 	private TableModel model;
 	
 	private JButton btnIncreaseStock;
@@ -80,7 +83,7 @@ public class ItemFrame extends JFrame{
 	private List<Material> list;
 	
 	public ItemFrame() {	
-		
+		accountController = new AccountController();
 		inventoryController = new InventoryController();
 		numberDecSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
 		numberIncSpinnerBounds = new SpinnerNumberModel(1, 1, Double.MAX_VALUE, 1 );
@@ -282,6 +285,7 @@ public class ItemFrame extends JFrame{
 			} else if(e.getSource() == btnAddNewItem) {
 				new AddItemFrame(ItemFrame.this);
 			} else if(e.getSource() == btnExit) {
+				accountController.logOut();
 				new Login();
 				dispose();
 			} else if(e.getSource() == btnModifyItem) {
