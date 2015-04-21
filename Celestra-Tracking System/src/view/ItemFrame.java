@@ -304,7 +304,7 @@ public class ItemFrame extends JFrame{
 				for(int i=0;i<selectedRows.length;i++){
 					selectedRows[i] = selectedRows[i]+1;
 				}
-				try {
+				try{
 					inventoryController.increaseStock(selectedRows, (double)increaseSpinner.getValue());
 				} catch (SQLException e1) {
 					e1.printStackTrace();

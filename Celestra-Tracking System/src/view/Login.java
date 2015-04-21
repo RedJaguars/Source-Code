@@ -54,6 +54,8 @@ public class Login extends JFrame {
 		btnSubmit.setBorderPainted(false);
 		btnSubmit.setBounds(100, 180, 130, 36);
 		getContentPane().add(btnSubmit);
+		textField.addKeyListener(new SubmitKeyListener(btnSubmit));
+
 		
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new doActionListener());

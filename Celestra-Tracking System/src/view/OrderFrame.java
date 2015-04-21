@@ -112,7 +112,6 @@ public class OrderFrame extends JFrame{
 	
 	public OrderFrame() {
 		orderController = new OrderController();
-		
 		getContentPane().setLayout(null);
 		getContentPane().setBackground(Color.decode("#D3D27C"));
 		
@@ -238,6 +237,8 @@ public class OrderFrame extends JFrame{
 		panel_1.add(btnModifyOrder);
 		
 		txtAreaOrderDetails = new JTextArea();
+		txtAreaOrderDetails.setText("asldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlkasldjkasjd;ajskdjsakdjklsajdlksa;kdjkadjksajdlk");
+
 		txtAreaOrderDetails.setBounds(37, 500, 500, 183);
 		panel_1.add(txtAreaOrderDetails);
 		txtAreaOrderDetails.setColumns(10);
@@ -361,14 +362,13 @@ public class OrderFrame extends JFrame{
 	}
 	
 	public void refreshDetails() {
-<<<<<<< HEAD
 		createJList();
 		panel_1.remove(clientOrderList);
 		panel_1.add(panelList);
 		panel_1.revalidate();
 		panel_1.repaint();
 		txtAreaOrderDetails.setText("");
-=======
+		
 		if(hasList) {
 			hasList = false;
 			panel_1.remove(clientOrderList);
@@ -377,7 +377,7 @@ public class OrderFrame extends JFrame{
 			panel_1.repaint();
 			txtAreaOrderDetails.setText("");
 		}
->>>>>>> f3c4363d301417eca772b6aa94b14bc0f729f66e
+
 	}
 	
 	public void refreshTable() {

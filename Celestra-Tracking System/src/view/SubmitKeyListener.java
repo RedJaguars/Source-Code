@@ -3,10 +3,13 @@ package view;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class SubmitKeyListener implements KeyListener {
+import javax.swing.JButton;
 
-	public SubmitKeyListener() {
-		// TODO Auto-generated constructor stub
+public class SubmitKeyListener implements KeyListener {
+	private JButton buttonToDo;
+	
+	public SubmitKeyListener(JButton button) {
+		this.buttonToDo = button;
 	}
 
 	public void keyReleased(KeyEvent evt) {
@@ -19,7 +22,7 @@ public class SubmitKeyListener implements KeyListener {
 
     public void keyPressed(KeyEvent evt) {
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
-        	
+        	buttonToDo.doClick();
         }
         	
     }

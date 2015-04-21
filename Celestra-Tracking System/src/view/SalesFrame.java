@@ -298,10 +298,11 @@ public class SalesFrame extends JFrame{
 	public void updateTable(Iterator<?> SalesList){
 		//salesTable is the JTable
 		//salesTableModel is the DefaultTableModel
-		for(int i = salesTable.getRowCount(); i != 0 ; i++) {
-			salesTableModel.removeRow(i-1);
+		for(int i = salesTable.getRowCount(); i != 0 ; i--) {
+			salesTableModel.removeRow(i - 1);
 		}
 		
+		//salesTableModel = new DefaultTableModel(headers, 0);
 		while(SalesList.hasNext()) {
 			SalesInfo saleToAdd = (SalesInfo)SalesList.next();
 			Object[] rowData = new Object[3];
