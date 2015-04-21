@@ -15,6 +15,8 @@ import javax.swing.SpinnerNumberModel;
 import objects.Unit;
 import view.AddOrderFrame.doActionListener;
 import controller.InventoryController;
+import exception.EmptyItemDescription;
+import exception.EmptyItemNameException;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -157,17 +159,21 @@ public class AddItemFrame extends JFrame{
 		public void actionPerformed(ActionEvent action) {
 			if(action.getSource() == btnSubmit) {
 				try {
-					inventoryController.addInventory(txtItemName.getText(), Double.parseDouble(snmQuantity.getValue().toString()),
+					if(txtItemName.getText().isEmpty())
+						throw new EmptyItemNameException();
+					if(tarDescription.getText().isEmpty())
+						throw new EmptyItemDescription();
+					else {
+						inventoryController.addInventory(txtItemName.getText(), Double.parseDouble(snmQuantity.getValue().toString()),
 							tarDescription.getText(), Unit.getUnit(cbMeasurement.getSelectedItem().toString()));
-				} catch (NumberFormatException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+						mainFrame.refreshTable();
+						dispose();
+					}
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e1.getMessage());
 					e1.printStackTrace();
 				}
-				mainFrame.refreshTable();
-				dispose();
+				
 			} else if(action.getSource() == btnCancel) {
 				mainFrame.refreshTable();
 				dispose();

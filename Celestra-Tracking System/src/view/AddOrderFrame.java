@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.OrderController;
+import exception.EmptyClientNameException;
 import objects.Alteration;
 import objects.BottomMeasurement;
 import objects.Client;
@@ -885,6 +886,15 @@ public class AddOrderFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent x) {
 			if(x.getSource() == btnCheckOut) {
+				if(txtClientName.getText().isEmpty()){
+					try {
+						throw new EmptyClientNameException();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e.getMessage());
+					}
+				}
+				
 				//due date
 				int day = Integer.parseInt(cbDueDay.getSelectedItem().toString());
 				int month = Integer.parseInt(cbDueMonth.getSelectedItem().toString());

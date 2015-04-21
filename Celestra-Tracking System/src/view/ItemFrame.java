@@ -301,11 +301,6 @@ public class ItemFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				
-					
-					
-					
-					
 				if(tableInventory.getSelectedRows().length == 0)
 					try {
 						throw new NoneSelectedException();
@@ -314,6 +309,15 @@ public class ItemFrame extends JFrame{
 					}
 				new ModifyItemFrame(selectedMaterial, ItemFrame.this);
 			} else if(e.getSource() == btnReduceQuantity) {
+				try {
+					if(!inventoryController.retrieveInventoryList().hasNext()){
+						throw new EmptyItemListException();
+					}
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				if(tableInventory.getSelectedRows().length == 0)
 					try {
 						throw new NoneSelectedException();
@@ -332,6 +336,15 @@ public class ItemFrame extends JFrame{
 				}
 				refreshTable();
 			} else if(e.getSource() == btnIncreaseStock){
+				try {
+					if(!inventoryController.retrieveInventoryList().hasNext()){
+						throw new EmptyItemListException();
+					}
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 				if(tableInventory.getSelectedRows().length == 0)
 					try {
 						throw new NoneSelectedException();
