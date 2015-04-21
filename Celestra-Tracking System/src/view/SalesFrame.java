@@ -38,9 +38,9 @@ import controller.AccountController;
 import controller.SalesController;
 import objects.Sales;
 import objects.SalesInfo;
-import view.ItemFrame.doActionListener;
 
 public class SalesFrame extends JFrame{
+	ArrayList<Sales> salesList;
 	private JTextArea textField;
 	
 	private JButton btnOrder;
@@ -60,6 +60,7 @@ public class SalesFrame extends JFrame{
 	String headers[] = new String[]{"", "Total", "Balance"};
 	
 	public SalesFrame() {
+		salesList = new ArrayList<>();
 		salesController = new SalesController();
 		accountController = new AccountController();
 		getContentPane().setLayout(null);
@@ -181,9 +182,19 @@ public class SalesFrame extends JFrame{
 				return false;
 			}
 		};
+		salesTable.setRowSelectionAllowed(true);
 		salesTable.setDefaultRenderer(salesTable.getColumnClass(0), new SalesCellRenderer());
 		salesTable.setDefaultEditor(salesTable.getColumnClass(0), new SalesCellEditor());
 		salesTable.setBounds(57, 126, 847, 302);
+		salesTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 1) {
+					JTable src = (JTable)e.getSource();
+					SalesInfo selected = (SalesInfo)src.getValueAt(src.getSelectedRow(), 1);
+					showDetails(selected);
+				}
+			}
+		});
 		if(salesPane != null) {
             panel_2.remove(salesPane);
         }
@@ -320,18 +331,20 @@ public class SalesFrame extends JFrame{
 		revalidate();
 	}
 	
-	public Iterator<?> groupByDay(Iterator<?> SalesList) {
+	public Iterator<?> groupByDay(Iterator<?> dayList) {
 		ArrayList<SalesInfo> infoList = new ArrayList<>();
 		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		
-		for(int i = 0; i < cal.getActualMaximum(cal.DAY_OF_MONTH); i++) {
+		for(int i = 0; i < cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
 			String unitName = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+" " +(i+1);
 			infoList.add(new SalesInfo(unitName));
 		}
 		
-		while(SalesList.hasNext()) {
-			Sales sale = (Sales)SalesList.next();
+		salesList.removeAll(salesList);
+		while(dayList.hasNext()) {
+			Sales sale = (Sales)dayList.next();
+			salesList.add(sale);
 			Calendar tempCal = Calendar.getInstance();
 			tempCal.setTime(sale.getOrderList().getDueDate());	
 			int day = tempCal.get(Calendar.DAY_OF_MONTH);
@@ -339,24 +352,27 @@ public class SalesFrame extends JFrame{
 			SalesInfo tempInfo = infoList.get(day);
 			tempInfo.addToTotal(sale.getOrderList().getTotalPrice());
 			tempInfo.addToBalance(sale.getOrderList().getBalance());
+			tempInfo.addToSales(sale);
 		}
 		
 		return infoList.iterator();
 	}
 	
-	public Iterator<?> groupByMonth(Iterator<?> SalesList) {
+	public Iterator<?> groupByMonth(Iterator<?> monthList) {
 		ArrayList<SalesInfo> infoList = new ArrayList<>();
 		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		
-		for(int i = 0; i < cal.getActualMaximum(Calendar.MONTH); i++) {
+		for(int i = 0; i <= cal.getActualMaximum(Calendar.MONTH); i++) {
 			cal.set(Calendar.MONTH, i);
 			String unitName = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
 			infoList.add(new SalesInfo(unitName));
 		}
 		
-		while(SalesList.hasNext()) {
-			Sales sale = (Sales)SalesList.next();
+		salesList.removeAll(salesList);
+		while(monthList.hasNext()) {
+			Sales sale = (Sales)monthList.next();
+			salesList.add(sale);
 			Calendar tempCal = Calendar.getInstance();
 			tempCal.setTime(sale.getOrderList().getDueDate());	
 			int month = tempCal.get(Calendar.MONTH);
@@ -364,12 +380,13 @@ public class SalesFrame extends JFrame{
 			SalesInfo tempInfo = infoList.get(month);
 			tempInfo.addToTotal(sale.getOrderList().getTotalPrice());
 			tempInfo.addToBalance(sale.getOrderList().getBalance());
+			tempInfo.addToSales(sale);
 		}
 		
 		return infoList.iterator();
 	}
 	
-	public Iterator<?> groupByWeek(Iterator<?> SalesList) {
+	public Iterator<?> groupByWeek(Iterator<?> weekList) {
 		ArrayList<SalesInfo> infoList = new ArrayList<>();
 		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -379,8 +396,10 @@ public class SalesFrame extends JFrame{
 			infoList.add(new SalesInfo(unitName));
 		}
 		
-		while(SalesList.hasNext()) {
-			Sales sale = (Sales)SalesList.next();
+		salesList.removeAll(salesList);
+		while(weekList.hasNext()) {
+			Sales sale = (Sales)weekList.next();
+			salesList.add(sale);
 			Calendar tempCal = Calendar.getInstance();
 			tempCal.setTime(sale.getOrderList().getDueDate());	
 			int week = tempCal.get(Calendar.WEEK_OF_MONTH);
@@ -388,9 +407,25 @@ public class SalesFrame extends JFrame{
 			SalesInfo tempInfo = infoList.get(week);
 			tempInfo.addToTotal(sale.getOrderList().getTotalPrice());
 			tempInfo.addToBalance(sale.getOrderList().getBalance());
+			tempInfo.addToSales(sale);
 		}
 		
 		return infoList.iterator();
+	}
+	
+	private void showDetails(SalesInfo info) {
+		Iterator<?> list = info.getSales();
+		
+		textField.removeAll();
+		while(list.hasNext()) {
+			Sales saleInfo = (Sales)list.next();
+			textField.append("<================================================>\n");
+			textField.append("Receipt No: " + saleInfo.getOrderList().getReceiptNo() + "\n");
+			textField.append("Client Name: " + saleInfo.getClient().getFirstName() + " " + saleInfo.getClient().getLastName() + "\n");
+			textField.append("Phone Number: " + saleInfo.getClient().getContactNo() + "\n");
+			textField.append("Balance: " + saleInfo.getOrderList().getBalance() + "\n");
+			textField.append("Price: " + saleInfo.getOrderList().getTotalPrice() + "\n");
+		}
 	}
 	
 	public class doActionListener implements ActionListener {
