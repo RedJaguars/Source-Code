@@ -16,9 +16,9 @@ public class GarmentOrder extends OrderItem{
 		this.material = builder.material;
 		this.specialInstruction = builder.specialInstruction;
 		measurements = new ArrayList<>();
-		do {
+		while(builder.measure.hasNext()) {
 			measurements.add(builder.measure.next());
-		} while(builder.measure.hasNext());
+		}
 	}
 	
 	/*Builder for GarmentOrder*/
